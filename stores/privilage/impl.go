@@ -65,7 +65,7 @@ func (im *impl) Create(ctx context.Context, privilage *privilageM.Privilage) err
 	return nil
 }
 
-const SELECT_STAT = "SEELCT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date WHERE \"id\" = $1"
+const SELECT_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date FROM PRIVILAGE WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*privilageM.Privilage, error) {
 
@@ -91,7 +91,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*privilageM.Privilage, 
 	return privilage, nil
 }
 
-const SELECT_ALL_STAT = "SEELCT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date"
+const SELECT_ALL_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date FROM PRIVILAGE"
 
 func (im *impl) GetAll(ctx context.Context) ([]*privilageM.Privilage, error) {
 
@@ -136,7 +136,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*privilageM.Privilage, error) {
 
 }
 
-const SELECT_BY_CARDID_STAT = "SEELCT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date WHERE card_id = $1"
+const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date WHERE card_id = $1"
 
 func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*privilageM.Privilage, error) {
 	privilages := []*privilageM.Privilage{}

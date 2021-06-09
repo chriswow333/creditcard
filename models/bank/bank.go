@@ -6,14 +6,14 @@ import (
 )
 
 type Bank struct {
-	ID   string
-	Name string
-	Desc string
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Desc string `json:"desc"`
 
-	StartDate  int64
-	EndDate    int64
-	UpdateDate int64
+	StartDate  int64 `json:"startDate"`
+	EndDate    int64 `json:"endDate"`
+	UpdateDate int64 `json:"updateDate"`
 
-	BankAcconts []*bankaccount.BankAccount
-	Cards       []*card.Card
+	BankAcconts []*bankaccount.BankAccount `json:"bankAccounts,omitempty"`
+	Cards       []*card.Card               `json:"cards,omitempty"`
 }

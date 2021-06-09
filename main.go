@@ -68,7 +68,7 @@ func NewServer(
 
 	bank.NewBankHandle(v1.Group("/bank"), bankSrc)
 	card.NewCardHandler(v1.Group("/card"), cardSrc)
-	privilage.NewPrivilageHandler(v1.Group("/privialge"), privilageSrc)
+	privilage.NewPrivilageHandler(v1.Group("/privilage"), privilageSrc)
 	constraint.NewConstraintHandler(v1.Group("/constraint"), constraintSrc)
 
 	return router

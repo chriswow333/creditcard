@@ -23,7 +23,7 @@ func New(psql *pgx.ConnPool) Store {
 	}
 }
 
-const INSERT_CARD_STAT = "INSERT INTO CARD(\"id\", company_id, \"name\", \"desc\", start_date, end_date, update_date) VALUES($1, $2, $3, $4, $5, $6, $7)"
+const INSERT_CARD_STAT = "INSERT INTO CARD(\"id\", bank_id, \"name\", \"desc\", start_date, end_date, update_date) VALUES($1, $2, $3, $4, $5, $6, $7)"
 
 func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 
@@ -69,7 +69,7 @@ func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", company_id, \"name\", \"desc\", start_date, end_date, update_date FROM CARD WHERE \"id\" = $1"
+const SELECT_STAT = "SELECT \"id\", bank_id, \"name\", \"desc\", start_date, end_date, update_date FROM CARD WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
 
@@ -95,7 +95,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
 	return card, nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", company_id, \"name\", \"desc\", start_date, end_date, update_date FROM CARD"
+const SELECT_ALL_STAT = "SELECT \"id\", bank_id, \"name\", \"desc\", start_date, end_date, update_date FROM CARD"
 
 func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 

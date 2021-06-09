@@ -26,7 +26,7 @@ func New(
 	}
 }
 
-const INSERT_CONSTRAINT_STAT = "INSERT INTO CONSTRAINT (\"id\", privilage_id, \"name\", \"desc\", \"operator\",start_date, end_date, update_date, limit_mx, limit_mn) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
+const INSERT_CONSTRAINT_STAT = "INSERT INTO \"constraint\"(\"id\", privilage_id, \"name\", \"desc\", \"operator\", start_date, end_date, update_date) VALUES($1,$2,$3,$4,$5,$6,$7,$8)"
 
 func (im *impl) Create(ctx context.Context, constraint *constraintM.Constraint) error {
 	tx, err := im.psql.Begin()
@@ -56,8 +56,6 @@ func (im *impl) Create(ctx context.Context, constraint *constraintM.Constraint) 
 		constraint.StartDate,
 		constraint.EndDate,
 		constraint.UpdateDate,
-		constraint.Limit.Max,
-		constraint.Limit.Min,
 	}
 
 	if _, err := tx.Exec(INSERT_CONSTRAINT_STAT, updater...); err != nil {
@@ -71,7 +69,7 @@ func (im *impl) Create(ctx context.Context, constraint *constraintM.Constraint) 
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", privilage_id, \"name\", \"desc\", \"operator\", start_date, end_date, update_date, limit_mx, limit_mn FROM CONSTRAINT WHERE \"id\" = $1"
+const SELECT_STAT = "SELECT \"id\", privilage_id, \"name\", \"desc\", \"operator\", start_date, end_date, update_date FROM \"constraint\" WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*constraintM.Constraint, error) {
 
@@ -98,7 +96,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*constraintM.Constraint
 	return constraint, nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", privilage_id, \"name\", \"desc\", \"operator\", start_date, end_date, update_date, limit_mx, limit_mn FROM CONSTRAINT"
+const SELECT_ALL_STAT = "SELECT \"id\", privilage_id, \"name\", \"desc\", \"operator\", start_date, end_date, update_date FROM \"constraint\""
 
 func (im *impl) GetAll(ctx context.Context) ([]*constraintM.Constraint, error) {
 

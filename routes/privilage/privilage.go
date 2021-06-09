@@ -54,7 +54,7 @@ func (h *privilageHandler) get(ctx *gin.Context) {
 	privilage, err := h.privilageSrc.GetByID(ctx, ID)
 	if err != nil {
 		logrus.Error(err)
-		ctx.JSON(http.StatusInternalServerError, "")
+		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, privilage)

@@ -39,7 +39,7 @@ func (h *constraintHandler) create(ctx *gin.Context) {
 	err := h.constraintSrc.Create(ctx, &constraintModel)
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, "")
+		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": "ok"})

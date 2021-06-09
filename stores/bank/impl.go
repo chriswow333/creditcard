@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 	}
 }
 
-const INSERT_BANK_STAT = "INSERT INTO BANK(\"id\", \"name\", \"desc\", startdate, enddate, updatedate) VALUES($1, $2, $3, $4, $5, $6)"
+const INSERT_BANK_STAT = "INSERT INTO BANK(\"id\", \"name\", \"desc\", start_date, end_date, update_date) VALUES($1, $2, $3, $4, $5, $6)"
 
 func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 
@@ -35,7 +35,6 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 		}).Error(err)
 		return err
 	}
-
 	defer tx.Rollback()
 
 	id, err := uuid.NewV4()
@@ -43,7 +42,6 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 		logrus.WithFields(logrus.Fields{
 			"msg": "",
 		}).Fatal(err)
-
 		return err
 	}
 
@@ -69,7 +67,7 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", \"name\", \"desc\", startdate, enddate, updatedate FROM BANK WHERE \"id\" = $1"
+const SELECT_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date FROM BANK WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 
@@ -95,7 +93,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 	return bank, nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", startdate, enddate, updatedate FROM BANK"
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date FROM BANK"
 
 func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
 
