@@ -1,7 +1,6 @@
 package constraint
 
 import (
-	"fmt"
 	"net/http"
 
 	"example.com/creditcard/middlewares/apis"
@@ -70,7 +69,6 @@ func (h *constraintHandler) getAll(ctx *gin.Context) {
 
 func (h *constraintHandler) getByPrivilageID(ctx *gin.Context) {
 	privilageID := ctx.Param("privilageID")
-	fmt.Println(privilageID)
 	constraints, err := h.constraintSrc.GetByPrivilageID(ctx, privilageID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)

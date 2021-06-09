@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 	}
 }
 
-const INSERT_BANK_STAT = "INSERT INTO BANK(\"id\", \"name\", \"desc\", start_date, end_date, update_date) VALUES($1, $2, $3, $4, $5, $6)"
+const INSERT_BANK_STAT = "INSERT INTO bank(\"id\", \"name\", \"desc\", start_date, end_date, update_date) VALUES($1, $2, $3, $4, $5, $6)"
 
 func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 
@@ -67,7 +67,7 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date FROM BANK WHERE \"id\" = $1"
+const SELECT_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date FROM bank WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 
@@ -93,7 +93,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 	return bank, nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date FROM BANK"
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date FROM bank"
 
 func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
 
