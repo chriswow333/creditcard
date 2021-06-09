@@ -32,6 +32,7 @@ func NewCardHandler(
 	apis.Handle(rg, http.MethodGet, "", ch.getAll)
 	apis.Handle(rg, http.MethodPost, "", ch.create)
 	apis.Handle(rg, http.MethodGet, "/:ID", ch.get)
+	apis.Handle(rg, http.MethodGet, "/bankID/:bankID", ch.getByBankID)
 }
 
 func (h *cardHandler) create(ctx *gin.Context) {
@@ -65,5 +66,16 @@ func (h *cardHandler) getAll(ctx *gin.Context) {
 		return
 	}
 
+	ctx.JSON(http.StatusOK, cards)
+}
+
+func (h *cardHandler) getByBankID(ctx *gin.Context) {
+
+	bankID := ctx.Param("bankID")
+	cards, err := h.cardSrc.GetByBankID(ctx, bankID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
 	ctx.JSON(http.StatusOK, cards)
 }

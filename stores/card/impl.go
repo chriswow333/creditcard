@@ -2,6 +2,7 @@ package card
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgx"
 	uuid "github.com/nu7hatch/gouuid"
@@ -134,11 +135,16 @@ func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 	return cards, nil
 }
 
-const SELECT_BY_BANKID_STAT = "SELECT \"id\", bank_id, \"name\", \"desc\", start_date, end_date, update_date FROM CARD WHERE \"bank_id\" = $1"
+const SELECT_BY_BANKID_STAT = "SELECT \"id\", bank_id, \"name\", \"desc\", start_date, end_date, update_date FROM CARD WHERE \"bank_id\"=$1"
 
 func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Card, error) {
 	cards := []*cardM.Card{}
-	rows, err := im.psql.Query(SELECT_ALL_STAT)
+
+	fmt.Println(bankID)
+	condition := []interface{}{
+		bankID,
+	}
+	rows, err := im.psql.Query(SELECT_BY_BANKID_STAT, condition...)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",

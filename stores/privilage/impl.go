@@ -2,6 +2,7 @@ package privilage
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgx"
 	uuid "github.com/nu7hatch/gouuid"
@@ -136,12 +137,15 @@ func (im *impl) GetAll(ctx context.Context) ([]*privilageM.Privilage, error) {
 
 }
 
-const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date WHERE card_id = $1"
+const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date FROM privilage WHERE card_id = $1"
 
 func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*privilageM.Privilage, error) {
 	privilages := []*privilageM.Privilage{}
-
-	rows, err := im.psql.Query(SELECT_BY_CARDID_STAT)
+	fmt.Println(cardID)
+	condition := []interface{}{
+		cardID,
+	}
+	rows, err := im.psql.Query(SELECT_BY_CARDID_STAT, condition...)
 
 	if err != nil {
 		logrus.WithFields(logrus.Fields{

@@ -32,6 +32,7 @@ func NewPrivilageHandler(
 	apis.Handle(rg, http.MethodGet, "", ph.getAll)
 	apis.Handle(rg, http.MethodPost, "", ph.create)
 	apis.Handle(rg, http.MethodGet, "/:ID", ph.get)
+	apis.Handle(rg, http.MethodGet, "/cardID/:cardID", ph.getByCardID)
 }
 
 func (h *privilageHandler) create(ctx *gin.Context) {
@@ -68,5 +69,18 @@ func (h *privilageHandler) getAll(ctx *gin.Context) {
 		return
 	}
 
+	ctx.JSON(http.StatusOK, privilages)
+}
+
+func (h *privilageHandler) getByCardID(ctx *gin.Context) {
+
+	cardID := ctx.Param("cardID")
+	privilages, err := h.privilageSrc.GetByCardID(ctx, cardID)
+
+	if err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
 	ctx.JSON(http.StatusOK, privilages)
 }

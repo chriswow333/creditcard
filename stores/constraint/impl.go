@@ -2,6 +2,7 @@ package constraint
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgx"
 	uuid "github.com/nu7hatch/gouuid"
@@ -135,13 +136,16 @@ func (im *impl) GetAll(ctx context.Context) ([]*constraintM.Constraint, error) {
 	return constraints, nil
 }
 
-const SELECT_BY_PRIVILAGEID_STAT = "SELECT \"id\", privilage_id, \"name\", \"desc\", \"operator\", start_date, end_date, update_date, limit_mx, limit_mn FROM CONSTRAINT WHERE privilage_id = $1"
+const SELECT_BY_PRIVILAGEID_STAT = "SELECT \"id\", privilage_id, \"name\", \"desc\", \"operator\", start_date, end_date, update_date FROM \"constraint\" WHERE privilage_id = $1"
 
 func (im *impl) GetByPrivilageID(ctx context.Context, privilageID string) ([]*constraintM.Constraint, error) {
-
 	constraints := []*constraintM.Constraint{}
 
-	rows, err := im.psql.Query(SELECT_BY_PRIVILAGEID_STAT)
+	condition := []interface{}{
+		privilageID,
+	}
+	fmt.Println(privilageID)
+	rows, err := im.psql.Query(SELECT_BY_PRIVILAGEID_STAT, condition...)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
