@@ -1,6 +1,7 @@
 package privilage
 
 import (
+	"fmt"
 	"net/http"
 
 	"go.uber.org/dig"
@@ -39,7 +40,7 @@ func (h *privilageHandler) create(ctx *gin.Context) {
 	var privilageModel privilageM.Privilage
 
 	ctx.BindJSON(&privilageModel)
-
+	fmt.Println(privilageModel)
 	if err := h.privilageSrc.Create(ctx, &privilageModel); err != nil {
 		logrus.Error(err)
 		ctx.JSON(http.StatusInternalServerError, err)

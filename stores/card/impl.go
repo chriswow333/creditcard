@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx"
-	uuid "github.com/nu7hatch/gouuid"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
 
@@ -38,17 +37,8 @@ func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 
 	defer tx.Rollback()
 
-	id, err := uuid.NewV4()
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Fatal(err)
-
-		return err
-	}
-
 	updater := []interface{}{
-		id.String(),
+		card.ID,
 		card.BankID,
 		card.Name,
 		card.Desc,

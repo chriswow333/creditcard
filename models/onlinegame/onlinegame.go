@@ -1,8 +1,15 @@
 package onlinegame
 
+type ActionType int32
+
+const (
+	Shopping ActionType = iota
+	Deposit
+)
+
 type Onlinegame struct {
-	ID     string
-	Name   string
-	Action string
-	Desc   string
+	ID     string     `json:"id"`
+	Name   string     `json:"name"`
+	Action ActionType `json:"action"`
+	Desc   string     `json:"desc"`
 }

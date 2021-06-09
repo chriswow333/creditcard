@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx"
-	uuid "github.com/nu7hatch/gouuid"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
 
@@ -24,7 +23,7 @@ func New(psql *pgx.ConnPool) Store {
 	}
 }
 
-const INSERT_PRIVILAGE_STAT = "INSERT INTO privilage(\"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date) VALUES($1,$2,$3,$4,$5,$6,$7)"
+const INSERT_PRIVILAGE_STAT = "INSERT INTO privilage(\"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date, score) VALUES($1,$2,$3,$4,$5,$6,$7,$8)"
 
 func (im *impl) Create(ctx context.Context, privilage *privilageM.Privilage) error {
 
@@ -38,22 +37,15 @@ func (im *impl) Create(ctx context.Context, privilage *privilageM.Privilage) err
 	}
 	defer tx.Rollback()
 
-	id, err := uuid.NewV4()
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		})
-		return err
-	}
-
 	updater := []interface{}{
-		id.String(),
+		privilage.ID,
 		privilage.CardID,
 		privilage.Name,
 		privilage.Desc,
 		privilage.StartDate,
 		privilage.EndDate,
 		privilage.UpdateDate,
+		privilage.Score,
 	}
 	if _, err := tx.Exec(INSERT_PRIVILAGE_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -66,7 +58,7 @@ func (im *impl) Create(ctx context.Context, privilage *privilageM.Privilage) err
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date FROM privilage WHERE \"id\" = $1"
+const SELECT_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date, score FROM privilage WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*privilageM.Privilage, error) {
 
@@ -80,6 +72,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*privilageM.Privilage, 
 		&privilage.StartDate,
 		&privilage.EndDate,
 		&privilage.UpdateDate,
+		&privilage.Score,
 	}
 
 	if err := im.psql.QueryRow(SELECT_STAT, ID).Scan(selector...); err != nil {
@@ -92,7 +85,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*privilageM.Privilage, 
 	return privilage, nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date FROM privilage"
+const SELECT_ALL_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date, score FROM privilage"
 
 func (im *impl) GetAll(ctx context.Context) ([]*privilageM.Privilage, error) {
 
@@ -119,6 +112,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*privilageM.Privilage, error) {
 			&privilage.StartDate,
 			&privilage.EndDate,
 			&privilage.UpdateDate,
+			&privilage.Score,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -137,7 +131,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*privilageM.Privilage, error) {
 
 }
 
-const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date FROM privilage WHERE card_id = $1"
+const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date, score FROM privilage WHERE card_id = $1"
 
 func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*privilageM.Privilage, error) {
 	privilages := []*privilageM.Privilage{}
@@ -166,6 +160,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*privilageM.P
 			&privilage.StartDate,
 			&privilage.EndDate,
 			&privilage.UpdateDate,
+			&privilage.Score,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

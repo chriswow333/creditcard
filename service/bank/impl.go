@@ -8,6 +8,8 @@ import (
 	"example.com/creditcard/stores/bank"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
+
+	uuid "github.com/nu7hatch/gouuid"
 )
 
 var (
@@ -32,8 +34,16 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 
 	bank.UpdateDate = timeNow().Unix()
 
-	err := im.bankStore.Create(ctx, bank)
+	id, err := uuid.NewV4()
 	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+	bank.ID = id.String()
+
+	if err := im.bankStore.Create(ctx, bank); err != nil {
 		logrus.Error(err)
 		return err
 	}

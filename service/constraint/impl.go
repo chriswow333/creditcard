@@ -8,6 +8,8 @@ import (
 	"example.com/creditcard/stores/constraint"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
+
+	uuid "github.com/nu7hatch/gouuid"
 )
 
 var (
@@ -31,6 +33,17 @@ func New(
 func (im *impl) Create(ctx context.Context, constraint *constraintM.Constraint) error {
 
 	constraint.UpdateDate = timeNow().Unix()
+
+	id, err := uuid.NewV4()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"": "",
+		}).Error(err)
+		return err
+	}
+
+	constraint.ID = id.String()
+
 	if err := im.constraintStore.Create(ctx, constraint); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",

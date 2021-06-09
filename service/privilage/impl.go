@@ -9,6 +9,8 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"go.uber.org/dig"
+
+	uuid "github.com/nu7hatch/gouuid"
 )
 
 var (
@@ -32,6 +34,16 @@ func New(
 func (im *impl) Create(ctx context.Context, privilage *privilageM.Privilage) error {
 
 	privilage.UpdateDate = timeNow().Unix()
+
+	id, err := uuid.NewV4()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"": "",
+		}).Error(err)
+		return err
+	}
+	privilage.ID = id.String()
+
 	if err := im.privilageStore.Create(ctx, privilage); err != nil {
 		logrus.Error(err)
 		return err

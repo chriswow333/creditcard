@@ -1,12 +1,15 @@
 package ecommerce
 
-import (
-	"example.com/creditcard/models/action"
+type ActionType int32
+
+const (
+	Shopping ActionType = iota
+	Deposit
 )
 
 type Ecommerce struct {
-	ID     string        `json:"id"`
-	Name   string        `json:"name"`
-	Action action.Action `json:"action"`
-	Desc   string        `json:"desc"`
+	ID     string     `json:"id"`
+	Name   string     `json:"name"`
+	Action ActionType `json:"action"`
+	Desc   string     `json:"desc"`
 }

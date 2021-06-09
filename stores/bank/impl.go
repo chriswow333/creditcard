@@ -3,8 +3,6 @@ package bank
 import (
 	"context"
 
-	uuid "github.com/nu7hatch/gouuid"
-
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -37,16 +35,8 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 	}
 	defer tx.Rollback()
 
-	id, err := uuid.NewV4()
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Fatal(err)
-		return err
-	}
-
 	updater := []interface{}{
-		id.String(),
+		bank.ID,
 		bank.Name,
 		bank.Desc,
 		bank.StartDate,
