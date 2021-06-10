@@ -2,7 +2,6 @@ package constraint
 
 import (
 	"context"
-	"time"
 
 	constraintM "example.com/creditcard/models/constraint"
 	"example.com/creditcard/stores/constraint"
@@ -10,10 +9,6 @@ import (
 	"go.uber.org/dig"
 
 	uuid "github.com/nu7hatch/gouuid"
-)
-
-var (
-	timeNow = time.Now
 )
 
 type impl struct {
@@ -25,14 +20,14 @@ type impl struct {
 func New(
 	constraintStore constraint.Store,
 ) Service {
-	return &impl{
+
+	im := &impl{
 		constraintStore: constraintStore,
 	}
+	return im
 }
 
 func (im *impl) Create(ctx context.Context, constraint *constraintM.Constraint) error {
-
-	constraint.UpdateDate = timeNow().Unix()
 
 	id, err := uuid.NewV4()
 	if err != nil {
@@ -57,6 +52,7 @@ func (im *impl) Create(ctx context.Context, constraint *constraintM.Constraint) 
 func (im *impl) GetByID(ctx context.Context, ID string) (*constraintM.Constraint, error) {
 
 	constraint, err := im.constraintStore.GetByID(ctx, ID)
+
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
@@ -89,5 +85,4 @@ func (im *impl) GetByPrivilageID(ctx context.Context, privilageID string) ([]*co
 		return nil, err
 	}
 	return constraints, nil
-
 }

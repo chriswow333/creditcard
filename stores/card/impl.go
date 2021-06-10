@@ -2,7 +2,6 @@ package card
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
@@ -130,11 +129,10 @@ const SELECT_BY_BANKID_STAT = "SELECT \"id\", bank_id, \"name\", \"desc\", start
 func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Card, error) {
 	cards := []*cardM.Card{}
 
-	fmt.Println(bankID)
-	condition := []interface{}{
+	conditions := []interface{}{
 		bankID,
 	}
-	rows, err := im.psql.Query(SELECT_BY_BANKID_STAT, condition...)
+	rows, err := im.psql.Query(SELECT_BY_BANKID_STAT, conditions...)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
