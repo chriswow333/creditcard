@@ -30,6 +30,11 @@ type Constraint struct {
 	ConstraintBody *ConstraintBody `json:"constraintBody,omitempty"`
 }
 
+type Limit struct {
+	Max int `json:"max"`
+	Min int `json:"min"`
+}
+
 type ConstraintBody struct {
 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
 }
@@ -39,51 +44,47 @@ type ConstraintPayload struct {
 
 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
 
-	Base         []*Base                    `json:"base,omitempty"`
 	Mobilepays   []*mobilepay.Mobilepay     `json:"mobilepays,omitempty"`
 	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces,omitempty"`
 	Supermarkets []*supermarket.Supermarket `json:"supermarkets,omitempty"`
 	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames,omitempty"`
 	Streamings   []*streaming.Streaming     `json:"streamings,omitempty"`
+
+	TimeBases    []*TimeBase    `json:"timeBases,omitempty"`
+	AccountBases []*AccountBase `json:"accountBases,omitempty"`
+	MoneyBases   []*MoneyBase   `json:"moneyBases,omitempty"`
 }
-
-type ActionType int32
-
-const (
-	Shopping ActionType = iota
-	Deposit
-	Setting
-)
-
-type BaseType int32
-
-const (
-	TimeBase BaseType = iota
-	MoneyBase
-	AccountBase
-)
-
-type Unit int32
-
-const (
-	DayUint Unit = iota
-	AccountUint
-	NTD
-)
 
 type Base struct {
-	ID         string   `json:"id"`
-	Name       string   `json:"name"`
-	Desc       string   `json:"desc"`
-	TargetFrom string   `json:"targetFrom"`
-	TargetTo   string   `json:"targetTo"`
-	BaseType   BaseType `json:"baseType"`
-	UnitType   string   `json:"unitType"`
-
-	Action ActionType `json:"actionType"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Desc string `json:"desc"`
 }
 
-type Limit struct {
-	Max int `json:"max"`
-	Min int `json:"min"`
+type TimeBase struct {
+	Base
+
+	DayFrom     string `json:"day"`
+	WeekDayFrom string `json:"weekDay"`
+	HourFrom    string `json:"hour"`
+	MinuteFrom  string `json:"minute"`
+
+	DayTo     string `json:"dayTo"`
+	WeekDayTo string `json:"weekDayTo"`
+	HourTo    string `json:"hourTo"`
+	MinuteTo  string `json:"minuteTo"`
+}
+
+type AccountBase struct {
+	Base
+
+	BankAccount string `json:"bankAccount"`
+}
+
+type MoneyBase struct {
+	Base
+
+	Currency string `json:"currency"`
+	AtLeast  int64  `json:"atLeast"`
+	AtMost   int64  `json:"atMost"`
 }
