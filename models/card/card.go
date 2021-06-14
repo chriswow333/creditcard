@@ -1,7 +1,7 @@
 package card
 
 import (
-	"example.com/creditcard/models/privilage"
+	"example.com/creditcard/models/reward"
 )
 
 type Card struct {
@@ -14,5 +14,5 @@ type Card struct {
 
 	UpdateDate int64 `json:"updateDate"`
 
-	Privilages []*privilage.Privilage `json:"privilages,omitempty"`
+	Rewards []*reward.Reward `json:"rewards,omitempty"`
 }

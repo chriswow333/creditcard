@@ -6,7 +6,7 @@ import (
 	"example.com/creditcard/routes/bank"
 	"example.com/creditcard/routes/card"
 	"example.com/creditcard/routes/constraint"
-	"example.com/creditcard/routes/privilage"
+	"example.com/creditcard/routes/reward"
 	"go.uber.org/dig"
 
 	"github.com/braintree/manners"
@@ -20,8 +20,8 @@ import (
 	cardService "example.com/creditcard/service/card"
 	cardStore "example.com/creditcard/stores/card"
 
-	privilageService "example.com/creditcard/service/privilage"
-	privilageStore "example.com/creditcard/stores/privilage"
+	rewardService "example.com/creditcard/service/reward"
+	rewardStore "example.com/creditcard/stores/reward"
 
 	constraintService "example.com/creditcard/service/constraint"
 	constraintStore "example.com/creditcard/stores/constraint"
@@ -41,8 +41,8 @@ func BuildContainer() *dig.Container {
 	container.Provide(cardStore.New)
 
 	// privlage module
-	container.Provide(privilageService.New)
-	container.Provide(privilageStore.New)
+	container.Provide(rewardService.New)
+	container.Provide(rewardStore.New)
 
 	// constraint module
 	container.Provide(constraintService.New)
@@ -56,7 +56,7 @@ func BuildContainer() *dig.Container {
 func NewServer(
 	bankSrc bankService.Service,
 	cardSrc cardService.Service,
-	privilageSrc privilageService.Service,
+	rewardSrc rewardService.Service,
 	constraintSrc constraintService.Service,
 
 ) *gin.Engine {
@@ -68,7 +68,7 @@ func NewServer(
 
 	bank.NewBankHandle(v1.Group("/bank"), bankSrc)
 	card.NewCardHandler(v1.Group("/card"), cardSrc)
-	privilage.NewPrivilageHandler(v1.Group("/privilage"), privilageSrc)
+	reward.NewrewardHandler(v1.Group("/reward"), rewardSrc)
 	constraint.NewConstraintHandler(v1.Group("/constraint"), constraintSrc)
 
 	return router

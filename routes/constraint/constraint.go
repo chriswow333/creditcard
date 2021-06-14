@@ -29,7 +29,7 @@ func NewConstraintHandler(
 	apis.Handle(rg, http.MethodGet, "", ch.getAll)
 	apis.Handle(rg, http.MethodPost, "", ch.create)
 	apis.Handle(rg, http.MethodGet, "/:ID", ch.get)
-	apis.Handle(rg, http.MethodGet, "/privilageID/:privilageID", ch.getByPrivilageID)
+	apis.Handle(rg, http.MethodGet, "/rewardID/:rewardID", ch.getByRewardID)
 
 }
 
@@ -67,9 +67,9 @@ func (h *constraintHandler) getAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, constraints)
 }
 
-func (h *constraintHandler) getByPrivilageID(ctx *gin.Context) {
-	privilageID := ctx.Param("privilageID")
-	constraints, err := h.constraintSrc.GetByPrivilageID(ctx, privilageID)
+func (h *constraintHandler) getByRewardID(ctx *gin.Context) {
+	rewardID := ctx.Param("rewardID")
+	constraints, err := h.constraintSrc.GetByRewardID(ctx, rewardID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 		return

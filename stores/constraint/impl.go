@@ -50,7 +50,7 @@ func (im *impl) Create(ctx context.Context, constraint *constraintM.Constraint) 
 
 	updater := []interface{}{
 		constraint.ID,
-		constraint.PrivilageID,
+		constraint.RewardID,
 		constraint.Name,
 		constraint.Desc,
 		constraint.StartDate,
@@ -88,7 +88,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*constraintM.Constraint
 
 	updater := []interface{}{
 		&constraint.ID,
-		&constraint.PrivilageID,
+		&constraint.RewardID,
 		&constraint.Name,
 		&constraint.Desc,
 		&constraint.StartDate,
@@ -129,7 +129,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*constraintM.Constraint, error) {
 		limit := &constraintM.Limit{}
 		selector := []interface{}{
 			&constraint.ID,
-			&constraint.PrivilageID,
+			&constraint.RewardID,
 			&constraint.Name,
 			&constraint.Desc,
 			&constraint.StartDate,
@@ -156,12 +156,12 @@ func (im *impl) GetAll(ctx context.Context) ([]*constraintM.Constraint, error) {
 const SELECT_BY_PRIVILAGEID_STAT = "SELECT \"id\", privilage_id, \"name\", \"desc\", " +
 	"start_date, end_date, update_date, limit_mx, limit_mn, constraint_body FROM \"constraint\" WHERE privilage_id = $1"
 
-func (im *impl) GetByPrivilageID(ctx context.Context, privilageID string) ([]*constraintM.Constraint, error) {
+func (im *impl) GetByRewardID(ctx context.Context, rewardID string) ([]*constraintM.Constraint, error) {
 
 	constraints := []*constraintM.Constraint{}
 
 	conditions := []interface{}{
-		privilageID,
+		rewardID,
 	}
 
 	rows, err := im.psql.Query(SELECT_BY_PRIVILAGEID_STAT, conditions...)
@@ -178,7 +178,7 @@ func (im *impl) GetByPrivilageID(ctx context.Context, privilageID string) ([]*co
 		limit := &constraintM.Limit{}
 		selector := []interface{}{
 			&constraint.ID,
-			&constraint.PrivilageID,
+			&constraint.RewardID,
 			&constraint.Name,
 			&constraint.Desc,
 			&constraint.StartDate,

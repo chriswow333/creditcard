@@ -1,4 +1,4 @@
-package constraint
+package card
 
 import (
 	"context"
@@ -7,5 +7,5 @@ import (
 )
 
 type Component interface {
-	Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, error)
+	Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Response, error)
 }

@@ -1,11 +1,11 @@
-package privilage
+package reward
 
 import (
 	"example.com/creditcard/models/bonus"
 	"example.com/creditcard/models/constraint"
 )
 
-type Privilage struct {
+type Reward struct {
 	ID         string  `json:"id"`
 	CardID     string  `json:"cardID"`
 	Name       string  `json:"name"`

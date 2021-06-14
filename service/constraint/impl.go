@@ -75,9 +75,9 @@ func (im *impl) GetAll(ctx context.Context) ([]*constraintM.Constraint, error) {
 	return constraints, nil
 }
 
-func (im *impl) GetByPrivilageID(ctx context.Context, privilageID string) ([]*constraintM.Constraint, error) {
+func (im *impl) GetByRewardID(ctx context.Context, rewardID string) ([]*constraintM.Constraint, error) {
 
-	constraints, err := im.constraintStore.GetByPrivilageID(ctx, privilageID)
+	constraints, err := im.constraintStore.GetByRewardID(ctx, rewardID)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
