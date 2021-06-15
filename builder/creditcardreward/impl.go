@@ -2,7 +2,6 @@ package creditcardreward
 
 import (
 	"context"
-	"fmt"
 
 	bankComp "example.com/creditcard/components/bank"
 	cardComp "example.com/creditcard/components/card"
@@ -62,6 +61,18 @@ func (im *impl) NewCreditcard(ctx context.Context, settings []*bankM.Bank) ([]*b
 	return banks, nil
 }
 
+func (im *impl) getConstraintComponent(ctx context.Context, c *constraintM.Constraint) (*constraintComp.Component, error) {
+
+	constraintComponent, err := im.getConstraintPayloadComponent(ctx, c.ConstraintPayload)
+	if err != nil {
+		return nil, err
+	}
+
+	component := constraintComp.New(c, constraintComponent)
+
+	return &component, nil
+}
+
 func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *constraintM.ConstraintPayload) (*constraintComp.Component, error) {
 
 	var constraintComponents []*constraintComp.Component
@@ -71,7 +82,10 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 	case constraintM.ConstraintPayloadType:
 
 		for _, p := range payload.ConstraintPayloads {
-			constraintComponentTemp, _ := im.getConstraintPayloadComponent(ctx, p)
+			constraintComponentTemp, err := im.getConstraintPayloadComponent(ctx, p)
+			if err != nil {
+				return nil, err
+			}
 			constraintComponents = append(constraintComponents, constraintComponentTemp)
 		}
 
@@ -92,8 +106,7 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 	case constraintM.MoneyBaseType:
 		constraintComponent = moneybase.New(payload.MoneyBases, payload.Operator)
 	default:
-		fmt.Println("error")
-		break
+		return nil, nil
 	}
 
 	if payload.ConstraintType != constraintM.ConstraintPayloadType {
@@ -104,22 +117,21 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 	return &payloadCompoent, nil
 }
 
-func (im *impl) getConstraintComponent(ctx context.Context, c *constraintM.Constraint) (*constraintComp.Component, error) {
-
-	return nil, nil
-}
-
 func (im *impl) getRewardComponent(ctx context.Context, r *rewardM.Reward, constraints []*constraintComp.Component) (*rewardComp.Component, error) {
 
-	return nil, nil
+	component := rewardComp.New(r, constraints)
+	return &component, nil
 }
 
 func (im *impl) getCardComponent(ctx context.Context, card *cardM.Card, rewards []*rewardComp.Component) (*cardComp.Component, error) {
 
-	return nil, nil
+	component := cardComp.New(card, rewards)
+
+	return &component, nil
 }
 
 func (im *impl) getBankComponent(ctx context.Context, bank *bankM.Bank, cards []*cardComp.Component) (*bankComp.Component, error) {
 
-	return nil, nil
+	component := bankComp.New(bank, cards)
+	return &component, nil
 }
