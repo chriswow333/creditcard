@@ -4,20 +4,23 @@ import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
+	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
 	supermarketM "example.com/creditcard/models/supermarket"
 )
 
 type impl struct {
-	supermarket *supermarketM.Supermarket
+	supermarkets []*supermarketM.Supermarket
+	operator     constraintM.OperatorType
 }
 
 func New(
-	supermarket *supermarketM.Supermarket,
+	supermarkets []*supermarketM.Supermarket,
+	operator constraintM.OperatorType,
 ) constraint.Component {
 
 	return &impl{
-		supermarket: supermarket,
+		supermarkets: supermarkets,
 	}
 }
 
@@ -25,14 +28,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, e
 
 	resp := &eventM.Response{
 		Pass: false,
-	}
-
-	for _, super := range e.Supermarkets {
-
-		if super.ID == im.supermarket.ID {
-			resp.Pass = true
-			return resp, nil
-		}
 	}
 
 	return resp, nil

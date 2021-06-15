@@ -4,35 +4,60 @@ import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
+	constraintM "example.com/creditcard/models/constraint"
 	ecommerceM "example.com/creditcard/models/ecommerce"
 	eventM "example.com/creditcard/models/event"
 )
 
 type impl struct {
-	ecommerce *ecommerceM.Ecommerce
+	ecommerceMap map[string]*ecommerceM.Ecommerce
+	operator     constraintM.OperatorType
 }
 
 func New(
-	ecommerce *ecommerceM.Ecommerce,
+	ecommerces []*ecommerceM.Ecommerce,
+	operator constraintM.OperatorType,
 
 ) constraint.Component {
 
+	m := make(map[string]*ecommerceM.Ecommerce)
+	for _, e := range ecommerces {
+		if _, ok := m[e.ID]; ok {
+			panic("duplicate")
+		} else {
+			m[e.ID] = e
+		}
+	}
+
 	return &impl{
-		ecommerce: ecommerce,
+		ecommerceMap: m,
+		operator:     operator,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
 
-	resp := &eventM.Response{
-		Pass: false,
-	}
-
-	for _, ec := range e.Ecommerces {
-		if ec.ID == im.ecommerce.ID {
-			resp.Pass = true
-			return resp, nil
+	resp := &eventM.Response{}
+	if im.operator == constraintM.OrOperator {
+		for _, e := range e.Ecommerces {
+			if _, ok := im.ecommerceMap[e.ID]; ok {
+				resp.Pass = true
+				return resp, nil
+			}
 		}
+
+		resp.Pass = false
+		return resp, nil
+	} else {
+		for _, e := range e.Ecommerces {
+			if _, ok := im.ecommerceMap[e.ID]; !ok {
+				resp.Pass = false
+				return resp, nil
+			}
+
+		}
+
+		resp.Pass = true
+		return resp, nil
 	}
-	return resp, nil
 }

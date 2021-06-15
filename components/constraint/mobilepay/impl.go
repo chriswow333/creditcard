@@ -4,19 +4,22 @@ import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
+	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
 	mobilepayM "example.com/creditcard/models/mobilepay"
 )
 
 type impl struct {
-	mobilepay *mobilepayM.Mobilepay
+	mobilepays []*mobilepayM.Mobilepay
+	operator   constraintM.OperatorType
 }
 
 func New(
-	mobilepay *mobilepayM.Mobilepay,
+	mobilepays []*mobilepayM.Mobilepay,
+	operator constraintM.OperatorType,
 ) constraint.Component {
 	return &impl{
-		mobilepay: mobilepay,
+		mobilepays: mobilepays,
 	}
 }
 
@@ -24,14 +27,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, e
 
 	resp := &eventM.Response{
 		Pass: false,
-	}
-
-	for _, pay := range e.Mobilepays {
-
-		if pay.ID == im.mobilepay.ID {
-			resp.Pass = true
-			return resp, nil
-		}
 	}
 
 	return resp, nil

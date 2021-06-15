@@ -4,19 +4,22 @@ import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
+	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
 	streamingM "example.com/creditcard/models/streaming"
 )
 
 type impl struct {
-	streaming *streamingM.Streaming
+	streamings []*streamingM.Streaming
+	operator   constraintM.OperatorType
 }
 
 func New(
-	streaming *streamingM.Streaming,
+	streamings []*streamingM.Streaming,
+	operator constraintM.OperatorType,
 ) constraint.Component {
 	return &impl{
-		streaming: streaming,
+		streamings: streamings,
 	}
 }
 
@@ -24,15 +27,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, e
 
 	resp := &eventM.Response{
 		Pass: false,
-	}
-
-	for _, streaming := range e.Streamings {
-		if streaming.ID == im.streaming.ID {
-
-			resp.Pass = true
-
-			return resp, nil
-		}
 	}
 
 	return resp, nil

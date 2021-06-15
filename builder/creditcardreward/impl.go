@@ -2,10 +2,20 @@ package creditcardreward
 
 import (
 	"context"
+	"fmt"
 
 	bankComp "example.com/creditcard/components/bank"
 	cardComp "example.com/creditcard/components/card"
 	constraintComp "example.com/creditcard/components/constraint"
+	"example.com/creditcard/components/constraint/accountbase"
+	"example.com/creditcard/components/constraint/constraintpayload"
+	"example.com/creditcard/components/constraint/ecommerce"
+	"example.com/creditcard/components/constraint/mobilepay"
+	"example.com/creditcard/components/constraint/moneybase"
+	"example.com/creditcard/components/constraint/onlinegame"
+	"example.com/creditcard/components/constraint/streaming"
+	"example.com/creditcard/components/constraint/supermarket"
+	timeBase "example.com/creditcard/components/constraint/timebase"
 	rewardComp "example.com/creditcard/components/reward"
 	bankM "example.com/creditcard/models/bank"
 	cardM "example.com/creditcard/models/card"
@@ -50,6 +60,48 @@ func (im *impl) NewCreditcard(ctx context.Context, settings []*bankM.Bank) ([]*b
 	}
 
 	return banks, nil
+}
+
+func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *constraintM.ConstraintPayload) (*constraintComp.Component, error) {
+
+	var constraintComponents []*constraintComp.Component
+
+	var constraintComponent constraintComp.Component
+	switch payload.ConstraintType {
+	case constraintM.ConstraintPayloadType:
+
+		for _, p := range payload.ConstraintPayloads {
+			constraintComponentTemp, _ := im.getConstraintPayloadComponent(ctx, p)
+			constraintComponents = append(constraintComponents, constraintComponentTemp)
+		}
+
+	case constraintM.MobilepayType:
+		constraintComponent = mobilepay.New(payload.Mobilepays, payload.Operator)
+	case constraintM.EcommerceType:
+		constraintComponent = ecommerce.New(payload.Ecommerces, payload.Operator)
+	case constraintM.SupermarketType:
+		constraintComponent = supermarket.New(payload.Supermarkets, payload.Operator)
+	case constraintM.OnlinegameType:
+		constraintComponent = onlinegame.New(payload.Onlinegames, payload.Operator)
+	case constraintM.StreamingType:
+		constraintComponent = streaming.New(payload.Streamings, payload.Operator)
+	case constraintM.TimeBaseType:
+		constraintComponent = timeBase.New(payload.TimeBases, payload.Operator)
+	case constraintM.AccountBaseType:
+		constraintComponent = accountbase.New(payload.AccountBases, payload.Operator)
+	case constraintM.MoneyBaseType:
+		constraintComponent = moneybase.New(payload.MoneyBases, payload.Operator)
+	default:
+		fmt.Println("error")
+		break
+	}
+
+	if payload.ConstraintType != constraintM.ConstraintPayloadType {
+		constraintComponents = append(constraintComponents, &constraintComponent)
+	}
+
+	payloadCompoent := constraintpayload.New(constraintComponents, payload.Operator)
+	return &payloadCompoent, nil
 }
 
 func (im *impl) getConstraintComponent(ctx context.Context, c *constraintM.Constraint) (*constraintComp.Component, error) {

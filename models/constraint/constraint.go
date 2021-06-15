@@ -26,9 +26,8 @@ type Constraint struct {
 	EndDate    int64 `json:"endDate"`
 	UpdateDate int64 `json:"updateDate"`
 
-	Limit *Limit `json:"limit,omitempty"`
-
-	ConstraintBody *ConstraintBody `json:"constraintBody,omitempty"`
+	Limit             *Limit             `json:"limit,omitempty"`
+	ConstraintPayload *ConstraintPayload `json:"constraintPayload,omitempty"`
 }
 
 type Limit struct {
@@ -36,12 +35,29 @@ type Limit struct {
 	Min int `json:"min"`
 }
 
-type ConstraintBody struct {
-	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
-}
+type ConstraintType int32
+
+const (
+	ConstraintPayloadType ConstraintType = iota
+	MobilepayType
+	EcommerceType
+	SupermarketType
+	OnlinegameType
+	StreamingType
+
+	TimeBaseType
+	AccountBaseType
+	MoneyBaseType
+)
+
+// type ConstraintBody struct {
+// 	Operator           OperatorType         `json:"operator"`
+// 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
+// }
 
 type ConstraintPayload struct {
-	Operator OperatorType `json:"operator"`
+	Operator       OperatorType   `json:"operator"`
+	ConstraintType ConstraintType `json:"constraintType"`
 
 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
 

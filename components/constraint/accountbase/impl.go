@@ -5,19 +5,22 @@ import (
 
 	"example.com/creditcard/components/constraint"
 	baseM "example.com/creditcard/models/base"
+	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
 )
 
 type impl struct {
-	accountBase *baseM.AccountBase
+	accountBases []*baseM.AccountBase
+	operator     constraintM.OperatorType
 }
 
 func New(
-	accountBase *baseM.AccountBase,
+	accountBases []*baseM.AccountBase,
+	operator constraintM.OperatorType,
 ) constraint.Component {
 
 	return &impl{
-		accountBase: accountBase,
+		accountBases: accountBases,
 	}
 }
 
@@ -27,12 +30,5 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, e
 		Pass: true,
 	}
 
-	for _, account := range e.BankAccounts {
-		if account.ID == im.accountBase.ID {
-
-			resp.Pass = true
-			return resp, nil
-		}
-	}
 	return resp, nil
 }

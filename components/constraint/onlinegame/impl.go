@@ -4,20 +4,24 @@ import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
+	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
 	onlinegameM "example.com/creditcard/models/onlinegame"
 )
 
 type impl struct {
-	onlinegame *onlinegameM.Onlinegame
+	onlinegames []*onlinegameM.Onlinegame
+	operator    constraintM.OperatorType
 }
 
 func New(
-	onlinegame *onlinegameM.Onlinegame,
+	onlinegames []*onlinegameM.Onlinegame,
+	operator constraintM.OperatorType,
+
 ) constraint.Component {
 
 	return &impl{
-		onlinegame: onlinegame,
+		onlinegames: onlinegames,
 	}
 }
 
@@ -25,13 +29,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, e
 
 	resp := &eventM.Response{
 		Pass: false,
-	}
-
-	for _, online := range e.Onlinegames {
-		if online.ID == im.onlinegame.ID {
-			resp.Pass = true
-			return resp, nil
-		}
 	}
 
 	return resp, nil

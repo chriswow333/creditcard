@@ -5,19 +5,22 @@ import (
 
 	"example.com/creditcard/components/constraint"
 	"example.com/creditcard/models/base"
+	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
 )
 
 type impl struct {
-	timeBase *base.TimeBase
+	timeBases []*base.TimeBase
+	operator  constraintM.OperatorType
 }
 
 func New(
-	timeBase *base.TimeBase,
+	timeBases []*base.TimeBase,
+	operator constraintM.OperatorType,
 ) constraint.Component {
 
 	return &impl{
-		timeBase: timeBase,
+		timeBases: timeBases,
 	}
 
 }
