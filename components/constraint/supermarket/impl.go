@@ -1,4 +1,4 @@
-package constraint
+package supermarket
 
 import (
 	"context"

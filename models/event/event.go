@@ -48,3 +48,6 @@ const (
 type Response struct {
 	Pass bool `json:"pass,omitempty"`
 }
+
+type EventResponse struct {
+}

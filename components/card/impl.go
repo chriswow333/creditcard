@@ -4,19 +4,23 @@ import (
 	"context"
 
 	"example.com/creditcard/components/reward"
+	cardM "example.com/creditcard/models/card"
 	eventM "example.com/creditcard/models/event"
 	"github.com/sirupsen/logrus"
 )
 
 type impl struct {
+	card    *cardM.Card
 	rewards []*reward.Component
 }
 
 func New(
+	card *cardM.Card,
 	rewards []*reward.Component,
 ) Component {
 
 	return &impl{
+		card:    card,
 		rewards: rewards,
 	}
 }

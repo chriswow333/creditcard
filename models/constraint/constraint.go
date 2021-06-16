@@ -50,11 +50,6 @@ const (
 	MoneyBaseType
 )
 
-// type ConstraintBody struct {
-// 	Operator           OperatorType         `json:"operator"`
-// 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
-// }
-
 type ConstraintPayload struct {
 	Operator       OperatorType   `json:"operator"`
 	ConstraintType ConstraintType `json:"constraintType"`

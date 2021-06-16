@@ -5,17 +5,21 @@ import (
 
 	constraintComp "example.com/creditcard/components/constraint"
 	eventM "example.com/creditcard/models/event"
+	rewardM "example.com/creditcard/models/reward"
 	"github.com/sirupsen/logrus"
 )
 
 type impl struct {
+	reward          *rewardM.Reward
 	constraintComps []*constraintComp.Component
 }
 
 func New(
+	reward *rewardM.Reward,
 	constraintComps []*constraintComp.Component,
 ) Component {
 	return &impl{
+		reward:          reward,
 		constraintComps: constraintComps,
 	}
 }
