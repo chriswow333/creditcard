@@ -3,6 +3,7 @@ package constraint
 import (
 	"example.com/creditcard/models/base"
 	"example.com/creditcard/models/ecommerce"
+	"example.com/creditcard/models/limit"
 	"example.com/creditcard/models/mobilepay"
 	"example.com/creditcard/models/onlinegame"
 	"example.com/creditcard/models/streaming"
@@ -26,13 +27,8 @@ type Constraint struct {
 	EndDate    int64 `json:"endDate"`
 	UpdateDate int64 `json:"updateDate"`
 
-	Limit             *Limit             `json:"limit,omitempty"`
+	Limit             *limit.Limit       `json:"limit,omitempty"`
 	ConstraintPayload *ConstraintPayload `json:"constraintPayload,omitempty"`
-}
-
-type Limit struct {
-	Max int `json:"max"`
-	Min int `json:"min"`
 }
 
 type ConstraintType int32

@@ -7,5 +7,5 @@ import (
 )
 
 type Module interface {
-	Evaluate(ctx context.Context, e *eventM.Event) (*eventM.EventResponse, error)
+	Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response, error)
 }

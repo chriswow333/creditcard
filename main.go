@@ -1,12 +1,12 @@
 package main
 
 import (
+	"example.com/creditcard/apis/bank"
+	"example.com/creditcard/apis/card"
+	"example.com/creditcard/apis/constraint"
+	"example.com/creditcard/apis/reward"
 	"example.com/creditcard/base/psql"
 	_ "example.com/creditcard/base/psql"
-	"example.com/creditcard/routes/bank"
-	"example.com/creditcard/routes/card"
-	"example.com/creditcard/routes/constraint"
-	"example.com/creditcard/routes/reward"
 	"go.uber.org/dig"
 
 	"github.com/braintree/manners"

@@ -1,8 +1,8 @@
 package action
 
-type Action int32
+type ActionType int32
 
 const (
-	ConsumeAction Action = iota
+	CostAction ActionType = iota
 	DepositAction
 )
