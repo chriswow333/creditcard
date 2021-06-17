@@ -1,9 +1,9 @@
 package base
 
 type Base struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	Desc string `json:"desc"`
+	ID   string   `json:"id"`
+	Name string   `json:"name"`
+	Desc []string `json:"desc"`
 }
 
 type TimeBase struct {

@@ -2,8 +2,8 @@ package constraint
 
 import (
 	"example.com/creditcard/models/base"
+	"example.com/creditcard/models/cost"
 	"example.com/creditcard/models/ecommerce"
-	"example.com/creditcard/models/limit"
 	"example.com/creditcard/models/mobilepay"
 	"example.com/creditcard/models/onlinegame"
 	"example.com/creditcard/models/streaming"
@@ -27,7 +27,7 @@ type Constraint struct {
 	EndDate    int64 `json:"endDate"`
 	UpdateDate int64 `json:"updateDate"`
 
-	Limit             *limit.Limit       `json:"limit,omitempty"`
+	Cost              *cost.Cost         `json:"limit,omitempty"`
 	ConstraintPayload *ConstraintPayload `json:"constraintPayload,omitempty"`
 }
 
@@ -47,7 +47,9 @@ const (
 )
 
 type ConstraintPayload struct {
+	Name           string         `json:"name"`
 	Operator       OperatorType   `json:"operator"`
+	Descs          []string       `json:"descs"`
 	ConstraintType ConstraintType `json:"constraintType"`
 
 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`

@@ -10,21 +10,27 @@ import (
 )
 
 type impl struct {
-	accountBases []*baseM.AccountBase
-	operator     constraintM.OperatorType
+	accountBases   []*baseM.AccountBase
+	operator       constraintM.OperatorType
+	constraintType constraintM.ConstraintType
+	name           string
+	descs          []string
 }
 
 func New(
-	accountBases []*baseM.AccountBase,
-	operator constraintM.OperatorType,
+	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 
 	return &impl{
-		accountBases: accountBases,
+		accountBases:   constraintPayload.AccountBases,
+		operator:       constraintPayload.Operator,
+		constraintType: constraintPayload.ConstraintType,
+		name:           constraintPayload.Name,
+		descs:          constraintPayload.Descs,
 	}
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
 
 	resp := &eventM.Response{
 		Pass: true,

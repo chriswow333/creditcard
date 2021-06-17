@@ -6,28 +6,71 @@ import (
 	"example.com/creditcard/components/constraint"
 	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
+	"example.com/creditcard/models/mobilepay"
 	mobilepayM "example.com/creditcard/models/mobilepay"
 )
 
 type impl struct {
-	mobilepays []*mobilepayM.Mobilepay
-	operator   constraintM.OperatorType
+	mobilepays     []*mobilepayM.Mobilepay
+	operator       constraintM.OperatorType
+	constraintType constraintM.ConstraintType
+	name           string
+	descs          []string
 }
 
 func New(
-	mobilepays []*mobilepayM.Mobilepay,
-	operator constraintM.OperatorType,
+	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 	return &impl{
-		mobilepays: mobilepays,
+		mobilepays:     constraintPayload.Mobilepays,
+		operator:       constraintPayload.Operator,
+		constraintType: constraintPayload.ConstraintType,
+		name:           constraintPayload.Name,
+		descs:          constraintPayload.Descs,
 	}
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
 
-	resp := &eventM.Response{
-		Pass: false,
+	constraint := &eventM.Constraint{
+		Name:           im.name,
+		Descs:          im.descs,
+		ConstraintType: im.constraintType,
 	}
 
-	return resp, nil
+	matches := []string{}
+	misses := []string{}
+
+	mobilepayMap := make(map[string]*mobilepay.Mobilepay)
+
+	for _, mo := range e.Mobilepays {
+		mobilepayMap[mo.ID] = mo
+
+	}
+
+	for _, mo := range im.mobilepays {
+
+		if _, ok := mobilepayMap[mo.ID]; ok {
+			matches = append(matches, mo.ID)
+		} else {
+			misses = append(misses, mo.ID)
+		}
+	}
+
+	switch im.operator {
+	case constraintM.OrOperator:
+		if len(matches) > 0 {
+			constraint.Pass = true
+		} else {
+			constraint.Pass = false
+		}
+	case constraintM.AndOperator:
+		if len(misses) > 0 {
+			constraint.Pass = false
+		} else {
+			constraint.Pass = true
+		}
+	}
+
+	return constraint, nil
 }

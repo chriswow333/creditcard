@@ -23,7 +23,7 @@ func New(
 	}
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
 
 	resp, err := (*im.component).Judge(ctx, e)
 	if err != nil {

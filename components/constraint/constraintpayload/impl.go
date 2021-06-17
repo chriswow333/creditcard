@@ -25,9 +25,10 @@ func New(
 	}
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
 
 	resps := []*eventM.Response{}
+
 	for _, c := range im.constraints {
 		resp, err := (*c).Judge(ctx, e)
 		if err != nil {

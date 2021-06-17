@@ -25,7 +25,7 @@ func New(
 
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
 
 	// TODO Get Range from time
 
