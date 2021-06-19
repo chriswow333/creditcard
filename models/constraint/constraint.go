@@ -8,6 +8,7 @@ import (
 	"example.com/creditcard/models/onlinegame"
 	"example.com/creditcard/models/streaming"
 	"example.com/creditcard/models/supermarket"
+	"example.com/creditcard/models/timeinterval"
 )
 
 type OperatorType int32
@@ -60,7 +61,7 @@ type ConstraintPayload struct {
 	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames,omitempty"`
 	Streamings   []*streaming.Streaming     `json:"streamings,omitempty"`
 
-	TimeBases    []*base.TimeBase    `json:"timeBases,omitempty"`
-	AccountBases []*base.AccountBase `json:"accountBases,omitempty"`
-	MoneyBases   []*base.MoneyBase   `json:"moneyBases,omitempty"`
+	TimeIntervals []*timeinterval.TimeInterval `json:"timeIntervals,omitempty"`
+	AccountBases  []*base.AccountBase          `json:"accountBases,omitempty"`
+	MoneyBases    []*base.MoneyBase            `json:"moneyBases,omitempty"`
 }

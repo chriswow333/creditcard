@@ -6,20 +6,6 @@ type Base struct {
 	Desc []string `json:"desc"`
 }
 
-type TimeBase struct {
-	Base
-
-	DayFrom     string `json:"day"`
-	WeekDayFrom string `json:"weekDay"`
-	HourFrom    string `json:"hour"`
-	MinuteFrom  string `json:"minute"`
-
-	DayTo     string `json:"dayTo"`
-	WeekDayTo string `json:"weekDayTo"`
-	HourTo    string `json:"hourTo"`
-	MinuteTo  string `json:"minuteTo"`
-}
-
 type AccountBase struct {
 	Base
 

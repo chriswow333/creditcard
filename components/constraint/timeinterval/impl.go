@@ -1,18 +1,18 @@
-package accountbase
+package time
 
 import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
-	baseM "example.com/creditcard/models/base"
 	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
+	"example.com/creditcard/models/timeinterval"
 )
 
 type impl struct {
-	accountBases   []*baseM.AccountBase
+	timeIntervals  []*timeinterval.TimeInterval
 	operator       constraintM.OperatorType
-	constraintType constraintM.ConstraintType
+	constratinType constraintM.ConstraintType
 	name           string
 	descs          []string
 }
@@ -20,11 +20,10 @@ type impl struct {
 func New(
 	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
-
 	return &impl{
-		accountBases:   constraintPayload.AccountBases,
+		timeIntervals:  constraintPayload.TimeIntervals,
 		operator:       constraintPayload.Operator,
-		constraintType: constraintPayload.ConstraintType,
+		constratinType: constraintPayload.ConstraintType,
 		name:           constraintPayload.Name,
 		descs:          constraintPayload.Descs,
 	}
@@ -32,7 +31,7 @@ func New(
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
 
-	for _, := 
+	// TODO Get Range from time
 
-	return resp, nil
+	return nil, nil
 }

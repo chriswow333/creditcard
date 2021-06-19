@@ -46,8 +46,8 @@ type Response struct {
 type Reward struct {
 	Pass        bool          `json:"pass"`
 	Bonus       Bonus         `json:"bonus"`
-	Constraints []*Constraint `json:"constraints"`
 	Descs       []string      `json:"descs"`
+	Constraints []*Constraint `json:"constraints"`
 }
 
 type Constraint struct {
@@ -57,6 +57,7 @@ type Constraint struct {
 	Descs          []string                  `json:"descs"`
 	Matches        []string                  `json:"matches"`
 	Misses         []string                  `json:"misses"`
+	Constraints    []*Constraint             `json:"constraints"`
 }
 
 type Bonus struct {
