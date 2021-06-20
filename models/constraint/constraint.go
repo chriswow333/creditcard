@@ -1,8 +1,8 @@
 package constraint
 
 import (
-	"example.com/creditcard/models/base"
 	"example.com/creditcard/models/cost"
+	"example.com/creditcard/models/customization"
 	"example.com/creditcard/models/ecommerce"
 	"example.com/creditcard/models/mobilepay"
 	"example.com/creditcard/models/onlinegame"
@@ -28,7 +28,6 @@ type Constraint struct {
 	EndDate    int64 `json:"endDate"`
 	UpdateDate int64 `json:"updateDate"`
 
-	Cost              *cost.Cost         `json:"limit,omitempty"`
 	ConstraintPayload *ConstraintPayload `json:"constraintPayload,omitempty"`
 }
 
@@ -36,15 +35,14 @@ type ConstraintType int32
 
 const (
 	ConstraintPayloadType ConstraintType = iota
+	CustomizationType
+	TimeIntervalType
+	CostType
 	MobilepayType
 	EcommerceType
 	SupermarketType
 	OnlinegameType
 	StreamingType
-
-	TimeBaseType
-	AccountBaseType
-	MoneyBaseType
 )
 
 type ConstraintPayload struct {
@@ -55,13 +53,12 @@ type ConstraintPayload struct {
 
 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
 
-	Mobilepays   []*mobilepay.Mobilepay     `json:"mobilepays,omitempty"`
-	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces,omitempty"`
-	Supermarkets []*supermarket.Supermarket `json:"supermarkets,omitempty"`
-	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames,omitempty"`
-	Streamings   []*streaming.Streaming     `json:"streamings,omitempty"`
-
-	TimeIntervals []*timeinterval.TimeInterval `json:"timeIntervals,omitempty"`
-	AccountBases  []*base.AccountBase          `json:"accountBases,omitempty"`
-	MoneyBases    []*base.MoneyBase            `json:"moneyBases,omitempty"`
+	CostLimit      *cost.CostLimit                `json:"costLimit,omitempty"`
+	TimeIntervals  []*timeinterval.TimeInterval   `json:"timeIntervals,omitempty"`
+	Customizations []*customization.Customization `json:"customizations,omitempty"`
+	Mobilepays     []*mobilepay.Mobilepay         `json:"mobilepays,omitempty"`
+	Ecommerces     []*ecommerce.Ecommerce         `json:"ecommerces,omitempty"`
+	Supermarkets   []*supermarket.Supermarket     `json:"supermarkets,omitempty"`
+	Onlinegames    []*onlinegame.Onlinegame       `json:"onlinegames,omitempty"`
+	Streamings     []*streaming.Streaming         `json:"streamings,omitempty"`
 }

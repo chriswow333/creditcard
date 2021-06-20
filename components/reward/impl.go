@@ -4,9 +4,9 @@ import (
 	"context"
 
 	constraintComp "example.com/creditcard/components/constraint"
+	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
 	rewardM "example.com/creditcard/models/reward"
-	"github.com/sirupsen/logrus"
 )
 
 type impl struct {
@@ -18,27 +18,53 @@ func New(
 	reward *rewardM.Reward,
 	constraintComps []*constraintComp.Component,
 ) Component {
+
 	return &impl{
 		reward:          reward,
 		constraintComps: constraintComps,
 	}
 }
 
-func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) ([]*eventM.Response, error) {
+func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Reward, error) {
 
-	resps := []*eventM.Response{}
+	reward := &eventM.Reward{
+		Name:  im.reward.Name,
+		Descs: im.reward.Descs,
+		Bonus: im.reward.Bonus,
+	}
 
+	constraints := []*eventM.Constraint{}
+
+	matches := 0
+	misses := 0
 	for _, c := range im.constraintComps {
-		resp, err := (*c).Judge(ctx, e)
+		constraint, err := (*c).Judge(ctx, e)
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
 			return nil, err
 		}
 
-		resps = append(resps, resp)
+		if constraint.Pass {
+			matches++
+		} else {
+			misses++
+		}
+		constraints = append(constraints, constraint)
 	}
 
-	return resps, nil
+	reward.Constraints = constraints
+	switch im.reward.Operator {
+	case constraintM.OrOperator:
+		if matches > 0 {
+			reward.Pass = true
+		} else {
+			reward.Pass = false
+		}
+	case constraintM.AndOperator:
+		if misses > 0 {
+			reward.Pass = false
+		} else {
+			reward.Pass = true
+		}
+	}
+	return reward, nil
 }
