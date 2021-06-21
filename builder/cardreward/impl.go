@@ -1,22 +1,20 @@
-package creditcardreward
+package cardreward
 
 import (
 	"context"
 
-	bankComp "example.com/creditcard/components/bank"
 	cardComp "example.com/creditcard/components/card"
 	constraintComp "example.com/creditcard/components/constraint"
-	"example.com/creditcard/components/constraint/accountbase"
 	"example.com/creditcard/components/constraint/constraintpayload"
+	"example.com/creditcard/components/constraint/cost"
+	"example.com/creditcard/components/constraint/customization"
 	"example.com/creditcard/components/constraint/ecommerce"
 	"example.com/creditcard/components/constraint/mobilepay"
-	"example.com/creditcard/components/constraint/moneybase"
 	"example.com/creditcard/components/constraint/onlinegame"
 	"example.com/creditcard/components/constraint/streaming"
 	"example.com/creditcard/components/constraint/supermarket"
-	timeBase "example.com/creditcard/components/constraint/timebase"
+	"example.com/creditcard/components/constraint/timeinterval"
 	rewardComp "example.com/creditcard/components/reward"
-	bankM "example.com/creditcard/models/bank"
 	cardM "example.com/creditcard/models/card"
 	constraintM "example.com/creditcard/models/constraint"
 	rewardM "example.com/creditcard/models/reward"
@@ -30,35 +28,24 @@ func New() Builder {
 
 }
 
-func (im *impl) NewCreditcard(ctx context.Context, settings []*bankM.Bank) ([]*bankComp.Component, error) {
+func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*cardComp.Component, error) {
 
-	banks := []*bankComp.Component{}
-	for _, b := range settings {
-		cards := []*cardComp.Component{}
+	rewards := []*rewardComp.Component{}
 
-		for _, c := range b.Cards {
+	for _, r := range setting.Rewards {
 
-			rewards := []*rewardComp.Component{}
+		constraints := []*constraintComp.Component{}
 
-			for _, r := range c.Rewards {
-
-				constraints := []*constraintComp.Component{}
-
-				for _, co := range r.Constraints {
-					constraint, _ := im.getConstraintComponent(ctx, co)
-					constraints = append(constraints, constraint)
-				}
-				reward, _ := im.getRewardComponent(ctx, r, constraints)
-				rewards = append(rewards, reward)
-			}
-			card, _ := im.getCardComponent(ctx, c, rewards)
-			cards = append(cards, card)
+		for _, co := range r.Constraints {
+			constraint, _ := im.getConstraintComponent(ctx, co)
+			constraints = append(constraints, constraint)
 		}
-		bank, _ := im.getBankComponent(ctx, b, cards)
-		banks = append(banks, bank)
+		reward, _ := im.getRewardComponent(ctx, r, constraints)
+		rewards = append(rewards, reward)
 	}
+	card, _ := im.getCardComponent(ctx, setting, rewards)
 
-	return banks, nil
+	return card, nil
 }
 
 func (im *impl) getConstraintComponent(ctx context.Context, c *constraintM.Constraint) (*constraintComp.Component, error) {
@@ -90,21 +77,21 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 		}
 
 	case constraintM.MobilepayType:
-		constraintComponent = mobilepay.New(payload.Mobilepays, payload.Operator)
+		constraintComponent = mobilepay.New(payload)
 	case constraintM.EcommerceType:
-		constraintComponent = ecommerce.New(payload.Ecommerces, payload.Operator)
+		constraintComponent = ecommerce.New(payload)
 	case constraintM.SupermarketType:
-		constraintComponent = supermarket.New(payload.Supermarkets, payload.Operator)
+		constraintComponent = supermarket.New(payload)
 	case constraintM.OnlinegameType:
-		constraintComponent = onlinegame.New(payload.Onlinegames, payload.Operator)
+		constraintComponent = onlinegame.New(payload)
 	case constraintM.StreamingType:
-		constraintComponent = streaming.New(payload.Streamings, payload.Operator)
-	case constraintM.TimeBaseType:
-		constraintComponent = timeBase.New(payload.TimeBases, payload.Operator)
-	case constraintM.AccountBaseType:
-		constraintComponent = accountbase.New(payload.AccountBases, payload.Operator)
-	case constraintM.MoneyBaseType:
-		constraintComponent = moneybase.New(payload.MoneyBases, payload.Operator)
+		constraintComponent = streaming.New(payload)
+	case constraintM.CostType:
+		constraintComponent = cost.New(payload)
+	case constraintM.TimeIntervalType:
+		constraintComponent = timeinterval.New(payload)
+	case constraintM.CustomizationType:
+		constraintComponent = customization.New(payload)
 	default:
 		return nil, nil
 	}
@@ -113,7 +100,7 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 		constraintComponents = append(constraintComponents, &constraintComponent)
 	}
 
-	payloadCompoent := constraintpayload.New(constraintComponents, payload.Operator)
+	payloadCompoent := constraintpayload.New(constraintComponents, payload)
 	return &payloadCompoent, nil
 }
 
@@ -127,11 +114,5 @@ func (im *impl) getCardComponent(ctx context.Context, card *cardM.Card, rewards 
 
 	component := cardComp.New(card, rewards)
 
-	return &component, nil
-}
-
-func (im *impl) getBankComponent(ctx context.Context, bank *bankM.Bank, cards []*cardComp.Component) (*bankComp.Component, error) {
-
-	component := bankComp.New(bank, cards)
 	return &component, nil
 }

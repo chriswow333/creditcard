@@ -14,11 +14,10 @@ type impl struct {
 }
 
 func New(
-	costLimit *costM.CostLimit,
+	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
-
 	return &impl{
-		costLimit: costLimit,
+		costLimit: constraintPayload.CostLimit,
 	}
 }
 

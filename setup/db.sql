@@ -15,7 +15,7 @@ DROP TABLE card;
 create table card (
     "id" VARCHAR(36) PRIMARY KEY,
     bank_id VARCHAR(36), 
-	"name" varchar(100),
+	"name" VARCHAR(100),
 	"desc" TEXT,
 	start_date BIGINT,
 	end_date BIGINT,
@@ -24,33 +24,20 @@ create table card (
 );
 
 
-DROP TABLE privilage;
-create table privilage (
+DROP TABLE reward;
+create table reward (
     "id" VARCHAR(36) PRIMARY KEY,
     card_id VARCHAR(36), 
-	"name" varchar(100),
-	"desc" TEXT,
+	"name" VARCHAR(100),
+	"desc" JSON,
+    operator INTEGER,
 	start_date BIGINT,
 	end_date BIGINT,
 	update_date BIGINT,
-	score float8,
+    bonus JSON,
+    constraints JSON,
     FOREIGN KEY(card_id) REFERENCES CARD("id")
 );
-
-DROP TABLE "constraint";
-create table "constraint" (
-    "id" VARCHAR(36) PRIMARY KEY,
-    privilage_id VARCHAR(36), 
-	"name" varchar(100),
-	"desc" TEXT,
-	start_date BIGINT,
-	end_date BIGINT,
-	update_date BIGINT,
-	limit_mx INTEGER,
-	limit_mn INTEGER, 
-	constraint_body json
-);
-
 
 
 
@@ -59,7 +46,7 @@ create table "constraint" (
 DROP TABLE mobilepay;
 create table mobilepay (
     "id" VARCHAR(36) PRIMARY KEY,
-	"name" varchar(100),
+	"name" VARCHAR(100),
 	"action" INTEGER,
     "desc" TEXT,
 	PRIMARY KEY("id", "action")
@@ -82,7 +69,7 @@ INSERT INTO public.mobilepay(id, "name", "action", "desc")values ('PXPay', 'PX P
 DROP TABLE ecommerce;
 create table ecommerce (
     "id" VARCHAR(36) PRIMARY KEY,
-	"name" varchar(100),
+	"name" VARCHAR(100),
 	"action" INTEGER,
     "desc" TEXT,
 	PRIMARY KEY("id", "action")
@@ -100,7 +87,7 @@ INSERT INTO public.ecommerce(id, "name", "action", "desc")values ('DECATHLON', '
 DROP TABLE supermarket;
 create table supermarket (
     "id" VARCHAR(36) PRIMARY KEY,
-	"name" varchar(100),
+	"name" VARCHAR(100),
 	"action" INTEGER,
     "desc" TEXT,
 	PRIMARY KEY("id", "action")
@@ -115,7 +102,7 @@ INSERT INTO public.supermarket(id, "name", "action", "desc")values ('PxMart', 'P
 DROP TABLE onlinegame;
 create table onlinegame (
     "id" VARCHAR(36) PRIMARY KEY,
-	"name" varchar(100),
+	"name" VARCHAR(100),
 	"action" INTEGER,
     "desc" TEXT
 );
@@ -130,7 +117,7 @@ INSERT INTO public.onlinegame(id, "name", "action", "desc")values ('Beanfun', 'B
 DROP TABLE streaming;
 create table streaming (
     "id" VARCHAR(36) PRIMARY KEY,
-	"name" varchar(100),
+	"name" VARCHAR(100),
 	"action" INTEGER,
     "desc" TEXT
 );
@@ -140,7 +127,16 @@ INSERT INTO public.streaming(id, "name", "action", "desc")values ('Netflix', 'Ne
 INSERT INTO public.streaming(id, "name", "action", "desc")values ('CATCHPLAY+', 'CATCHPLAY+', 0,  'CATCHPLAY+');
 
 
+DROP TABLE customization; 
+CREATE TABLE customization (
+    "id" VARCHAR(36) PRIMARY KEY,
+    "reward_id" VARCHAR(36),
+    "name" VARCHAR(100),
+    "descs" JSON
+	FOREIGN KEY(reward_id) REFERENCES reward("id")
+)
 
+/*
 DROP TABLE base;
 create table base (
     "id" VARCHAR(36) PRIMARY KEY,
@@ -162,6 +158,9 @@ values (gen_random_uuid(), '0ac94dfe-9604-472e-4738-fecdeac91ef1', '榜定Richar
 INSERT INTO public.base("id", "bank_id", "name", "desc", "target_from", "target_to", "base_type", "unit", "action") 
 values (gen_random_uuid(), '0ac94dfe-9604-472e-4738-fecdeac91ef1', '消費滿5000元',  '', 
 		'5000', '', 1, 2, 0);
+
+*/
+
 
 /**
 

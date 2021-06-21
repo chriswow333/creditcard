@@ -17,7 +17,7 @@ type impl struct {
 }
 
 func New(
-	constraintPayload constraintM.ConstraintPayload,
+	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 	return &impl{
 		customizations: constraintPayload.Customizations,

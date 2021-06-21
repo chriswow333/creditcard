@@ -5,15 +5,15 @@ type TimeInterval struct {
 	Name string   `json:"name"`
 	Desc []string `json:"desc"`
 
-	DayFrom string `json:"day"`
-	DayTo   string `json:"dayTo"`
+	DayFrom int32 `json:"day"`
+	DayTo   int32 `json:"dayTo"`
 
-	WeekDayFrom string `json:"weekDay"`
-	WeekDayTo   string `json:"weekDayTo"`
+	WeekDayFrom int32 `json:"weekDay"`
+	WeekDayTo   int32 `json:"weekDayTo"`
 
-	HourFrom string `json:"hour"`
-	HourTo   string `json:"hourTo"`
+	HourFrom int32 `json:"hour"`
+	HourTo   int32 `json:"hourTo"`
 
-	MinuteFrom string `json:"minute"`
-	MinuteTo   string `json:"minuteTo"`
+	MinuteFrom int32 `json:"minute"`
+	MinuteTo   int32 `json:"minuteTo"`
 }

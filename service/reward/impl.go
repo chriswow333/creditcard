@@ -61,15 +61,6 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error)
 	return reward, nil
 }
 
-func (im *impl) GetAll(ctx context.Context) ([]*rewardM.Reward, error) {
-	rewards, err := im.rewardStore.GetAll(ctx)
-	if err != nil {
-		logrus.Error(err)
-		return nil, err
-	}
-	return rewards, nil
-}
-
 func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Reward, error) {
 	rewards, err := im.rewardStore.GetByCardID(ctx, cardID)
 	if err != nil {

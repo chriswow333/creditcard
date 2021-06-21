@@ -7,8 +7,6 @@ import (
 )
 
 type Service interface {
-	Create(ctx context.Context, constraint *constraintM.Constraint) error
-	GetByID(ctxt context.Context, ID string) (*constraintM.Constraint, error)
-	GetAll(ctx context.Context) ([]*constraintM.Constraint, error)
+	Create(ctx context.Context, rewardID string, constraints []*constraintM.Constraint) error
 	GetByRewardID(ctx context.Context, rewardID string) ([]*constraintM.Constraint, error)
 }

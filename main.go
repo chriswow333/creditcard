@@ -22,9 +22,6 @@ import (
 
 	rewardService "example.com/creditcard/service/reward"
 	rewardStore "example.com/creditcard/stores/reward"
-
-	constraintService "example.com/creditcard/service/constraint"
-	constraintStore "example.com/creditcard/stores/constraint"
 )
 
 func BuildContainer() *dig.Container {
@@ -44,10 +41,6 @@ func BuildContainer() *dig.Container {
 	container.Provide(rewardService.New)
 	container.Provide(rewardStore.New)
 
-	// constraint module
-	container.Provide(constraintService.New)
-	container.Provide(constraintStore.New)
-
 	// gin server
 	container.Provide(NewServer)
 	return container
@@ -57,7 +50,6 @@ func NewServer(
 	bankSrc bankService.Service,
 	cardSrc cardService.Service,
 	rewardSrc rewardService.Service,
-	constraintSrc constraintService.Service,
 
 ) *gin.Engine {
 

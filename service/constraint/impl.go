@@ -4,85 +4,37 @@ import (
 	"context"
 
 	constraintM "example.com/creditcard/models/constraint"
-	"example.com/creditcard/stores/constraint"
-	"github.com/sirupsen/logrus"
-	"go.uber.org/dig"
-
-	uuid "github.com/nu7hatch/gouuid"
+	"example.com/creditcard/stores/reward"
 )
 
 type impl struct {
-	dig.In
-
-	constraintStore constraint.Store
+	rewardStore reward.Store
 }
 
 func New(
-	constraintStore constraint.Store,
+	rewardStore reward.Store,
 ) Service {
-
-	im := &impl{
-		constraintStore: constraintStore,
+	return &impl{
+		rewardStore: rewardStore,
 	}
-	return im
 }
 
-func (im *impl) Create(ctx context.Context, constraint *constraintM.Constraint) error {
-
-	id, err := uuid.NewV4()
+func (im *impl) Create(ctx context.Context, rewardID string, constraints []*constraintM.Constraint) error {
+	reward, err := im.rewardStore.GetByID(ctx, rewardID)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
 		return err
 	}
-
-	constraint.ID = id.String()
-
-	if err := im.constraintStore.Create(ctx, constraint); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+	reward.Constraints = constraints
+	if err := im.rewardStore.UpdateByID(ctx, reward); err != nil {
 		return err
 	}
-
 	return nil
 }
 
-func (im *impl) GetByID(ctx context.Context, ID string) (*constraintM.Constraint, error) {
-
-	constraint, err := im.constraintStore.GetByID(ctx, ID)
-
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
-		return nil, err
-	}
-
-	return constraint, nil
-}
-
-func (im *impl) GetAll(ctx context.Context) ([]*constraintM.Constraint, error) {
-
-	constraints, err := im.constraintStore.GetAll(ctx)
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
-		return nil, err
-	}
-	return constraints, nil
-}
-
 func (im *impl) GetByRewardID(ctx context.Context, rewardID string) ([]*constraintM.Constraint, error) {
-
-	constraints, err := im.constraintStore.GetByRewardID(ctx, rewardID)
+	rewardModel, err := im.rewardStore.GetByID(ctx, rewardID)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
 		return nil, err
 	}
-	return constraints, nil
+	return rewardModel.Constraints, nil
 }

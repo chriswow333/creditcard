@@ -1,4 +1,4 @@
-package time
+package timeinterval
 
 import (
 	"context"
@@ -10,28 +10,33 @@ import (
 )
 
 type impl struct {
-	timeIntervals  []*timeinterval.TimeInterval
-	operator       constraintM.OperatorType
-	constratinType constraintM.ConstraintType
-	name           string
-	descs          []string
+	timeIntervals []*timeinterval.TimeInterval
+	operator      constraintM.OperatorType
+	name          string
+	descs         []string
 }
 
 func New(
 	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 	return &impl{
-		timeIntervals:  constraintPayload.TimeIntervals,
-		operator:       constraintPayload.Operator,
-		constratinType: constraintPayload.ConstraintType,
-		name:           constraintPayload.Name,
-		descs:          constraintPayload.Descs,
+		timeIntervals: constraintPayload.TimeIntervals,
+		operator:      constraintPayload.Operator,
+		name:          constraintPayload.Name,
+		descs:         constraintPayload.Descs,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
 
 	// TODO Get Range from time
+	constraint := &eventM.Constraint{
+		Name:           im.name,
+		Descs:          im.descs,
+		ConstraintType: constraintM.TimeIntervalType,
+	}
 
-	return nil, nil
+	//Using calandar
+
+	return constraint, nil
 }
