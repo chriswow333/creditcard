@@ -18,12 +18,15 @@ import (
 	cardM "example.com/creditcard/models/card"
 	constraintM "example.com/creditcard/models/constraint"
 	rewardM "example.com/creditcard/models/reward"
+	"go.uber.org/dig"
 )
 
 type impl struct {
+	*dig.In
 }
 
 func New() Builder {
+
 	return &impl{}
 
 }

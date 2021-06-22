@@ -7,33 +7,33 @@ import (
 	cardComp "example.com/creditcard/components/card"
 	eventM "example.com/creditcard/models/event"
 	cardService "example.com/creditcard/service/card"
-	constraintService "example.com/creditcard/service/constraint"
 	rewardService "example.com/creditcard/service/reward"
+	"go.uber.org/dig"
 )
 
 type impl struct {
-	cards             map[string]*cardEvaluator
-	constraintService constraintService.Service
-	cardService       cardService.Service
-	rewardService     rewardService.Service
-	cardBuilder       cardreward.Builder
+	dig.In
+
+	cards         map[string]*cardEvaluator
+	cardService   cardService.Service
+	rewardService rewardService.Service
+	cardBuilder   cardreward.Builder
 }
 
 type cardEvaluator struct {
+	ID           string
 	cardCompnent *cardComp.Component
 }
 
 func New(
-	constraintService constraintService.Service,
 	cardService cardService.Service,
 	rewardService rewardService.Service,
 	cardBuilder cardreward.Builder,
 ) Module {
 	im := &impl{
-		constraintService: constraintService,
-		cardService:       cardService,
-		rewardService:     rewardService,
-		cardBuilder:       cardBuilder,
+		cardService:   cardService,
+		rewardService: rewardService,
+		cardBuilder:   cardBuilder,
 	}
 
 	// init the card component
@@ -80,5 +80,44 @@ func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) erro
 
 func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
 
-	return nil, nil
+	resp := &eventM.Response{
+		EventID: e.ID,
+	}
+
+	specificedCardID := make(map[string]bool)
+	for _, c := range e.CardIDs {
+		specificedCardID[c] = true
+	}
+
+	cards := []*eventM.Card{}
+
+	for _, c := range im.cards {
+		if len(e.CardIDs) != 0 {
+			if _, ok := specificedCardID[c.ID]; ok {
+				card, err := im.evaluateCard(ctx, e, *c.cardCompnent)
+				if err != nil {
+					return nil, err
+				}
+				cards = append(cards, card)
+			}
+		} else {
+			card, err := im.evaluateCard(ctx, e, *c.cardCompnent)
+			if err != nil {
+				return nil, err
+			}
+			cards = append(cards, card)
+		}
+	}
+
+	resp.Cards = cards
+	return resp, nil
+}
+
+func (im *impl) evaluateCard(ctx context.Context, e *eventM.Event, cardComp cardComp.Component) (*eventM.Card, error) {
+
+	card, err := cardComp.Satisfy(ctx, e)
+	if err != nil {
+		return nil, err
+	}
+	return card, nil
 }

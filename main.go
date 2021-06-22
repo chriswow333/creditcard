@@ -3,7 +3,7 @@ package main
 import (
 	"example.com/creditcard/apis/bank"
 	"example.com/creditcard/apis/card"
-	"example.com/creditcard/apis/constraint"
+	"example.com/creditcard/apis/evaluator"
 	"example.com/creditcard/apis/reward"
 	"example.com/creditcard/base/psql"
 	_ "example.com/creditcard/base/psql"
@@ -15,13 +15,17 @@ import (
 	"github.com/sirupsen/logrus"
 
 	bankService "example.com/creditcard/service/bank"
-	bankStore "example.com/creditcard/stores/bank"
-
 	cardService "example.com/creditcard/service/card"
-	cardStore "example.com/creditcard/stores/card"
-
+	constraintService "example.com/creditcard/service/constraint"
 	rewardService "example.com/creditcard/service/reward"
+
+	bankStore "example.com/creditcard/stores/bank"
+	cardStore "example.com/creditcard/stores/card"
 	rewardStore "example.com/creditcard/stores/reward"
+
+	cardrewardBuilder "example.com/creditcard/builder/cardreward"
+
+	evaluatorModule "example.com/creditcard/modules/evaluator"
 )
 
 func BuildContainer() *dig.Container {
@@ -29,17 +33,22 @@ func BuildContainer() *dig.Container {
 	container := dig.New()
 	container.Provide(psql.NewPsql) // new postgres
 
-	// bank module
+	// service
 	container.Provide(bankService.New)
-	container.Provide(bankStore.New)
-
-	// card module
 	container.Provide(cardService.New)
-	container.Provide(cardStore.New)
-
-	// privlage module
 	container.Provide(rewardService.New)
+	container.Provide(constraintService.New)
+
+	// store
+	container.Provide(bankStore.New)
+	container.Provide(cardStore.New)
 	container.Provide(rewardStore.New)
+
+	// builder
+	container.Provide(cardrewardBuilder.New)
+
+	// module
+	container.Provide(evaluatorModule.New)
 
 	// gin server
 	container.Provide(NewServer)
@@ -51,6 +60,8 @@ func NewServer(
 	cardSrc cardService.Service,
 	rewardSrc rewardService.Service,
 
+	evaluatorMod evaluatorModule.Module,
+
 ) *gin.Engine {
 
 	router := gin.Default()
@@ -61,7 +72,7 @@ func NewServer(
 	bank.NewBankHandle(v1.Group("/bank"), bankSrc)
 	card.NewCardHandler(v1.Group("/card"), cardSrc)
 	reward.NewrewardHandler(v1.Group("/reward"), rewardSrc)
-	constraint.NewConstraintHandler(v1.Group("/constraint"), constraintSrc)
+	evaluator.NewEvaluatorHandler(v1.Group("/evaluator"), evaluatorMod)
 
 	return router
 }

@@ -7,5 +7,5 @@ import (
 )
 
 type Component interface {
-	Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Response, error)
+	Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Card, error)
 }

@@ -1,7 +1,6 @@
 package reward
 
 import (
-	"fmt"
 	"net/http"
 
 	"go.uber.org/dig"
@@ -30,7 +29,6 @@ func NewrewardHandler(
 		rewardSrc: rewardSrc,
 	}
 
-	apis.Handle(rg, http.MethodGet, "", ph.getAll)
 	apis.Handle(rg, http.MethodPost, "", ph.create)
 	apis.Handle(rg, http.MethodGet, "/:ID", ph.get)
 	apis.Handle(rg, http.MethodGet, "/cardID/:cardID", ph.getByCardID)
@@ -40,7 +38,6 @@ func (h *rewardHandler) create(ctx *gin.Context) {
 	var rewardModel rewardM.Reward
 
 	ctx.BindJSON(&rewardModel)
-	fmt.Println(rewardModel)
 	if err := h.rewardSrc.Create(ctx, &rewardModel); err != nil {
 		logrus.Error(err)
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -60,17 +57,6 @@ func (h *rewardHandler) get(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, reward)
-}
-
-func (h *rewardHandler) getAll(ctx *gin.Context) {
-	rewards, err := h.rewardSrc.GetAll(ctx)
-	if err != nil {
-		logrus.Error(err)
-		ctx.JSON(http.StatusInternalServerError, err)
-		return
-	}
-
-	ctx.JSON(http.StatusOK, rewards)
 }
 
 func (h *rewardHandler) getByCardID(ctx *gin.Context) {

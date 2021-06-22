@@ -25,21 +25,28 @@ func New(
 	}
 }
 
-func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
+func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Card, error) {
 
-	resp := &eventM.Response{}
-
+	card := &eventM.Card{
+		Name:      im.card.Name,
+		Descs:     im.card.Descs,
+		StartDate: im.card.StartDate,
+		EndDate:   im.card.EndDate,
+		LinkURL:   im.card.LinkURL,
+	}
+	rewards := []*eventM.Reward{}
 	for _, r := range im.rewards {
-		_, err := (*r).Satisfy(ctx, e)
-
+		reward, err := (*r).Satisfy(ctx, e)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"": "",
 			}).Error(err)
 			return nil, err
-
 		}
+		rewards = append(rewards, reward)
 	}
 
-	return resp, nil
+	card.Rewards = rewards
+
+	return card, nil
 }

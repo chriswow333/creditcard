@@ -4,7 +4,6 @@ import (
 	"example.com/creditcard/models/action"
 	"example.com/creditcard/models/bankaccount"
 	"example.com/creditcard/models/bonus"
-	"example.com/creditcard/models/card"
 	"example.com/creditcard/models/constraint"
 	"example.com/creditcard/models/cost"
 	"example.com/creditcard/models/customization"
@@ -18,6 +17,7 @@ import (
 type Event struct {
 	ID string
 
+	CardIDs       []string           `json:"cards,omitempty"`
 	Cost          *cost.CurrentCost  `json:"cost"`
 	EffictiveTime int64              `json:"effictiveTime"`
 	ActionType    *action.ActionType `json:"actionType"`
@@ -30,12 +30,15 @@ type Event struct {
 	Streamings   []*streaming.Streaming     `json:"streamings,omitempty"`
 
 	Mobilepays   []*mobilepay.Mobilepay     `json:"mobilpays,omitempty"`
-	Cards        []*card.Card               `json:"cards,omitempty"`
 	BankAccounts []*bankaccount.BankAccount `json:"bankAccounts,omitempty"`
 }
 
 type Response struct {
-	EventID   string   `json:"eventID"`
+	EventID string  `json:"eventID"`
+	Cards   []*Card `json:"cards,omitempty"`
+}
+
+type Card struct {
 	Name      string   `json:"name"`
 	Descs     []string `json:"descs"`
 	StartDate int64    `json:"startDate"`
