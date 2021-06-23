@@ -1,9 +1,9 @@
-package constraint
+package bonus
 
 import (
 	"context"
 
-	constraintM "example.com/creditcard/models/constraint"
+	bonusM "example.com/creditcard/models/bonus"
 	"example.com/creditcard/stores/reward"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -23,14 +23,14 @@ func New(
 	}
 }
 
-func (im *impl) UpdateByRewardID(ctx context.Context, rewardID string, constraints []*constraintM.Constraint) error {
+func (im *impl) UpdateByRewardID(ctx context.Context, rewardID string, bonus *bonusM.Bonus) error {
 
 	reward, err := im.rewardStore.GetByID(ctx, rewardID)
 	if err != nil {
 		logrus.Error(err)
 		return err
 	}
-	reward.Constraints = constraints
+	reward.Bonus = bonus
 	if err := im.rewardStore.UpdateByID(ctx, reward); err != nil {
 		logrus.Error(err)
 		return err
@@ -38,11 +38,11 @@ func (im *impl) UpdateByRewardID(ctx context.Context, rewardID string, constrain
 	return nil
 }
 
-func (im *impl) GetByRewardID(ctx context.Context, rewardID string) ([]*constraintM.Constraint, error) {
+func (im *impl) GetByRewardID(ctx context.Context, rewardID string) (*bonusM.Bonus, error) {
 	rewardModel, err := im.rewardStore.GetByID(ctx, rewardID)
 	if err != nil {
 		logrus.Error(err)
 		return nil, err
 	}
-	return rewardModel.Constraints, nil
+	return rewardModel.Bonus, nil
 }

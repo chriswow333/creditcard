@@ -29,7 +29,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Reward, e
 
 	reward := &eventM.Reward{
 		Name:  im.reward.Name,
-		Descs: im.reward.Descs,
+		Desc:  im.reward.Desc,
 		Bonus: im.reward.Bonus,
 	}
 

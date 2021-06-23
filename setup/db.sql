@@ -9,7 +9,7 @@ create table bank (
 	end_date BIGINT,
 	update_date BIGINT
 );
-
+INSERT INTO bank ("id", "name", "desc", "start_date", "end_date", "update_date")VALUES('c6f9c053-2ccd-4178-9d42-9853e950d500','台新銀行','',1624369053,1624369053,1624369053);
 
 DROP TABLE card;
 create table card (
@@ -24,12 +24,14 @@ create table card (
 );
 
 
+INSERT INTO card ("id", "bank_id", "name", "desc", "start_date", "end_date", "update_date") VALUES('96d7ba6a-227a-45f2-8b78-f92223353316', 'c6f9c053-2ccd-4178-9d42-9853e950d500', 'Richart GoGo卡', '', 1624369053,1624369053,1624369053);
+
 DROP TABLE reward;
 create table reward (
     "id" VARCHAR(36) PRIMARY KEY,
     card_id VARCHAR(36), 
 	"name" VARCHAR(100),
-	"desc" JSON,
+	"desc" TEXT,
     operator INTEGER,
 	start_date BIGINT,
 	end_date BIGINT,
@@ -40,6 +42,14 @@ create table reward (
 );
 
 
+DROP TABLE customization; 
+CREATE TABLE customization (
+    "id" VARCHAR(36) PRIMARY KEY,
+    "reward_id" VARCHAR(36),
+    "name" VARCHAR(100),
+    "descs" JSON,
+	FOREIGN KEY(reward_id) REFERENCES reward("id")
+)
 
 
 
@@ -127,14 +137,23 @@ INSERT INTO public.streaming(id, "name", "action", "desc")values ('Netflix', 'Ne
 INSERT INTO public.streaming(id, "name", "action", "desc")values ('CATCHPLAY+', 'CATCHPLAY+', 0,  'CATCHPLAY+');
 
 
-DROP TABLE customization; 
-CREATE TABLE customization (
-    "id" VARCHAR(36) PRIMARY KEY,
-    "reward_id" VARCHAR(36),
-    "name" VARCHAR(100),
-    "descs" JSON
-	FOREIGN KEY(reward_id) REFERENCES reward("id")
-)
+
+
+
+/*
+
+{
+    "name":"台新銀行",
+    "cardID":"96d7ba6a-227a-45f2-8b78-f92223353316",
+    "name":"GoGo卡 不只網購，更懂生活",
+    "desc":"@GoGo卡12大數位通路(網購/Pay/影音)最高6%，指定餐飲/健身/按摩等最高3%！, 綁Pay是標配！網購/健身/享樂也hen會！",
+    "startDate":1625097600,
+    "endDate":1643587200,
+    "updateDate":1624412547,
+    "operator":1
+}
+
+*/
 
 /*
 DROP TABLE base;

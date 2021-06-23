@@ -9,7 +9,7 @@ type Reward struct {
 	ID         string       `json:"id"`
 	CardID     string       `json:"cardID"`
 	Name       string       `json:"name"`
-	Descs      []string     `json:"descs"`
+	Desc       string       `json:"desc"`
 	StartDate  int64        `json:"startDate"`
 	EndDate    int64        `json:"endDate"`
 	UpdateDate int64        `json:"updateDate"`

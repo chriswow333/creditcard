@@ -29,7 +29,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Card, err
 
 	card := &eventM.Card{
 		Name:      im.card.Name,
-		Descs:     im.card.Descs,
+		Desc:      im.card.Desc,
 		StartDate: im.card.StartDate,
 		EndDate:   im.card.EndDate,
 		LinkURL:   im.card.LinkURL,

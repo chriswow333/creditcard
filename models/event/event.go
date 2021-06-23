@@ -39,10 +39,10 @@ type Response struct {
 }
 
 type Card struct {
-	Name      string   `json:"name"`
-	Descs     []string `json:"descs"`
-	StartDate int64    `json:"startDate"`
-	EndDate   int64    `json:"endDate"`
+	Name      string `json:"name"`
+	Desc      string `json:"desc"`
+	StartDate int64  `json:"startDate"`
+	EndDate   int64  `json:"endDate"`
 
 	Rewards    []*Reward    `json:"rewards"`
 	TotalBonus *bonus.Bonus `json:"totalBonus"`
@@ -54,7 +54,7 @@ type Reward struct {
 	Pass        bool         `json:"pass"`
 	Bonus       *bonus.Bonus `json:"bonus"`
 	Name        string
-	Descs       []string                `json:"descs"`
+	Desc        string                  `json:"desc"`
 	Operator    constraint.OperatorType `json:"operator,omitempty"`
 	Constraints []*Constraint           `json:"constraints,omitempty"`
 }

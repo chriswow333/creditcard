@@ -3,12 +3,15 @@ package evaluator
 import (
 	"context"
 
+	"go.uber.org/dig"
+
+	"github.com/sirupsen/logrus"
+
 	"example.com/creditcard/builder/cardreward"
 	cardComp "example.com/creditcard/components/card"
 	eventM "example.com/creditcard/models/event"
 	cardService "example.com/creditcard/service/card"
 	rewardService "example.com/creditcard/service/reward"
-	"go.uber.org/dig"
 )
 
 type impl struct {
@@ -31,6 +34,7 @@ func New(
 	cardBuilder cardreward.Builder,
 ) Module {
 	im := &impl{
+		cards:         make(map[string]*cardEvaluator),
 		cardService:   cardService,
 		rewardService: rewardService,
 		cardBuilder:   cardBuilder,
@@ -38,7 +42,7 @@ func New(
 
 	// init the card component
 	if err := im.UpdateAllComponents(context.Background()); err != nil {
-		panic(err)
+		logrus.Error(err)
 	}
 
 	return im
@@ -47,11 +51,13 @@ func New(
 func (im *impl) UpdateAllComponents(ctx context.Context) error {
 	cards, err := im.cardService.GetAll(ctx)
 	if err != nil {
+		logrus.Error(err)
 		return err
 	}
 
 	for _, card := range cards {
 		if err := im.UpdateComponentByCardID(ctx, card.ID); err != nil {
+			logrus.Error(err)
 			return err
 		}
 	}
@@ -63,18 +69,27 @@ func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) erro
 
 	card, err := im.cardService.GetByID(ctx, cardID)
 	if err != nil {
+		logrus.Error(err)
 		return err
 	}
 
+	rewards, err := im.rewardService.GetByCardID(ctx, cardID)
+	if err != nil {
+		logrus.Error(err)
+		return err
+	}
+
+	card.Rewards = rewards
+
 	cardCompnent, err := im.cardBuilder.BuildCardComponent(ctx, card)
 	if err != nil {
+		logrus.Error(err)
 		return nil
 	}
 
 	im.cards[cardID] = &cardEvaluator{
 		cardCompnent: cardCompnent,
 	}
-
 	return nil
 }
 

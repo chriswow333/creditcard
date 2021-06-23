@@ -2,7 +2,9 @@ package main
 
 import (
 	"example.com/creditcard/apis/bank"
+	"example.com/creditcard/apis/bonus"
 	"example.com/creditcard/apis/card"
+	"example.com/creditcard/apis/constraint"
 	"example.com/creditcard/apis/evaluator"
 	"example.com/creditcard/apis/reward"
 	"example.com/creditcard/base/psql"
@@ -15,6 +17,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	bankService "example.com/creditcard/service/bank"
+	bonusService "example.com/creditcard/service/bonus"
 	cardService "example.com/creditcard/service/card"
 	constraintService "example.com/creditcard/service/constraint"
 	rewardService "example.com/creditcard/service/reward"
@@ -38,6 +41,7 @@ func BuildContainer() *dig.Container {
 	container.Provide(cardService.New)
 	container.Provide(rewardService.New)
 	container.Provide(constraintService.New)
+	container.Provide(bonusService.New)
 
 	// store
 	container.Provide(bankStore.New)
@@ -59,6 +63,8 @@ func NewServer(
 	bankSrc bankService.Service,
 	cardSrc cardService.Service,
 	rewardSrc rewardService.Service,
+	constraintSrc constraintService.Service,
+	bonusSrc bonusService.Service,
 
 	evaluatorMod evaluatorModule.Module,
 
@@ -73,6 +79,8 @@ func NewServer(
 	card.NewCardHandler(v1.Group("/card"), cardSrc)
 	reward.NewrewardHandler(v1.Group("/reward"), rewardSrc)
 	evaluator.NewEvaluatorHandler(v1.Group("/evaluator"), evaluatorMod)
+	constraint.NewConstraintHandler(v1.Group("/constraint"), constraintSrc)
+	bonus.NewBonusHandler(v1.Group("/bonus"), bonusSrc)
 
 	return router
 }

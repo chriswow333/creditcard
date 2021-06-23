@@ -31,6 +31,7 @@ func NewrewardHandler(
 
 	apis.Handle(rg, http.MethodPost, "", ph.create)
 	apis.Handle(rg, http.MethodGet, "/:ID", ph.get)
+	apis.Handle(rg, http.MethodPost, "/:ID", ph.updateByID)
 	apis.Handle(rg, http.MethodGet, "/cardID/:cardID", ph.getByCardID)
 }
 
@@ -70,4 +71,17 @@ func (h *rewardHandler) getByCardID(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, rewards)
+}
+
+func (h *rewardHandler) updateByID(ctx *gin.Context) {
+	var rewardModel rewardM.Reward
+
+	ctx.BindJSON(&rewardModel)
+	if err := h.rewardSrc.UpdateByID(ctx, &rewardModel); err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": "ok"})
 }

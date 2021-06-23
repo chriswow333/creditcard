@@ -25,7 +25,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint,
 
 	constraint := &eventM.Constraint{
 		Name:           im.costLimit.Name,
-		Descs:          im.costLimit.Descs,
+		Descs:          []string{im.costLimit.Desc},
 		ConstraintType: constraintM.CostType,
 	}
 

@@ -1,9 +1,9 @@
 package timeinterval
 
 type TimeInterval struct {
-	ID   string   `json:"id"`
-	Name string   `json:"name"`
-	Desc []string `json:"desc"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Desc string `json:"desc"`
 
 	DayFrom int32 `json:"day"`
 	DayTo   int32 `json:"dayTo"`

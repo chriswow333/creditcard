@@ -2,6 +2,7 @@ package reward
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
@@ -23,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_REWARD_STAT = "INSERT INTO reward " +
-	"(\"id\", \"card_id\", \"name\", \"descs\", start_date, end_date, update_date, bonus, operator, constraints)" +
+	"(\"id\", \"card_id\", \"name\", \"desc\", start_date, end_date, update_date, bonus, operator, constraints)" +
 	" VALUES($1,$2,$3,$4,$5,$6,$7,$8, $9, $10)"
 
 func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
@@ -37,12 +38,12 @@ func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 		return err
 	}
 	defer tx.Rollback()
-
+	fmt.Println(reward.Bonus)
 	updater := []interface{}{
 		reward.ID,
 		reward.CardID,
 		reward.Name,
-		reward.Descs,
+		reward.Desc,
 		reward.StartDate,
 		reward.EndDate,
 		reward.UpdateDate,
@@ -61,7 +62,7 @@ func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", card_id, \"name\", \"descs\", start_date, end_date, update_date, bonus, operator, constraints " +
+const SELECT_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date, bonus, operator, constraints " +
 	"FROM reward WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error) {
@@ -72,25 +73,24 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error)
 		&reward.ID,
 		&reward.CardID,
 		&reward.Name,
-		&reward.Descs,
+		&reward.Desc,
 		&reward.StartDate,
 		&reward.EndDate,
 		&reward.UpdateDate,
+		&reward.Bonus,
 		&reward.Operator,
 		&reward.Constraints,
 	}
 
 	if err := im.psql.QueryRow(SELECT_STAT, ID).Scan(selector...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Error(err)
 		return nil, err
 	}
 
 	return reward, nil
 }
 
-const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"descs\", start_date, end_date, update_date, bonus, operator, constraints " +
+const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date, bonus, operator, constraints " +
 	"FROM reward WHERE card_id = $1"
 
 func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Reward, error) {
@@ -117,7 +117,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 			&reward.ID,
 			&reward.CardID,
 			&reward.Name,
-			&reward.Descs,
+			&reward.Desc,
 			&reward.StartDate,
 			&reward.EndDate,
 			&reward.UpdateDate,
@@ -142,7 +142,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE reward SET " +
-	" card_id = $1, \"name\" = $2, \"descs\" = $3, start_date = $4, end_date = $5, update_date = $6, bonus = $7, operator = $8, constraints = $9 " +
+	" card_id = $1, \"name\" = $2, \"desc\" = $3, start_date = $4, end_date = $5, update_date = $6, bonus = $7, operator = $8, constraints = $9 " +
 	" WHERE \"id\" = $10"
 
 func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
@@ -159,7 +159,7 @@ func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
 	updater := []interface{}{
 		reward.CardID,
 		reward.Name,
-		reward.Descs,
+		reward.Desc,
 		reward.StartDate,
 		reward.EndDate,
 		reward.UpdateDate,

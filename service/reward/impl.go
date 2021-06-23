@@ -69,3 +69,12 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 	}
 	return rewards, nil
 }
+
+func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
+	if err := im.rewardStore.UpdateByID(ctx, reward); err != nil {
+		logrus.Error(err)
+		return err
+	}
+	return nil
+
+}

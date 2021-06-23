@@ -3,10 +3,11 @@ package bank
 import (
 	"context"
 
+	"github.com/sirupsen/logrus"
+
 	"example.com/creditcard/components/card"
 	bankM "example.com/creditcard/models/bank"
 	eventM "example.com/creditcard/models/event"
-	"github.com/sirupsen/logrus"
 )
 
 type impl struct {
@@ -37,7 +38,6 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Response,
 				"": "",
 			}).Error(err)
 			return nil, err
-
 		}
 	}
 

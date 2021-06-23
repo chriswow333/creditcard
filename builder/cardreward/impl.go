@@ -40,14 +40,15 @@ func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*c
 		constraints := []*constraintComp.Component{}
 
 		for _, co := range r.Constraints {
+
 			constraint, _ := im.getConstraintComponent(ctx, co)
 			constraints = append(constraints, constraint)
 		}
 		reward, _ := im.getRewardComponent(ctx, r, constraints)
 		rewards = append(rewards, reward)
 	}
-	card, _ := im.getCardComponent(ctx, setting, rewards)
 
+	card, _ := im.getCardComponent(ctx, setting, rewards)
 	return card, nil
 }
 
@@ -116,6 +117,5 @@ func (im *impl) getRewardComponent(ctx context.Context, r *rewardM.Reward, const
 func (im *impl) getCardComponent(ctx context.Context, card *cardM.Card, rewards []*rewardComp.Component) (*cardComp.Component, error) {
 
 	component := cardComp.New(card, rewards)
-
 	return &component, nil
 }

@@ -12,9 +12,9 @@ type CurrentCost struct {
 }
 
 type CostLimit struct {
-	ID    string   `json:"id"`
-	Name  string   `json:"name"`
-	Descs []string `json:"descs"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Desc string `json:"desc"`
 
 	Currency CurrencyType `json:"currency"`
 	AtLeast  int64        `json:"atLeast"`
