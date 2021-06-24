@@ -7,6 +7,8 @@ import (
 	"example.com/creditcard/stores/reward"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
+
+	uuid "github.com/nu7hatch/gouuid"
 )
 
 type impl struct {
@@ -30,6 +32,18 @@ func (im *impl) UpdateByRewardID(ctx context.Context, rewardID string, constrain
 		logrus.Error(err)
 		return err
 	}
+
+	for _, c := range constraints {
+		if c.ID != "" {
+			id, err := uuid.NewV4()
+			if err != nil {
+				logrus.Error(err)
+				return err
+			}
+			c.ID = id.String()
+		}
+	}
+
 	reward.Constraints = constraints
 	if err := im.rewardStore.UpdateByID(ctx, reward); err != nil {
 		logrus.Error(err)

@@ -41,6 +41,7 @@ func (h *constraintHandler) update(ctx *gin.Context) {
 
 	var constraintModels []*constraintM.Constraint
 	ctx.BindJSON(&constraintModels)
+
 	fmt.Println(constraintModels)
 
 	if err := h.constraintService.UpdateByRewardID(ctx, rewardID, constraintModels); err != nil {

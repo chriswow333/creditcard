@@ -2,11 +2,13 @@ package cardreward
 
 import (
 	"context"
+	"fmt"
 
 	cardComp "example.com/creditcard/components/card"
 	constraintComp "example.com/creditcard/components/constraint"
+	"example.com/creditcard/components/constraint/bonuslimit"
 	"example.com/creditcard/components/constraint/constraintpayload"
-	"example.com/creditcard/components/constraint/cost"
+	"example.com/creditcard/components/constraint/costlimit"
 	"example.com/creditcard/components/constraint/customization"
 	"example.com/creditcard/components/constraint/ecommerce"
 	"example.com/creditcard/components/constraint/mobilepay"
@@ -69,6 +71,8 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 	var constraintComponents []*constraintComp.Component
 
 	var constraintComponent constraintComp.Component
+	fmt.Println(payload.ConstraintType)
+
 	switch payload.ConstraintType {
 	case constraintM.ConstraintPayloadType:
 
@@ -90,8 +94,10 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 		constraintComponent = onlinegame.New(payload)
 	case constraintM.StreamingType:
 		constraintComponent = streaming.New(payload)
-	case constraintM.CostType:
-		constraintComponent = cost.New(payload)
+	case constraintM.CostLimitType:
+		constraintComponent = costlimit.New(payload)
+	case constraintM.BonusLimitType:
+		constraintComponent = bonuslimit.New(payload)
 	case constraintM.TimeIntervalType:
 		constraintComponent = timeinterval.New(payload)
 	case constraintM.CustomizationType:

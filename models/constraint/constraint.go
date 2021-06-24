@@ -1,6 +1,7 @@
 package constraint
 
 import (
+	"example.com/creditcard/models/bonus"
 	"example.com/creditcard/models/cost"
 	"example.com/creditcard/models/customization"
 	"example.com/creditcard/models/ecommerce"
@@ -37,7 +38,8 @@ const (
 	ConstraintPayloadType ConstraintType = iota
 	CustomizationType
 	TimeIntervalType
-	CostType
+	CostLimitType
+	BonusLimitType
 	MobilepayType
 	EcommerceType
 	SupermarketType
@@ -53,12 +55,16 @@ type ConstraintPayload struct {
 
 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
 
-	CostLimit      *cost.CostLimit                `json:"costLimit,omitempty"`
-	TimeIntervals  []*timeinterval.TimeInterval   `json:"timeIntervals,omitempty"`
+	CostLimit  *cost.CostLimit   `json:"costLimit,omitempty"`
+	BonusLimit *bonus.BonusLimit `json:"bonusLimit,omitempty"`
+
+	TimeIntervals []*timeinterval.TimeInterval `json:"timeIntervals,omitempty"`
+
 	Customizations []*customization.Customization `json:"customizations,omitempty"`
-	Mobilepays     []*mobilepay.Mobilepay         `json:"mobilepays,omitempty"`
-	Ecommerces     []*ecommerce.Ecommerce         `json:"ecommerces,omitempty"`
-	Supermarkets   []*supermarket.Supermarket     `json:"supermarkets,omitempty"`
-	Onlinegames    []*onlinegame.Onlinegame       `json:"onlinegames,omitempty"`
-	Streamings     []*streaming.Streaming         `json:"streamings,omitempty"`
+
+	Mobilepays   []*mobilepay.Mobilepay     `json:"mobilepays,omitempty"`
+	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces,omitempty"`
+	Supermarkets []*supermarket.Supermarket `json:"supermarkets,omitempty"`
+	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames,omitempty"`
+	Streamings   []*streaming.Streaming     `json:"streamings,omitempty"`
 }

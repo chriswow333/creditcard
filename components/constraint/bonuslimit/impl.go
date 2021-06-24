@@ -1,43 +1,36 @@
-package cost
+package bonuslimit
 
 import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
+	bonusM "example.com/creditcard/models/bonus"
 	constraintM "example.com/creditcard/models/constraint"
-	costM "example.com/creditcard/models/cost"
 	eventM "example.com/creditcard/models/event"
 )
 
 type impl struct {
-	costLimit *costM.CostLimit
+	bonusLimit *bonusM.BonusLimit
 }
 
 func New(
 	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 	return &impl{
-		costLimit: constraintPayload.CostLimit,
+		bonusLimit: constraintPayload.BonusLimit,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
 
 	constraint := &eventM.Constraint{
-		Name:           im.costLimit.Name,
-		Descs:          []string{im.costLimit.Desc},
-		ConstraintType: constraintM.CostType,
+		Name:           im.bonusLimit.Name,
+		Descs:          []string{im.bonusLimit.Desc},
+		ConstraintType: constraintM.BonusLimitType,
 	}
-
-	if e.Cost.Currency == im.costLimit.Currency {
-		if e.Cost.Current >= im.costLimit.AtLeast &&
-			e.Cost.Current <= im.costLimit.AtMost {
-			constraint.Pass = true
-		} else {
-			constraint.Pass = false
-		}
+	if e.Bonus.BonusType == im.bonusLimit.BonusType {
+		// TODO
 	} else {
-		// if empty, set true
 		constraint.Pass = true
 	}
 

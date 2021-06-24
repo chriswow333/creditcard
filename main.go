@@ -78,9 +78,10 @@ func NewServer(
 	bank.NewBankHandle(v1.Group("/bank"), bankSrc)
 	card.NewCardHandler(v1.Group("/card"), cardSrc)
 	reward.NewrewardHandler(v1.Group("/reward"), rewardSrc)
-	evaluator.NewEvaluatorHandler(v1.Group("/evaluator"), evaluatorMod)
 	constraint.NewConstraintHandler(v1.Group("/constraint"), constraintSrc)
 	bonus.NewBonusHandler(v1.Group("/bonus"), bonusSrc)
+
+	evaluator.NewEvaluatorHandler(v1.Group("/evaluator"), evaluatorMod)
 
 	return router
 }

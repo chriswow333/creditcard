@@ -39,6 +39,7 @@ func (h *rewardHandler) create(ctx *gin.Context) {
 	var rewardModel rewardM.Reward
 
 	ctx.BindJSON(&rewardModel)
+
 	if err := h.rewardSrc.Create(ctx, &rewardModel); err != nil {
 		logrus.Error(err)
 		ctx.JSON(http.StatusInternalServerError, err)

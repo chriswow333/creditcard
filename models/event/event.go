@@ -18,7 +18,8 @@ type Event struct {
 	ID string
 
 	CardIDs       []string           `json:"cards,omitempty"`
-	Cost          *cost.CurrentCost  `json:"cost"`
+	Cost          *cost.Cost         `json:"cost,omitempty"`
+	Bonus         *bonus.Bonus       `json:"bonus,omitempty"`
 	EffictiveTime int64              `json:"effictiveTime"`
 	ActionType    *action.ActionType `json:"actionType"`
 
