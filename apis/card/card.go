@@ -31,6 +31,7 @@ func NewCardHandler(
 
 	apis.Handle(rg, http.MethodGet, "", ch.getAll)
 	apis.Handle(rg, http.MethodPost, "", ch.create)
+	apis.Handle(rg, http.MethodPost, "/:ID", ch.update)
 	apis.Handle(rg, http.MethodGet, "/:ID", ch.get)
 	apis.Handle(rg, http.MethodGet, "/bankID/:bankID", ch.getByBankID)
 }
@@ -40,6 +41,21 @@ func (h *cardHandler) create(ctx *gin.Context) {
 	ctx.BindJSON(&cardModel)
 
 	err := h.cardSrc.Create(ctx, &cardModel)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, "")
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": "ok"})
+}
+
+func (h *cardHandler) update(ctx *gin.Context) {
+	var cardModel cardM.Card
+	ctx.BindJSON(&cardModel)
+
+	ID := ctx.Param("ID")
+	cardModel.ID = ID
+	err := h.cardSrc.UpdateByID(ctx, &cardModel)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, "")

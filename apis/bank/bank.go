@@ -28,6 +28,7 @@ func NewBankHandle(
 	}
 
 	apis.Handle(rg, http.MethodGet, "", bh.getAll)
+	apis.Handle(rg, http.MethodPost, "/:ID", bh.update)
 	apis.Handle(rg, http.MethodPost, "", bh.create)
 	apis.Handle(rg, http.MethodGet, "/:ID", bh.get)
 }
@@ -35,6 +36,22 @@ func NewBankHandle(
 func (h *bankHandler) create(ctx *gin.Context) {
 	var bankModel bankM.Bank
 	ctx.BindJSON(&bankModel)
+
+	err := h.bankSrc.Create(ctx, &bankModel)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, "")
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": "ok"})
+}
+
+func (h *bankHandler) update(ctx *gin.Context) {
+	var bankModel bankM.Bank
+	ctx.BindJSON(&bankModel)
+
+	ID := ctx.Param("ID")
+	bankModel.ID = ID
 
 	err := h.bankSrc.Create(ctx, &bankModel)
 
