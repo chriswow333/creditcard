@@ -37,6 +37,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Reward, e
 
 	matches := 0
 	misses := 0
+
 	for _, c := range im.constraintComps {
 		constraint, err := (*c).Judge(ctx, e)
 		if err != nil {
@@ -66,5 +67,6 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Reward, e
 			reward.Pass = true
 		}
 	}
+
 	return reward, nil
 }

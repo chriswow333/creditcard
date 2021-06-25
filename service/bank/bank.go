@@ -3,11 +3,12 @@ package bank
 import (
 	"context"
 
-	bankM "example.com/creditcard/models/bank"
+	"example.com/creditcard/models/bank"
 )
 
 type Service interface {
-	Create(ctx context.Context, card *bankM.Bank) error
-	GetByID(ctx context.Context, ID string) (*bankM.Bank, error)
-	GetAll(ctx context.Context) ([]*bankM.Bank, error)
+	Create(ctx context.Context, card *bank.Bank) error
+	UpdateByID(ctx context.Context, bank *bank.Bank) error
+	GetByID(ctx context.Context, ID string) (*bank.Bank, error)
+	GetAll(ctx context.Context) ([]*bank.Bank, error)
 }

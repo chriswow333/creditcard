@@ -66,6 +66,14 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
 	return card, nil
 }
 
+func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
+	if err := im.cardStore.UpdateByID(ctx, card); err != nil {
+		logrus.Error(err)
+		return err
+	}
+	return nil
+}
+
 func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 
 	cards, err := im.cardStore.GetAll(ctx)

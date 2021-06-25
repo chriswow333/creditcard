@@ -51,6 +51,8 @@ CREATE TABLE customization (
 	FOREIGN KEY(reward_id) REFERENCES reward("id")
 )
 
+INSERT INTO customization ("id", "rewardi_id", "name", "descs")  VALUES ('', '4f84a5cb-d54d-4c83-541c-1dfaed707a8a', 'Richard帳戶自動扣繳於GoGo信用卡帳單', );
+
 
 
 DROP TABLE mobilepay;
@@ -143,9 +145,8 @@ INSERT INTO public.streaming(id, "name", "action", "desc")values ('CATCHPLAY+', 
 /*
 
 {
-    "name":"台新銀行",
+    "name":"8大精選，週六3%",
     "cardID":"96d7ba6a-227a-45f2-8b78-f92223353316",
-    "name":"GoGo卡 不只網購，更懂生活",
     "desc":"@GoGo卡12大數位通路(網購/Pay/影音)最高6%，指定餐飲/健身/按摩等最高3%！, 綁Pay是標配！網購/健身/享樂也hen會！",
     "startDate":1625097600,
     "endDate":1643587200,
@@ -153,255 +154,234 @@ INSERT INTO public.streaming(id, "name", "action", "desc")values ('CATCHPLAY+', 
     "operator":1
 }
 
+{
+    "name":"基本0.2%",
+    "cardID":"96d7ba6a-227a-45f2-8b78-f92223353316",
+    "desc":"無任何限制條件皆0.2%",
+    "startDate":1625097600,
+    "endDate":1643587200,
+    "updateDate":1624412547,
+    "operator":0
+}
+
 */
 
 /*
-DROP TABLE base;
-create table base (
-    "id" VARCHAR(36) PRIMARY KEY,
-	"bank_id" VARCHAR(36),
-	"name" VARCHAR(100),
-	"desc" TEXT,
-	"target_from" VARCHAR(100),
-	"target_to" VARCHAR(100),
-	"base_type" INTEGER,
-	"unit" VARCHAR(100),
-	"action" INTEGER,
-	FOREIGN KEY(bank_id) REFERENCES BANK("id")
-);
 
-INSERT INTO public.base("id", "bank_id", "name", "desc", "target_from", "target_to", "base_type", "unit", "action") 
-values (gen_random_uuid(), '0ac94dfe-9604-472e-4738-fecdeac91ef1', '榜定Richart帳戶',  '以Richart帳戶自動扣繳@GoGo卡信用卡帳單', 
-		'Richart', '', 2, 1, 2);
 
-INSERT INTO public.base("id", "bank_id", "name", "desc", "target_from", "target_to", "base_type", "unit", "action") 
-values (gen_random_uuid(), '0ac94dfe-9604-472e-4738-fecdeac91ef1', '消費滿5000元',  '', 
-		'5000', '', 1, 2, 0);
+[
+    {
+        "rewardID":"178e34d3-f2c2-4b76-60f3-cbfce5878edb",
+        "name":"10大指定2%",
+        "desc":"10大指定購物2%",
+        "start_date":1625097600,
+        "end_date":1643587200,
+        "update_date":1624428666,
+        "constraintPayload":{
+            "name":"",
+            "operator":0,
+            "descs":["使用行動支付在指定網購平台消費"],
+            "constraintType":0,
+            "constraintPayloads":[
+                 {
+                    "name":"最高回饋200元",
+                    "operator":1,
+                    "descs":["200元"],
+                    "constraintType":4,
+                    "bonusLimit":{
+                        "id":"richard-gogo-2021",
+                        "richart":"最高回饋200元",
+                        "bonusType":0,
+                        "atLeast":0,
+                        "atMost":200
+                    }
+                 },
+                 {
+                    "name":"10大指定2%",
+                    "operator":0,
+                    "descs":["在指定平台消費享有2%"],
+                    "constraintType":1,
+                    "constraintPayloads":[
+                        {
+                            "name":"網購",
+                            "operator":1,
+                            "descs":["Amazon", "Gmarket", "迪卡儂線上購物"],
+                            "constraintType":6,
+                            "ecommerces":[
+                                {
+                                    "id":"Amazon-0",
+                                    "name":"Amazon",
+                                    "actionType":0,
+                                    "desc":"Amazon"
+                                },
+                                {
+                                    "id":"Gmarket-0",
+                                    "name":"Gmarket",
+                                    "actionType":0,
+                                    "desc":"Gmarket"
+                                },
+                                {
+                                    "id":"DECATHLON-0",
+                                    "name":"Decathlon",
+                                    "actionType":0,
+                                    "desc":"迪卡儂線上購物"
+                                }
+                            ]
+                        },
+                        {
+                            "name":"超市",
+                            "operator":1,
+                            "descs":["全聯超市"],
+                            "constraintType":7,
+                            "supermarkets":[
+                                {
+                                    "id":"PxMart-0",
+                                    "name":"Px Mart",
+                                    "actionType":0,
+                                    "desc":"於全聯福利中心消費, 待修"
+                                }
+                            ]  
+                        },
+                        {
+                            "name":"影音",
+                            "operator":1,
+                            "descs":["Spotify", "Netflix", "CATCHPLAY+"],
+                            "constraintType":7,
+                            "streamings":[
+                                {
+                                    "id":"Spotify-0",
+                                    "name":"Spotify",
+                                    "actionType":0,
+                                    "desc":"Spotify"
+                                },
+                                {
+                                    "id":"Netflix-0",
+                                    "name":"Netflix",
+                                    "actionType":0,
+                                    "desc":"Netflix"
+                                },
+                                {
+                                    "id":"CATCHPLAY+-0",
+                                    "name":"CATCHPLAY+",
+                                    "actionType":0,
+                                    "desc":"CATCHPLAY+"
+                                }
+                            ] 
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+]
 
+
+
+
+
+
+
+
+
+
+[
+    {
+        "rewardID":"178e34d3-f2c2-4b76-60f3-cbfce5878edb",
+        "name":"週六3%",
+        "desc":"8大精選，週六3%",
+        "start_date":1625097600,
+        "end_date":1643587200,
+        "update_date":1624428666,
+        "constraintPayload":{
+            "name":"",
+            "operator":0,
+            "descs":["使用行動支付在指定網購平台消費"],
+            "constraintType":0,
+            "constraintPayloads":[
+                 {
+                    "name":"最高回饋200元",
+                    "operator":1,
+                    "descs":["200元"],
+                    "constraintType":4,
+                    "bonusLimit":{
+                        "id":"richard-gogo-2021",
+                        "richart":"最高回饋200元",
+                        "bonusType":0,
+                        "atLeast":0,
+                        "atMost":200
+                    }
+                 },
+                 {
+                    "name":"8大精選，週六3%",
+                    "operator":0,
+                    "descs":["使用行動支付在指定網購平台消費"],
+                    "constraintType":0,
+                    "constraintPayloads":[
+                        {
+                            "name":"網購",
+                            "operator":1,
+                            "descs":["蝦皮", "momo", "PChome"],
+                            "constraintType":6,
+                            "ecommerces":[
+                                {
+                                    "id":"Shopee-0",
+                                    "name":"Shopee",
+                                    "actionType":0,
+                                    "desc":"蝦皮購物"
+                                },
+                                {
+                                    "id":"MOMO-0",
+                                    "name":"MOMO",
+                                    "actionType":0,
+                                    "desc":"MOMO購物"
+                                },
+                                {
+                                    "id":"PCHOME-0",
+                                    "name":"PCHOME",
+                                    "actionType":0,
+                                    "desc":"PCHOME"
+                                }
+                            ]
+                        },
+                        {
+                            "name":"行動支付",
+                            "operator":1,
+                            "descs":["LINE PAY", "MyFamiPay", "Open錢包", "悠遊付", "台新Pay"],
+                            "constraintType":5,
+                            "mobilepays":[
+                                {
+                                    "id":"LINE-PAY-0",
+                                    "name":"LINE PAY",
+                                    "actionType":0,
+                                    "desc":"連線支付"
+                                },
+                                {
+                                    "id":"MyFamiPay-0",
+                                    "name":"My FamiPay",
+                                    "actionType":0,
+                                    "desc":"全家超商支付"
+                                },
+                                {
+                                    "id":"OpenWallet-0",
+                                    "name":"Open Wallet",
+                                    "actionType":0,
+                                    "desc":"OPEN錢包"
+                                },
+                                {
+                                    "id":"EasyWallet-0",
+                                    "name":"Easy Wallet",
+                                    "actionType":0,
+                                    "desc":"Easy Wallet 悠遊付"
+                                }
+                            ]  
+                        }
+                    ]
+                }
+            ]
+
+
+        }
+
+    }
+]
 */
-
-
-/**
-
-{
-    "privilageID":"ad82febb-8d0c-4ef5-5e29-3909cd2771dc",
-    "name":"週六回饋",
-    "desc":"",
-    "startDate":1623204991,
-    "endDate":1623204991,
-    "limit":{
-        "max":200,
-        "min":0
-    },
-    "constraintBody":{
-        "constraintPayloads":[
-            {
-                "operator":0,
-                "base":[
-                    {
-                        "name":"週六回饋",
-                        "desc":"僅只於週六提供",
-                        "actDay":"Sat"
-                    }
-                ],
-                "constraintPayloads":[
-                    {
-                        "operator":1,
-                        "ecommerces":[
-                            {
-                                "id":"Shopee",
-                                "name":"蝦皮購物",
-                                "action":0,
-                                "desc":"蝦皮購物"
-                            },
-                            {
-                                "id":"MOMO",
-                                "name":"MOMO購物",
-                                "action":0,
-                                "desc":"MOMO購物"
-                            },
-                            {
-                                "id":"PChome",
-                                "name":"PChome",
-                                "action":0,
-                                "desc":"PChome"
-                            }
-                        ]
-                    },
-                    {
-                        "operator":1,
-                        "mobilepays":[
-                            {
-                                "id":"LinePay",
-                                "name":"LINE Pay",
-                                "action":0,
-                                "desc":"連線支付"
-                            },
-                            {
-                                "id":"MyFamiPay",
-                                "name":"My FamiPay",
-                                "action":0,
-                                "desc":"全家超商支付"
-                            },
-                            {
-                                "id":"TaishinPay",
-                                "name":"Taishin Pay",
-                                "action":0,
-                                "desc":"台新支付"
-                            },
-                            {
-                                "id":"OpenWallet",
-                                "name":"Open Wallet",
-                                "action":0,
-                                "desc":"OPEN錢包"
-                            },
-                            {
-                                "id":"EasyWallet",
-                                "name":"Easy Wallet",
-                                "action":0,
-                                "desc":"Easy Wallet 悠遊付"
-                            }
-                        ]
-                    }
-                ]
-            }
-
-        ]
-        
-    }
-}
-
-**/
-
-
-
-/**
-
-{
-    "privilageID":"667256fb-4e6f-43d9-6a26-981a6d41ad68",
-    "name":"精選回饋",
-    "desc":"",
-    "startDate":1623204991,
-    "endDate":1623204991,
-    "limit":{
-        "max":200,
-        "min":0
-    },
-    "constraintBody":{
-        "constraintPayloads":[
-            {
-                "operator":0,
-                "constraintPayloads":[
-                    {
-                        "operator":1,
-                        "ecommerces":[
-                            {
-                                "id":"Shopee",
-                                "name":"蝦皮購物",
-                                "action":0,
-                                "desc":"蝦皮購物"
-                            },
-                            {
-                                "id":"MOMO",
-                                "name":"MOMO購物",
-                                "action":0,
-                                "desc":"MOMO購物"
-                            },
-                            {
-                                "id":"PChome",
-                                "name":"PChome",
-                                "action":0,
-                                "desc":"PChome"
-                            }
-                        ]
-                    },
-                    {
-                        "operator":1,
-                        "mobilepays":[
-                            {
-                                "id":"LinePay",
-                                "name":"LINE Pay",
-                                "action":0,
-                                "desc":"連線支付"
-                            },
-                            {
-                                "id":"MyFamiPay",
-                                "name":"My FamiPay",
-                                "action":0,
-                                "desc":"全家超商支付"
-                            },
-                            {
-                                "id":"TaishinPay",
-                                "name":"Taishin Pay",
-                                "action":0,
-                                "desc":"台新支付"
-                            },
-                            {
-                                "id":"OpenWallet",
-                                "name":"Open Wallet",
-                                "action":0,
-                                "desc":"OPEN錢包"
-                            },
-                            {
-                                "id":"EasyWallet",
-                                "name":"Easy Wallet",
-                                "action":0,
-                                "desc":"Easy Wallet 悠遊付"
-                            }
-                        ]
-                    }
-                ]
-            }
-
-        ]
-        
-    }
-}
-
-**/
-
-
-/**
-
-{
-    "privilageID":"b02a75eb-08cb-482e-6755-cb72e2daaedd",
-    "name":"任務回饋",
-    "desc":"",
-    "startDate":1623204991,
-    "endDate":1623204991,
-    "limit":{
-        "max":200,
-        "min":0
-    },
-    "constraintBody":{
-        "constraintPayloads":[
-            {
-                "operator":0,
-                "base":[
-                    {
-                        "id":1,
-                        "name":"榜定Richart帳戶",
-                        "desc":"以Richart帳戶自動扣繳@GoGo卡信用卡帳單",
-                        "targetFrom":"Richart",
-                        "targetTo":"",
-                        "baseType":2,
-                        "unitType":1,
-                        "actionType":2
-                    },
-                    {
-                        "id":2,
-                        "name":"消費滿5000元",
-                        "desc":"",
-                        "targetFrom":"5000",
-                        "targetTo":"",
-                        "baseType":1,
-                        "unitType":2,
-                        "actionType":0
-                    }
-                ]
-            }
-        ]
-    }
-}
-
-**/

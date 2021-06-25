@@ -22,7 +22,9 @@ func New(psql *pgx.ConnPool) Store {
 	}
 }
 
-const INSERT_BANK_STAT = "INSERT INTO bank(\"id\", \"name\", \"desc\", start_date, end_date, update_date) VALUES($1, $2, $3, $4, $5, $6)"
+const INSERT_BANK_STAT = "INSERT INTO bank " +
+	" (\"id\", \"name\", \"desc\", start_date, end_date, update_date) " +
+	" VALUES($1, $2, $3, $4, $5, $6)"
 
 func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 
@@ -57,7 +59,44 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date FROM bank WHERE \"id\" = $1"
+const UPDATE_BY_ID_STAT = "UPDATE bank SET " +
+	" \"name\" = $1, desc = $2, start_date = $3, end_date = $4, update_date = $5 " +
+	" where \"id\" = $6"
+
+func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
+
+	tx, err := im.psql.Begin()
+
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"": "",
+		}).Error(err)
+		return err
+	}
+	defer tx.Rollback()
+
+	updater := []interface{}{
+		bank.Name,
+		bank.Desc,
+		bank.StartDate,
+		bank.EndDate,
+		bank.UpdateDate,
+		bank.ID,
+	}
+
+	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"": "",
+		})
+		return err
+	}
+	tx.Commit()
+	return nil
+}
+
+const SELECT_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date " +
+	" FROM bank " +
+	" WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 
@@ -83,7 +122,8 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 	return bank, nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date FROM bank"
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date " +
+	" FROM bank"
 
 func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
 

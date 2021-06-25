@@ -51,6 +51,15 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 	return nil
 }
 
+func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
+
+	if err := im.bankStore.UpdateByID(ctx, bank); err != nil {
+		logrus.Error(err)
+		return err
+	}
+	return nil
+}
+
 func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 
 	bank, err := im.bankStore.GetByID(ctx, ID)
