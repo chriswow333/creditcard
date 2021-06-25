@@ -28,6 +28,12 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint,
 		Descs:          []string{im.bonusLimit.Desc},
 		ConstraintType: constraintM.BonusLimitType,
 	}
+
+	if e.Bonus == nil {
+		constraint.Pass = true
+		return constraint, nil
+	}
+
 	if e.Bonus.BonusType == im.bonusLimit.BonusType {
 		// TODO
 	} else {

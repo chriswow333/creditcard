@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"example.com/creditcard/components/reward"
+	bonusM "example.com/creditcard/models/bonus"
 	cardM "example.com/creditcard/models/card"
 	eventM "example.com/creditcard/models/event"
 	"github.com/sirupsen/logrus"
@@ -35,6 +36,15 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Card, err
 		LinkURL:   im.card.LinkURL,
 	}
 	rewards := []*eventM.Reward{}
+
+	totalBonus := &bonusM.Bonus{
+		BonusType: bonusM.Percentage,
+	}
+
+	countBonus := &bonusM.Bonus{
+		BonusType: bonusM.Percentage,
+	}
+
 	for _, r := range im.rewards {
 		reward, err := (*r).Satisfy(ctx, e)
 		if err != nil {
@@ -44,9 +54,15 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Card, err
 			return nil, err
 		}
 		rewards = append(rewards, reward)
+		if reward.Pass {
+			countBonus.Point += reward.Bonus.Point
+		}
+
+		totalBonus.Point += reward.Bonus.Point
 	}
 
 	card.Rewards = rewards
-
+	card.CountBonus = countBonus
+	card.TotalBonus = totalBonus
 	return card, nil
 }

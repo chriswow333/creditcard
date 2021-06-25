@@ -168,6 +168,7 @@ func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
 		reward.Constraints,
 		reward.ID,
 	}
+
 	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",

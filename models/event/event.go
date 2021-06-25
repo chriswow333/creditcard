@@ -44,11 +44,11 @@ type Card struct {
 	Desc      string `json:"desc"`
 	StartDate int64  `json:"startDate"`
 	EndDate   int64  `json:"endDate"`
+	LinkURL   string `json:"linkURL"`
 
 	Rewards    []*Reward    `json:"rewards"`
 	TotalBonus *bonus.Bonus `json:"totalBonus"`
 	CountBonus *bonus.Bonus `json:"countBonus"`
-	LinkURL    string       `json:"linkURL"`
 }
 
 type Reward struct {
