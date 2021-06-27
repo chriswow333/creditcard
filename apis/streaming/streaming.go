@@ -17,7 +17,7 @@ type streamingHandler struct {
 	streamingService streaming.Service
 }
 
-func NewEcommerceHandler(
+func NewStreamingHandler(
 	rg *gin.RouterGroup,
 
 	streamingService streaming.Service,

@@ -144,6 +144,79 @@ INSERT INTO public.streaming(id, "name", "action", "desc")values ('CATCHPLAY+', 
 
 /*
 
+[
+    {
+        "rewardID":"178e34d3-f2c2-4b76-60f3-cbfce5878edb",
+        "name":"任務0.8%",
+        "desc":"完成任務0.8%",
+        "start_date":1625097600,
+        "end_date":1643587200,
+        "update_date":1624428666,
+        "constraintPayload":{
+            "name":"",
+            "operator":0,
+            "descs":["當期帳單「成功以Richart帳戶自動扣繳@GoGo卡信用卡帳單，且@GoGo卡消費金額滿NT$5,000(含)」"],
+            "constraintType":0,
+            "constraintPayloads":[
+                 {
+                    "name":"最高回饋200元",
+                    "operator":0,
+                    "descs":["200元"],
+                    "constraintType":4,
+                    "bonusLimit":{
+                        "id":"richard-gogo-2021",
+                        "richart":"最高回饋200元",
+                        "bonusType":0,
+                        "atLeast":0,
+                        "atMost":200
+                    }
+                 },
+                 {
+                    "name":"完成任務0.8%",
+                    "operator":0,
+                    "descs":["完成任務0.8%"],
+                    "constraintType":0,
+                    "constraintPayloads":[
+                        {
+                            "name":"以Richart帳戶自動扣繳@GoGo卡信用卡帳單",
+                            "operator":0,
+                            "descs":[],
+                            "constraintType":1,
+                            "customizations":[
+                                {
+                                    "ID":"10232919-3d2a-41e0-4ef2-166c1159a42d",
+                                    "rewardID":"4f84a5cb-d54d-4c83-541c-1dfaed707a8a",
+                                    "name":"以Richart帳戶自動扣繳@GoGo卡信用帳單",
+                                    "descs":["消費採同品牌項下(含@GoGo悠遊卡/icash/虛擬卡)正附卡合併計算(四捨五入計)，分期以每期入帳金額計算，不含信用卡年費/預借現金/利息/違約金/手續費等非消費交易，其餘消費皆可認列(例：學費/稅/公用事業代扣繳費用(水/電/瓦斯/電信費)…等)。"
+                                    ]
+                                },
+                                {
+                                    "ID":"8dc2dc0a-e3a1-474d-63b3-5ae35ee1a12b",
+                                    "rewardID":"4f84a5cb-d54d-4c83-541c-1dfaed707a8a",
+                                    "name":"GoGo卡消費金額滿NT$5,000(含)",
+                                    "descs":["消費採同品牌項下(含@GoGo悠遊卡/icash/虛擬卡)正附卡合併計算(四捨五入計)，分期以每期入帳金額計算，不含信用卡年費/預借現金/利息/違約金/手續費等非消費交易，其餘消費皆可認列(例：學費/稅/公用事業代扣繳費用(水/電/瓦斯/電信費)…等)。"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+]
+
+
+{
+
+    "rewardID":"4f84a5cb-d54d-4c83-541c-1dfaed707a8a",
+    "name":"以Richart帳戶自動扣繳@GoGo卡信用帳單",
+    "descs":[
+        "消費採同品牌項下(含@GoGo悠遊卡/icash/虛擬卡)正附卡合併計算(四捨五入計)，分期以每期入帳金額計算，不含信用卡年費/預借現金/利息/違約金/手續費等非消費交易，其餘消費皆可認列(例：學費/稅/公用事業代扣繳費用(水/電/瓦斯/電信費)…等)。"
+    ]
+}
+
+
 {
     "name":"8大精選，週六3%",
     "cardID":"96d7ba6a-227a-45f2-8b78-f92223353316",

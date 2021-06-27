@@ -6,6 +6,8 @@ import (
 	streamingM "example.com/creditcard/models/streaming"
 	streamingStore "example.com/creditcard/stores/streaming"
 	"github.com/sirupsen/logrus"
+
+	uuid "github.com/nu7hatch/gouuid"
 )
 
 type impl struct {
@@ -21,6 +23,16 @@ func New(
 }
 
 func (im *impl) Create(ctx context.Context, streaming *streamingM.Streaming) error {
+
+	ID, err := uuid.NewV4()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+	streaming.ID = ID.String()
+
 	if err := im.streamingStore.Create(ctx, streaming); err != nil {
 		logrus.Error(err)
 		return err

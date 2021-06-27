@@ -17,7 +17,7 @@ type onlinegameHandler struct {
 	onlinegameService onlinegame.Service
 }
 
-func NewEcommerceHandler(
+func NewOnlinegameandler(
 	rg *gin.RouterGroup,
 
 	onlinegameService onlinegame.Service,

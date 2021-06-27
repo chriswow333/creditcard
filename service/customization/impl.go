@@ -7,6 +7,8 @@ import (
 	customizationStore "example.com/creditcard/stores/customization"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
+
+	uuid "github.com/nu7hatch/gouuid"
 )
 
 type impl struct {
@@ -24,6 +26,17 @@ func New(
 }
 
 func (im *impl) Create(ctx context.Context, customization *customizationM.Customization) error {
+
+	ID, err := uuid.NewV4()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+
+	customization.ID = ID.String()
+
 	if err := im.customizationStore.Create(ctx, customization); err != nil {
 		logrus.Error(err)
 		return err

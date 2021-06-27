@@ -7,6 +7,8 @@ import (
 	ecommerceM "example.com/creditcard/models/ecommerce"
 	ecommerceStore "example.com/creditcard/stores/ecommerce"
 	"github.com/sirupsen/logrus"
+
+	uuid "github.com/nu7hatch/gouuid"
 )
 
 type impl struct {
@@ -22,6 +24,15 @@ func New(
 }
 
 func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) error {
+	ID, err := uuid.NewV4()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+	ecommerce.ID = ID.String()
+
 	if err := im.ecommerceStore.Create(ctx, ecommerce); err != nil {
 		logrus.Error(err)
 		return err

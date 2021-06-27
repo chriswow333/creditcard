@@ -17,7 +17,7 @@ type mobilepayHandler struct {
 	mobilepayService mobilepay.Service
 }
 
-func NewEcommerceHandler(
+func NewMobilepayHandler(
 	rg *gin.RouterGroup,
 
 	mobilepayService mobilepay.Service,

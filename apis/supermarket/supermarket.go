@@ -18,7 +18,7 @@ type supermarketHandler struct {
 	supermarketService supermarket.Service
 }
 
-func NewEcommerceHandler(
+func NewSupermarketHandler(
 	rg *gin.RouterGroup,
 
 	supermarketService supermarket.Service,

@@ -6,6 +6,8 @@ import (
 	onlinegameM "example.com/creditcard/models/onlinegame"
 	onlinegameStore "example.com/creditcard/stores/onlinegame"
 	"github.com/sirupsen/logrus"
+
+	uuid "github.com/nu7hatch/gouuid"
 )
 
 type impl struct {
@@ -21,6 +23,16 @@ func New(
 }
 
 func (im *impl) Create(ctx context.Context, onlinegame *onlinegameM.Onlinegame) error {
+
+	ID, err := uuid.NewV4()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+	onlinegame.ID = ID.String()
+
 	if err := im.onlinegameStore.Create(ctx, onlinegame); err != nil {
 		logrus.Error(err)
 		return err
