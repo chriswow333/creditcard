@@ -2,10 +2,9 @@ package feature
 
 import (
 	"context"
-	"errors"
-	"strconv"
 
 	cardM "example.com/creditcard/app/view_card/models/card"
+	"example.com/creditcard/app/view_card/models/common"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -95,20 +94,16 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) (*cardM.Feature,
 			return nil, err
 		}
 
-		switch featureType {
-		case int(cardM.ECommerce):
-			feature.FeatureTypes = append(feature.FeatureTypes, cardM.ECommerce)
-		case int(cardM.Supremarket):
-			feature.FeatureTypes = append(feature.FeatureTypes, cardM.ECommerce)
-		case int(cardM.Delivery):
-			feature.FeatureTypes = append(feature.FeatureTypes, cardM.ECommerce)
-		case int(cardM.Fee):
-			feature.FeatureTypes = append(feature.FeatureTypes, cardM.ECommerce)
-		case int(cardM.Transport):
-			feature.FeatureTypes = append(feature.FeatureTypes, cardM.ECommerce)
-		default:
-			return nil, errors.New("No match featureType: " + strconv.Itoa(featureType))
+		f, err := common.ConvertFeature(featureType)
+
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"": "",
+			}).Error(err)
+			return nil, err
 		}
+		feature.FeatureTypes = append(feature.FeatureTypes, f)
+
 	}
 
 	return feature, nil

@@ -58,6 +58,43 @@ func (im *impl) Create(ctx context.Context, task *taskM.Task) error {
 	return nil
 }
 
+func (im *impl) CreateTasks(ctx context.Context, tasks []*taskM.Task) error {
+
+	tx, err := im.psql.Begin()
+
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Error(err)
+		return err
+	}
+
+	defer tx.Rollback()
+
+	for _, task := range tasks {
+		updater := []interface{}{
+			task.ID,
+			task.Name,
+			task.Desc,
+			task.RewardID,
+			task.Point,
+			task.UpdateDate,
+		}
+
+		if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
+			logrus.WithFields(logrus.Fields{
+				"": "",
+			}).Fatal(err)
+
+			return err
+		}
+	}
+
+	tx.Commit()
+
+	return nil
+}
+
 const UPDATE_BY_ID_STAT = "UPDATE task SET " +
 	" \"name\" = $1, \"desc\" = $2, " +
 	" reward_id = $3, point = $4, update_date = $5 " +

@@ -2,17 +2,6 @@ package card
 
 import (
 	"example.com/creditcard/app/view_card/models/common"
-	"example.com/creditcard/app/view_card/models/reward"
-)
-
-type FeatureType int32
-
-const (
-	ECommerce FeatureType = iota
-	Supremarket
-	Delivery
-	Fee
-	Transport
 )
 
 type Card struct {
@@ -24,17 +13,30 @@ type Card struct {
 
 	MaxPoint float64 `json:"maxPoint"`
 
-	Feature     *Feature `json:"feature"`
-	FeatureDesc string   `json:"featureDesc"`
+	FeatureDesc string `json:"featureDesc"`
 
-	ValidateTime            common.ValidateTime `json:"validateDate"`
-	ApplicantQualifications []string            `json:"applicantQualifications"`
+	ValidateTime            *common.ValidateTime `json:"validateDate"`
+	ApplicantQualifications []string             `json:"applicantQualifications"`
 
 	UpdateDate int64 `json:"updateDate"`
-
-	Rewards []*reward.Reward `json:"rewards"`
 }
 
 type Feature struct {
-	FeatureTypes []FeatureType `json:"featureTypes"`
+	FeatureTypes []common.FeatureType `json:"featureTypes"`
+}
+
+type Repr struct {
+	ID       string  `json:"id"`
+	Name     string  `json:"name"`
+	Icon     string  `json:"icon"`
+	BankID   string  `json:"bankID"`
+	MaxPoint float64 `json:"maxPoint"`
+
+	Features    []common.FeatureType `json:"features"`
+	FeatureDesc string               `json:"featureDesc"`
+
+	StartTime int64 `json:"startDate"`
+	EndTime   int64 `json:"endDate"`
+
+	ApplicantQualifications []string `json:"applicantQualifications"`
 }

@@ -2,16 +2,7 @@ package reward
 
 import (
 	"example.com/creditcard/app/view_card/models/common"
-)
-
-type RewardType int32
-
-const (
-	DomesticCache RewardType = iota // 國內現金回饋
-	AbroadCache                     // 國外現金回饋
-	Point                           // 點數回饋
-	Limited                         // 限量優惠
-	FirstGift                       // 首刷禮
+	"example.com/creditcard/app/view_card/models/task"
 )
 
 /*
@@ -24,13 +15,30 @@ type Reward struct {
 	CardID string `json:"cardID"`
 	Desc   string `json:"desc"`
 
-	RewardType RewardType `json:"rewardType"`
+	RewardType common.RewardType `json:"rewardType"`
 
 	OperatorType common.OperatorType `json:"operatorType"`
 
 	ValidateTime common.ValidateTime `json:"validateDate"`
 
-	TotalPoint int64 `json:"totalPoint"`
+	TotalPoint float64 `json:"totalPoint"`
 
 	UpdateDate int64 `json:"updateDate"`
+}
+
+type Repr struct {
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	CardID string `json:"cardID"`
+	Desc   string `json:"desc"`
+
+	RewardType common.RewardType `json:"rewardType"`
+
+	OperatorType common.OperatorType `json:"operatorType"`
+
+	StartTime int64 `json:"startTime"`
+	EndTime   int64 `json:"endTIme"`
+
+	TotalPoint float64      `json:"totalPoint"`
+	TaskReprs  []*task.Repr `json:"tasks"`
 }

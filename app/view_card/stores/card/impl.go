@@ -3,10 +3,11 @@ package card
 import (
 	"context"
 
-	cardM "example.com/creditcard/app/view_card/models/card"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
+
+	cardM "example.com/creditcard/app/view_card/models/card"
 )
 
 type impl struct {
