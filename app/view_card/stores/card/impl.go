@@ -8,17 +8,24 @@ import (
 	"go.uber.org/dig"
 
 	cardM "example.com/creditcard/app/view_card/models/card"
+	"example.com/creditcard/app/view_card/utils/conn"
 )
 
 type impl struct {
 	dig.In
 
 	psql *pgx.ConnPool
+
+	connService conn.Service
 }
 
-func New(psql *pgx.ConnPool) Store {
+func New(
+	psql *pgx.ConnPool,
+	connService conn.Service,
+) Store {
 	return &impl{
-		psql: psql,
+		psql:        psql,
+		connService: connService,
 	}
 }
 
@@ -27,17 +34,7 @@ const INSERT_STAT = "INSERT INTO card " +
 	" max_point, feature_desc, applicant_qualifications, update_date) " +
 	" VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
 
-func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
-
-	tx, err := im.psql.Begin()
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
-		return err
-	}
-
-	defer tx.Rollback()
+func (im *impl) Create(ctx context.Context, conn *conn.Connection, card *cardM.Card) error {
 
 	updater := []interface{}{
 		card.ID,
@@ -52,17 +49,15 @@ func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 		card.UpdateDate,
 	}
 
-	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
+	if err := im.connService.Exec(conn, INSERT_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
 		}).Fatal(err)
 
 		return err
 	}
-
-	tx.Commit()
-
 	return nil
+
 }
 
 const SELECT_STAT = "SELECT \"id\", \"name\", icon, bank_id, " +
@@ -104,17 +99,7 @@ const UPDATE_BY_ID_STAT = "UPDATE card SET " +
 	" feature_desc = $7, applicant_qualifications = $8, update_date = $9 " +
 	" where \"id\" = $10"
 
-func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
-
-	tx, err := im.psql.Begin()
-
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
-		return err
-	}
-	defer tx.Rollback()
+func (im *impl) UpdateByID(ctx context.Context, conn *conn.Connection, card *cardM.Card) error {
 
 	updater := []interface{}{
 		card.Name,
@@ -129,13 +114,13 @@ func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
 		card.ID,
 	}
 
-	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
+	if err := im.connService.Exec(conn, UPDATE_BY_ID_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
 		})
 		return err
 	}
-	tx.Commit()
+
 	return nil
 }
 

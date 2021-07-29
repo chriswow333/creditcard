@@ -12,6 +12,7 @@ import (
 	"example.com/creditcard/app/view_card/models/common"
 	"example.com/creditcard/app/view_card/stores/card"
 	"example.com/creditcard/app/view_card/stores/feature"
+	"example.com/creditcard/app/view_card/utils/conn"
 )
 
 var (
@@ -23,15 +24,18 @@ type impl struct {
 
 	cardStore    card.Store
 	featureStore feature.Store
+	connService  conn.Service
 }
 
 func New(
 	cardStore card.Store,
 	featureStore feature.Store,
+	connService conn.Service,
 ) Service {
 	return &impl{
 		cardStore:    cardStore,
 		featureStore: featureStore,
+		connService:  connService,
 	}
 }
 
@@ -45,14 +49,19 @@ func (im *impl) Create(ctx context.Context, cardRepr *cardM.Repr) error {
 		return err
 	}
 
+	conn, err := im.connService.GetConn()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+	defer im.connService.RollBack(conn)
+
 	validateTime := &common.ValidateTime{
 		StartTime: cardRepr.StartTime,
 		EndTime:   cardRepr.EndTime,
 	}
-
-	// feature := &cardM.Feature{
-	// 	FeatureTypes: cardRepr.Features,
-	// }
 
 	card := &cardM.Card{
 		ID:                      id.String(),
@@ -66,12 +75,24 @@ func (im *impl) Create(ctx context.Context, cardRepr *cardM.Repr) error {
 		UpdateDate:              timeNow().Unix(),
 	}
 
-	if err := im.cardStore.Create(ctx, card); err != nil {
+	if err := im.cardStore.Create(ctx, conn, card); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"msg": "",
 		}).Fatal(err)
 		return err
 	}
+	feature := &cardM.Feature{
+		FeatureTypes: cardRepr.Features,
+	}
+
+	if err := im.featureStore.CreateByCardID(ctx, conn, id.String(), feature); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+
+	im.connService.Commit(conn)
 
 	return nil
 }
@@ -112,14 +133,19 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Repr, error) {
 
 func (im *impl) UpdateByID(ctx context.Context, cardRepr *cardM.Repr) error {
 
+	conn, err := im.connService.GetConn()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+	defer im.connService.RollBack(conn)
+
 	validateTime := &common.ValidateTime{
 		StartTime: cardRepr.StartTime,
 		EndTime:   cardRepr.EndTime,
 	}
-
-	// feature := &cardM.Feature{
-	// 	FeatureTypes: cardRepr.Features,
-	// }
 
 	card := &cardM.Card{
 		ID:                      cardRepr.ID,
@@ -134,12 +160,33 @@ func (im *impl) UpdateByID(ctx context.Context, cardRepr *cardM.Repr) error {
 		UpdateDate: timeNow().Unix(),
 	}
 
-	if err := im.cardStore.UpdateByID(ctx, card); err != nil {
+	if err := im.cardStore.UpdateByID(ctx, conn, card); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"msg": "",
 		}).Fatal(err)
 		return err
 	}
+
+	feature := &cardM.Feature{
+		FeatureTypes: cardRepr.Features,
+	}
+
+	if err := im.featureStore.DeleteByCardID(ctx, conn, card.ID); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+
+	if err := im.featureStore.CreateByCardID(ctx, conn, card.ID, feature); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+
+	im.connService.Commit(conn)
+
 	return nil
 }
 

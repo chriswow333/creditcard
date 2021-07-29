@@ -5,6 +5,7 @@ import (
 
 	cardM "example.com/creditcard/app/view_card/models/card"
 	"example.com/creditcard/app/view_card/models/common"
+	"example.com/creditcard/app/view_card/utils/conn"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -26,7 +27,7 @@ const INSERT_STAT = "INSERT INTO feature " +
 	" (card_id, type, \"desc\") " +
 	" VALUES ($1, $2, $3)"
 
-func (im *impl) CreateByCardID(ctx context.Context, cardID string, feature *cardM.Feature) error {
+func (im *impl) CreateByCardID(ctx context.Context, conn *conn.Connection, cardID string, feature *cardM.Feature) error {
 
 	tx, err := im.psql.Begin()
 	if err != nil {
@@ -112,7 +113,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) (*cardM.Feature,
 const DELETE_STAT = "DELETE FROM feature " +
 	" WHERE card_id = $1 "
 
-func (im *impl) DeleteByCardID(ctx context.Context, cardID string) error {
+func (im *impl) DeleteByCardID(ctx context.Context, conn *conn.Connection, cardID string) error {
 	tx, err := im.psql.Begin()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
