@@ -14,12 +14,17 @@ import (
 type impl struct {
 	dig.In
 
-	psql *pgx.ConnPool
+	psql        *pgx.ConnPool
+	connService conn.Service
 }
 
-func New(psql *pgx.ConnPool) Store {
+func New(
+	psql *pgx.ConnPool,
+	connService conn.Service,
+) Store {
 	return &impl{
-		psql: psql,
+		psql:        psql,
+		connService: connService,
 	}
 }
 
@@ -29,33 +34,18 @@ const INSERT_STAT = "INSERT INTO feature " +
 
 func (im *impl) CreateByCardID(ctx context.Context, conn *conn.Connection, cardID string, feature *cardM.Feature) error {
 
-	tx, err := im.psql.Begin()
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
-		return err
-	}
-
-	defer tx.Rollback()
-
 	for _, f_type := range feature.FeatureTypes {
-
 		updater := []interface{}{
 			cardID,
 			f_type,
 		}
-
-		if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
+		if err := im.connService.Exec(conn, INSERT_STAT, updater...); err != nil {
 			logrus.WithFields(logrus.Fields{
 				"": "",
 			}).Fatal(err)
 			return err
 		}
-
 	}
-
-	tx.Commit()
 
 	return nil
 }
@@ -114,27 +104,16 @@ const DELETE_STAT = "DELETE FROM feature " +
 	" WHERE card_id = $1 "
 
 func (im *impl) DeleteByCardID(ctx context.Context, conn *conn.Connection, cardID string) error {
-	tx, err := im.psql.Begin()
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
-		return err
-	}
-
-	defer tx.Rollback()
 
 	updater := []interface{}{
 		cardID,
 	}
-	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
+	if err := im.connService.Exec(conn, INSERT_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
 		}).Fatal(err)
 		return err
 	}
-
-	tx.Commit()
 
 	return nil
 }

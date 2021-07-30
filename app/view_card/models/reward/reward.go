@@ -19,7 +19,7 @@ type Reward struct {
 
 	OperatorType common.OperatorType `json:"operatorType"`
 
-	ValidateTime common.ValidateTime `json:"validateDate"`
+	ValidateTime *common.ValidateTime `json:"validateDate"`
 
 	TotalPoint float64 `json:"totalPoint"`
 
@@ -39,6 +39,7 @@ type Repr struct {
 	StartTime int64 `json:"startTime"`
 	EndTime   int64 `json:"endTIme"`
 
-	TotalPoint float64      `json:"totalPoint"`
-	TaskReprs  []*task.Repr `json:"tasks"`
+	TotalPoint float64 `json:"totalPoint"`
+
+	TaskReprs []*task.Repr `json:"tasks"`
 }

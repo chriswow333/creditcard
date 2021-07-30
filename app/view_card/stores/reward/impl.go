@@ -4,6 +4,7 @@ import (
 	"context"
 
 	rewardM "example.com/creditcard/app/view_card/models/reward"
+	"example.com/creditcard/app/view_card/utils/conn"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -12,12 +13,17 @@ import (
 type impl struct {
 	dig.In
 
-	psql *pgx.ConnPool
+	psql        *pgx.ConnPool
+	connService conn.Service
 }
 
-func New(psql *pgx.ConnPool) Store {
+func New(
+	psql *pgx.ConnPool,
+	connService conn.Service,
+) Store {
 	return &impl{
-		psql: psql,
+		psql:        psql,
+		connService: connService,
 	}
 }
 
@@ -26,17 +32,7 @@ const INSERT_STAT = "INSERT INTO reward " +
 	" total_point, start_time, end_time,update_date) " +
 	" VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
 
-func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
-
-	tx, err := im.psql.Begin()
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
-		return err
-	}
-
-	defer tx.Rollback()
+func (im *impl) Create(ctx context.Context, conn *conn.Connection, reward *rewardM.Reward) error {
 
 	updater := []interface{}{
 		reward.ID,
@@ -51,15 +47,13 @@ func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 		reward.UpdateDate,
 	}
 
-	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
+	if err := im.connService.Exec(conn, INSERT_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
 		}).Fatal(err)
 
 		return err
 	}
-
-	tx.Commit()
 
 	return nil
 }
@@ -102,17 +96,7 @@ const UPDATE_BY_ID_STAT = "UPDATE reward SET " +
 	" start_time = $7, end_time = $8, update_date = $9 " +
 	" where \"id\" = $10"
 
-func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
-
-	tx, err := im.psql.Begin()
-
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
-		return err
-	}
-	defer tx.Rollback()
+func (im *impl) UpdateByID(ctx context.Context, conn *conn.Connection, reward *rewardM.Reward) error {
 
 	updater := []interface{}{
 		reward.Name,
@@ -127,13 +111,13 @@ func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
 		reward.ID,
 	}
 
-	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
+	if err := im.connService.Exec(conn, UPDATE_BY_ID_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
 		})
 		return err
 	}
-	tx.Commit()
+
 	return nil
 }
 

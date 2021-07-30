@@ -5,6 +5,7 @@ import (
 	"time"
 
 	rewardM "example.com/creditcard/app/view_card/models/reward"
+	"example.com/creditcard/app/view_card/utils/conn"
 	uuid "github.com/nu7hatch/gouuid"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -23,15 +24,19 @@ type impl struct {
 	dig.In
 	rewardStore reward.Store
 	taskStore   task.Store
+	connService conn.Service
 }
 
 func New(
 	rewardStore reward.Store,
 	taskStore task.Store,
+	connService conn.Service,
 ) Service {
 	return &impl{
+
 		rewardStore: rewardStore,
 		taskStore:   taskStore,
+		connService: connService,
 	}
 }
 
@@ -61,7 +66,15 @@ func (im *impl) Create(ctx context.Context, rewardRepr *rewardM.Repr) error {
 		UpdateDate:   timeNow().Unix(),
 	}
 
-	if err := im.rewardStore.Create(ctx, reward); err != nil {
+	conn, err := im.connService.GetConn()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+
+	if err := im.rewardStore.Create(ctx, conn, reward); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"msg": "",
 		}).Fatal(err)
@@ -92,7 +105,7 @@ func (im *impl) Create(ctx context.Context, rewardRepr *rewardM.Repr) error {
 
 	}
 
-	if err := im.taskStore.CreateTasks(ctx, tasks); err != nil {
+	if err := im.taskStore.CreateTasks(ctx, conn, tasks); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"msg": "",
 		}).Fatal(err)
@@ -137,6 +150,78 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Repr, error) {
 }
 
 func (im *impl) UpdateByID(ctx context.Context, rewardRepr *rewardM.Repr) error {
+
+	conn, err := im.connService.GetConn()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+
+	defer im.connService.RollBack(conn)
+
+	validateTime := &common.ValidateTime{
+		StartTime: rewardRepr.StartTime,
+		EndTime:   rewardRepr.EndTime,
+	}
+	reward := &rewardM.Reward{
+		ID:           rewardRepr.ID,
+		Name:         rewardRepr.Name,
+		CardID:       rewardRepr.CardID,
+		RewardType:   rewardRepr.RewardType,
+		OperatorType: rewardRepr.OperatorType,
+		ValidateTime: validateTime,
+		TotalPoint:   rewardRepr.TotalPoint,
+		UpdateDate:   timeNow().Unix(),
+	}
+
+	if err := im.rewardStore.UpdateByID(ctx, conn, reward); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+
+	if err := im.taskStore.DeleteByRewardID(ctx, conn, rewardRepr.ID); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+
+	tasks := []*taskM.Task{}
+	for _, t := range rewardRepr.TaskReprs {
+
+		id, err := uuid.NewV4()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"msg": "",
+			}).Fatal(err)
+			return err
+		}
+
+		task := &taskM.Task{
+			ID:         id.String(),
+			Name:       t.Name,
+			Desc:       t.Desc,
+			RewardID:   reward.ID,
+			Point:      t.Point,
+			UpdateDate: timeNow().Unix(),
+		}
+
+		tasks = append(tasks, task)
+
+	}
+
+	if err := im.taskStore.CreateTasks(ctx, conn, tasks); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"msg": "",
+		}).Fatal(err)
+		return err
+	}
+
+	im.connService.Commit(conn)
 
 	return nil
 }
