@@ -22,9 +22,9 @@ var (
 type impl struct {
 	dig.In
 
-	cardStore    card.Store
-	featureStore feature.Store
-	connService  conn.Service
+	cardStore    card.Store    `name:"cardStore"`
+	featureStore feature.Store `name:"featureStore"`
+	connService  conn.Service  `name:"connService"`
 }
 
 func New(
@@ -81,6 +81,11 @@ func (im *impl) Create(ctx context.Context, cardRepr *cardM.Repr) error {
 		}).Fatal(err)
 		return err
 	}
+
+	if cardRepr.Features == nil {
+		return nil
+	}
+
 	feature := &cardM.Feature{
 		FeatureTypes: cardRepr.Features,
 	}

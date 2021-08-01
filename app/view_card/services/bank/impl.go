@@ -19,7 +19,7 @@ var (
 type impl struct {
 	dig.In
 
-	bankStore bank.Store
+	bankStore bank.Store `name:"bankStore"`
 }
 
 func New(

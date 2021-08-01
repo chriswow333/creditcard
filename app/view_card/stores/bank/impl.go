@@ -12,7 +12,7 @@ import (
 type impl struct {
 	dig.In
 
-	psql *pgx.ConnPool
+	psql *pgx.ConnPool `name:"psql"`
 }
 
 func New(psql *pgx.ConnPool) Store {

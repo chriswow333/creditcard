@@ -5,21 +5,24 @@ import (
 
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
+	"go.uber.org/dig"
 
-	conn_pool "example.com/creditcard/app/view_card/utils/conn_pool"
+	conn "example.com/creditcard/app/view_card/utils/conn"
 )
 
 type impl struct {
-	psql *pgx.ConnPool
+	dig.In
+
+	psql *pgx.ConnPool `name:"psql"`
 }
 
-func New(psql *pgx.ConnPool) conn_pool.Service {
+func New(psql *pgx.ConnPool) conn.Service {
 	return &impl{
 		psql: psql,
 	}
 }
 
-func (im *impl) GetConn() (*conn_pool.Connection, error) {
+func (im *impl) GetConn() (*conn.Connection, error) {
 
 	tx, err := im.psql.Begin()
 	if err != nil {
@@ -29,13 +32,13 @@ func (im *impl) GetConn() (*conn_pool.Connection, error) {
 		return nil, err
 	}
 
-	conn := &conn_pool.Connection{
+	conn := &conn.Connection{
 		Connection: tx,
 	}
 	return conn, nil
 }
 
-func (im *impl) Commit(conn *conn_pool.Connection) error {
+func (im *impl) Commit(conn *conn.Connection) error {
 
 	tx, err := conn.Connection.(*pgx.Tx)
 	if err {
@@ -54,7 +57,7 @@ func (im *impl) Commit(conn *conn_pool.Connection) error {
 	return nil
 }
 
-func (im *impl) RollBack(conn *conn_pool.Connection) error {
+func (im *impl) RollBack(conn *conn.Connection) error {
 
 	tx, err := conn.Connection.(*pgx.Tx)
 	if err {
@@ -73,7 +76,7 @@ func (im *impl) RollBack(conn *conn_pool.Connection) error {
 	return nil
 }
 
-func (im *impl) Exec(conn *conn_pool.Connection, sql string, updater ...interface{}) error {
+func (im *impl) Exec(conn *conn.Connection, sql string, updater ...interface{}) error {
 
 	tx, err := conn.Connection.(*pgx.Tx)
 	if err {

@@ -14,9 +14,8 @@ import (
 type impl struct {
 	dig.In
 
-	psql *pgx.ConnPool
-
-	connService conn.Service
+	psql        *pgx.ConnPool `name:"psql"`
+	connService conn.Service  `name:"connService"`
 }
 
 func New(

@@ -22,9 +22,10 @@ var (
 
 type impl struct {
 	dig.In
-	rewardStore reward.Store
-	taskStore   task.Store
-	connService conn.Service
+
+	rewardStore reward.Store `name:"rewardStore"`
+	taskStore   task.Store   `name:"taskStore"`
+	connService conn.Service `name:"connService"`
 }
 
 func New(
@@ -50,7 +51,7 @@ func (im *impl) Create(ctx context.Context, rewardRepr *rewardM.Repr) error {
 		return err
 	}
 
-	validateTime := common.ValidateTime{
+	validateTime := &common.ValidateTime{
 		StartTime: rewardRepr.StartTime,
 		EndTime:   rewardRepr.EndTime,
 	}
