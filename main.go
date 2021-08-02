@@ -133,11 +133,11 @@ func main() {
 	container := BuildContainer()
 
 	if err := container.Invoke(func(router *gin.Engine) {
+		logrus.Info("start serving http request")
+
 		manners.ListenAndServe(":8080", router)
 	}); err != nil {
 		panic(err)
 	}
-
-	logrus.Info("start serving http request")
 
 }
