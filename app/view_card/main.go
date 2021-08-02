@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 
@@ -19,13 +20,12 @@ import (
 func BuildContainer() *dig.Container {
 
 	container := dig.New()
-	container.Provide(grpc.NewServer)
 
-	container.Provide(psql.NewPsql, dig.Name("psql")) // new postgres
-	container.Provide(postConn.New, dig.Name("connService"))
+	container.Provide(psql.NewPsql) // new postgres
+	container.Provide(postConn.New)
 
-	container.Provide(bankService.New, dig.Name("bankService"))
-	container.Provide(bankStore.New, dig.Name("bankStore"))
+	container.Provide(bankService.New)
+	container.Provide(bankStore.New)
 
 	// service
 
@@ -39,9 +39,7 @@ func NewServer(
 ) *grpc.Server {
 
 	s := grpc.NewServer()
-
 	bankRoute.NewRoute(s, bankSrc)
-
 	return s
 }
 
@@ -59,8 +57,14 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
+	container.Invoke(func(ss bankService.Service) {
+		fmt.Println(ss)
+	})
+
 	if err := container.Invoke(func(s *grpc.Server) {
-		logrus.Info("start serving grpc request")
+
+		logrus.Info("start serving grpc request", port)
+
 		if err := s.Serve(lis); err != nil {
 			log.Fatalf("failed to serve: %v", err)
 		}

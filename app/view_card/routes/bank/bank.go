@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/sirupsen/logrus"
+	"go.uber.org/dig"
 	"google.golang.org/grpc"
 
 	bankM "example.com/creditcard/app/view_card/models/bank"
@@ -24,6 +25,7 @@ func NewRoute(
 // server is used to implement helloworld.GreeterServer.
 type BankRoute struct {
 	pb.UnimplementedBankServer
+	dig.In
 
 	bankService bank.Service
 }
@@ -34,6 +36,7 @@ func (r *BankRoute) Create(ctx context.Context, in *pb.BankCreateRequest) (*pb.B
 		Name: in.GetPayload().GetName(),
 		Icon: in.GetPayload().GetIcon(),
 	}
+
 	if err := r.bankService.Create(ctx, bank); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"msg": "",
