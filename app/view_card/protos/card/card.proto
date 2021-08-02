@@ -1,0 +1,90 @@
+
+
+syntax = "proto3";
+
+/**
+protoc  --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative *.proto
+
+**/
+
+option go_package="example.com/creditcard/app/view_card/protos/card";
+
+package card;
+
+service Card {
+	rpc Create (CardCreateRequest) returns (CardCreateReply){}
+	rpc GetByID (CardGetByIDRequest) returns (CardGetByIDReply) {}
+	rpc UpdateByID (CardUpdateByIDRequest) returns (CardUpdateByIDReply) {}
+	rpc GetAll (CardGetAllRequest) returns (CardGetAllReply){}
+	rpc GetByBankID (CardGetByBankIDRequest) returns (CardGetByBankIDReply){}
+}
+
+
+message CardPayload {
+	string id = 1;
+	string name = 2;
+	string icon = 3;
+    string bankID = 4;
+    float maxPoint = 5;
+
+    repeated int32 features = 6;
+    string featureDedsc = 7;
+
+    int64 startTime = 8;
+    int64 endTime = 9;
+
+    repeated string applicationQualifications = 10;
+}
+
+message CardCreateRequest{
+    CardPayload payload = 1;
+}
+
+message CardCreateReply {
+    bool success = 1;
+	string msg = 2;
+}
+
+
+message CardGetByIDRequest{
+    string id = 1;
+}
+
+message CardGetByIDReply {
+    bool success = 1;
+	string msg = 2;
+	CardPayload card = 3;
+}
+
+message CardUpdateByIDRequest {
+    CardPayload payload = 1;
+}
+
+message CardUpdateByIDReply {
+    bool success = 1;
+	string msg = 2;
+}
+
+
+
+message CardGetAllRequest{
+
+}
+
+
+message CardGetAllReply{
+    bool success = 1;
+	string msg = 2;
+	repeated CardPayload card = 3;
+}
+
+
+message CardGetByBankIDRequest{
+    string id = 1;
+}
+
+message CardGetByBankIDReply{
+    bool success = 1;
+	string msg = 2;
+	repeated CardPayload card = 3;
+}
