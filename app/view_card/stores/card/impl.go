@@ -8,6 +8,7 @@ import (
 	"go.uber.org/dig"
 
 	cardM "example.com/creditcard/app/view_card/models/card"
+	"example.com/creditcard/app/view_card/models/common"
 	"example.com/creditcard/app/view_card/utils/conn"
 )
 
@@ -50,7 +51,7 @@ func (im *impl) Create(ctx context.Context, conn *conn.Connection, card *cardM.C
 
 	if err := im.connService.Exec(conn, INSERT_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
-			"": "",
+			"msg": err,
 		}).Fatal(err)
 
 		return err
@@ -128,7 +129,9 @@ const SELECT_ALL_STAT = "SELECT \"id\", \"name\", icon, bank_id, " +
 	" FROM card"
 
 func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
+
 	cards := []*cardM.Card{}
+
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -140,13 +143,14 @@ func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 	for rows.Next() {
 
 		card := &cardM.Card{}
+		validateTime := &common.ValidateTime{}
 		selector := []interface{}{
 			&card.ID,
 			&card.Name,
 			&card.Icon,
 			&card.BankID,
-			&card.ValidateTime.StartTime,
-			&card.ValidateTime.EndTime,
+			&validateTime.StartTime,
+			&validateTime.EndTime,
 			&card.MaxPoint,
 			&card.FeatureDesc,
 			&card.ApplicantQualifications,
@@ -159,7 +163,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 			}).Error(err)
 			return nil, err
 		}
-
+		card.ValidateTime = validateTime
 		cards = append(cards, card)
 	}
 
@@ -190,17 +194,16 @@ func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Card, 
 	for rows.Next() {
 
 		card := &cardM.Card{}
-
+		validateTime := &common.ValidateTime{}
 		selector := []interface{}{
 			&card.ID,
 			&card.Name,
 			&card.Icon,
 			&card.BankID,
-			&card.ValidateTime.StartTime,
-			&card.ValidateTime.EndTime,
+			&validateTime.StartTime,
+			&validateTime.EndTime,
 			&card.MaxPoint,
 			&card.FeatureDesc,
-			&card.ApplicantQualifications,
 			&card.ApplicantQualifications,
 			&card.UpdateDate,
 		}
@@ -212,6 +215,8 @@ func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Card, 
 
 			return nil, err
 		}
+
+		card.ValidateTime = validateTime
 
 		cards = append(cards, card)
 

@@ -1,0 +1,90 @@
+
+
+syntax = "proto3";
+
+/**
+protoc  --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative *.proto
+
+**/
+
+option go_package="example.com/creditcard/app/view_card/protos/reward";
+
+
+
+package reward;
+
+
+service Reward{
+    rpc Create (RewardCreateRequest) returns (RewardCreateReply){}
+    rpc GetByID (RewardGetByIDRequest) returns (RewardGetByIDReply) {}
+    rpc UpdateByID (RewardUpdateByIDRequest) returns (RewardUpdateByIDReply) {}
+    rpc GetByCardID (RewardGetByCardIDRequest) returns (RewardGetByCardIDReply){}
+}
+
+
+message RewardPayload{
+    string id = 1;
+    string name = 2;
+    string cardID = 3;
+    string desc = 4;
+
+    int32 rewardType = 5;
+    int32 operatorType = 6;
+    int64 startTime = 7;
+    int64 endTime = 8;
+    double totalPoint = 9;
+    int64 updateDate = 10;
+
+    repeated TaskPayload taskPayloads = 11;
+
+}
+
+message TaskPayload {
+    string id = 1;
+    string name = 2;
+    string desc = 3;
+    string rewardID = 4;
+    double point = 5;
+}
+
+
+message RewardCreateRequest {
+    RewardPayload payload = 1;
+}
+
+message RewardCreateReply {
+    bool success = 1;
+    string msg = 2;
+}
+
+
+message RewardGetByIDRequest {
+    string id = 1;
+}
+
+message RewardGetByIDReply {
+    bool success = 1;
+    string msg = 2;
+    RewardPayload reward = 3;
+}
+
+message RewardUpdateByIDRequest {
+    RewardPayload payload = 1;
+}
+
+message RewardUpdateByIDReply {
+    bool success = 1;
+    string msg = 2;
+}
+
+
+message RewardGetByCardIDRequest {
+    string id = 1;
+}
+
+
+message RewardGetByCardIDReply {
+    bool success = 1;
+    string msg = 2;
+    repeated RewardPayload reward = 3;
+}

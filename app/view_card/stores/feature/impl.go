@@ -29,19 +29,19 @@ func New(
 }
 
 const INSERT_STAT = "INSERT INTO feature " +
-	" (card_id, type, \"desc\") " +
-	" VALUES ($1, $2, $3)"
+	" (card_id, type) " +
+	" VALUES ($1, $2)"
 
 func (im *impl) CreateByCardID(ctx context.Context, conn *conn.Connection, cardID string, feature *cardM.Feature) error {
 
 	for _, f_type := range feature.FeatureTypes {
 		updater := []interface{}{
 			cardID,
-			f_type,
+			int(f_type),
 		}
 		if err := im.connService.Exec(conn, INSERT_STAT, updater...); err != nil {
 			logrus.WithFields(logrus.Fields{
-				"": "",
+				"msg": err,
 			}).Fatal(err)
 			return err
 		}
@@ -61,6 +61,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) (*cardM.Feature,
 	conditions := []interface{}{
 		cardID,
 	}
+
 	rows, err := im.psql.Query(SELECT_CARDID_STAT, conditions...)
 
 	if err != nil {
@@ -71,13 +72,14 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) (*cardM.Feature,
 	}
 
 	for rows.Next() {
+		featureType := new(int32)
 
-		var featureType int
 		selector := []interface{}{
 			featureType,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
+
 			logrus.WithFields(logrus.Fields{
 				"": "",
 			}).Error(err)
@@ -85,7 +87,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) (*cardM.Feature,
 			return nil, err
 		}
 
-		f, err := common.ConvertFeature(featureType)
+		f, err := common.ConvertFeature(*featureType)
 
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
@@ -94,7 +96,6 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) (*cardM.Feature,
 			return nil, err
 		}
 		feature.FeatureTypes = append(feature.FeatureTypes, f)
-
 	}
 
 	return feature, nil

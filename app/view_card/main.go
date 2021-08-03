@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 
@@ -13,8 +12,18 @@ import (
 	"example.com/creditcard/base/psql"
 
 	bankRoute "example.com/creditcard/app/view_card/routes/bank"
+	cardRoute "example.com/creditcard/app/view_card/routes/card"
+	rewardRoute "example.com/creditcard/app/view_card/routes/reward"
 	bankService "example.com/creditcard/app/view_card/services/bank"
+	cardService "example.com/creditcard/app/view_card/services/card"
 	bankStore "example.com/creditcard/app/view_card/stores/bank"
+	cardStore "example.com/creditcard/app/view_card/stores/card"
+	featureStore "example.com/creditcard/app/view_card/stores/feature"
+
+	rewardService "example.com/creditcard/app/view_card/services/reward"
+	rewardStore "example.com/creditcard/app/view_card/stores/reward"
+
+	taskStore "example.com/creditcard/app/view_card/stores/task"
 )
 
 func BuildContainer() *dig.Container {
@@ -26,6 +35,12 @@ func BuildContainer() *dig.Container {
 
 	container.Provide(bankService.New)
 	container.Provide(bankStore.New)
+	container.Provide(cardService.New)
+	container.Provide(cardStore.New)
+	container.Provide(featureStore.New)
+	container.Provide(rewardService.New)
+	container.Provide(rewardStore.New)
+	container.Provide(taskStore.New)
 
 	// service
 
@@ -36,10 +51,16 @@ func BuildContainer() *dig.Container {
 
 func NewServer(
 	bankSrc bankService.Service,
+	cardSrc cardService.Service,
+	rewardSrc rewardService.Service,
 ) *grpc.Server {
 
 	s := grpc.NewServer()
+
 	bankRoute.NewRoute(s, bankSrc)
+	cardRoute.NewRoute(s, cardSrc)
+	rewardRoute.NewRoute(s, rewardSrc)
+
 	return s
 }
 
@@ -56,10 +77,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-
-	container.Invoke(func(ss bankService.Service) {
-		fmt.Println(ss)
-	})
 
 	if err := container.Invoke(func(s *grpc.Server) {
 

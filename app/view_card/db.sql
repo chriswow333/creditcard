@@ -65,6 +65,6 @@ create table task (
 DROP TABLE  if exists feature;
 create table feature (
     card_id VARCHAR(36),
-	"type" INTEGER,
+	"type" smallint,
 	PRIMARY KEY(card_id, "type")
 );

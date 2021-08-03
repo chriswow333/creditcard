@@ -3,6 +3,7 @@ package reward
 import (
 	"context"
 
+	"example.com/creditcard/app/view_card/models/common"
 	rewardM "example.com/creditcard/app/view_card/models/reward"
 	"example.com/creditcard/app/view_card/utils/conn"
 	"github.com/jackc/pgx"
@@ -67,6 +68,7 @@ const SELECT_STAT = "SELECT \"id\", \"name\", card_id, " +
 func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error) {
 	reward := &rewardM.Reward{}
 
+	validateTime := &common.ValidateTime{}
 	selector := []interface{}{
 		&reward.ID,
 		&reward.Name,
@@ -75,8 +77,8 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error)
 		&reward.RewardType,
 		&reward.OperatorType,
 		&reward.TotalPoint,
-		&reward.ValidateTime.StartTime,
-		&reward.ValidateTime.EndTime,
+		&validateTime.StartTime,
+		&validateTime.EndTime,
 		&reward.UpdateDate,
 	}
 
@@ -87,6 +89,8 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error)
 		return nil, err
 
 	}
+
+	reward.ValidateTime = validateTime
 	return reward, nil
 }
 
@@ -133,6 +137,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 	conditions := []interface{}{
 		cardID,
 	}
+
 	rows, err := im.psql.Query(SELECT_CARDID_STAT, conditions...)
 
 	if err != nil {
@@ -145,7 +150,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 	for rows.Next() {
 
 		reward := &rewardM.Reward{}
-
+		validateTime := &common.ValidateTime{}
 		selector := []interface{}{
 			&reward.ID,
 			&reward.Name,
@@ -154,8 +159,8 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 			&reward.RewardType,
 			&reward.OperatorType,
 			&reward.TotalPoint,
-			&reward.ValidateTime.StartTime,
-			&reward.ValidateTime.EndTime,
+			&validateTime.StartTime,
+			&validateTime.EndTime,
 			&reward.UpdateDate,
 		}
 
@@ -167,6 +172,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 			return nil, err
 		}
 
+		reward.ValidateTime = validateTime
 		rewards = append(rewards, reward)
 
 	}

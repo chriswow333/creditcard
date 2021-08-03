@@ -40,11 +40,11 @@ func (im *impl) GetConn() (*conn.Connection, error) {
 
 func (im *impl) Commit(conn *conn.Connection) error {
 
-	tx, err := conn.Connection.(*pgx.Tx)
-	if err {
+	tx, ok := conn.Connection.(*pgx.Tx)
+	if !ok {
 		logrus.WithFields(logrus.Fields{
 			"msg": "cast failed",
-		}).Error(err)
+		})
 		return errors.New("cast failed")
 	}
 
@@ -59,30 +59,25 @@ func (im *impl) Commit(conn *conn.Connection) error {
 
 func (im *impl) RollBack(conn *conn.Connection) error {
 
-	tx, err := conn.Connection.(*pgx.Tx)
-	if err {
+	tx, ok := conn.Connection.(*pgx.Tx)
+	if !ok {
 		logrus.WithFields(logrus.Fields{
 			"msg": "cast failed",
-		}).Error(err)
+		})
 		return errors.New("cast failed")
 	}
 
-	if err := tx.Rollback(); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
-		return err
-	}
+	tx.Rollback()
 	return nil
 }
 
 func (im *impl) Exec(conn *conn.Connection, sql string, updater ...interface{}) error {
 
-	tx, err := conn.Connection.(*pgx.Tx)
-	if err {
+	tx, ok := conn.Connection.(*pgx.Tx)
+	if !ok {
 		logrus.WithFields(logrus.Fields{
 			"msg": "cast failed",
-		}).Error(err)
+		})
 		return errors.New("cast failed")
 	}
 
@@ -90,7 +85,6 @@ func (im *impl) Exec(conn *conn.Connection, sql string, updater ...interface{}) 
 		logrus.WithFields(logrus.Fields{
 			"": "",
 		}).Fatal(err)
-
 		return err
 	}
 	return nil

@@ -74,6 +74,7 @@ func (im *impl) Create(ctx context.Context, rewardRepr *rewardM.Repr) error {
 		}).Fatal(err)
 		return err
 	}
+	defer im.connService.RollBack(conn)
 
 	if err := im.rewardStore.Create(ctx, conn, reward); err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -113,6 +114,7 @@ func (im *impl) Create(ctx context.Context, rewardRepr *rewardM.Repr) error {
 		return err
 	}
 
+	im.connService.Commit(conn)
 	return nil
 }
 

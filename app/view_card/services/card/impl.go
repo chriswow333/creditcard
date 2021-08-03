@@ -262,6 +262,17 @@ func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Repr, 
 		cardReprs = append(cardReprs, cardRepr)
 	}
 
+	for _, c := range cardReprs {
+		feature, err := im.getFeaturesByCardID(ctx, c.ID)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"msg": "",
+			}).Fatal(err)
+			return nil, err
+		}
+		c.Features = feature.FeatureTypes
+	}
+
 	return cardReprs, nil
 }
 

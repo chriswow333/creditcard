@@ -25,7 +25,7 @@ message CardPayload {
 	string name = 2;
 	string icon = 3;
     string bankID = 4;
-    float maxPoint = 5;
+    double maxPoint = 5;
 
     repeated int32 features = 6;
     string featureDedsc = 7;
