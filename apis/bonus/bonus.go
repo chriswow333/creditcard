@@ -4,28 +4,28 @@ import (
 	"net/http"
 
 	"example.com/creditcard/middlewares/apis"
-	"example.com/creditcard/service/bonus"
+	"example.com/creditcard/service/cost"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/dig"
 
-	bonusM "example.com/creditcard/models/bonus"
+	costM "example.com/creditcard/models/cost"
 )
 
 type bonusHandler struct {
 	dig.In
 
-	bonusSrc bonus.Service
+	costSrc cost.Service
 }
 
 func NewBonusHandler(
 	rg *gin.RouterGroup,
 
-	bonusSrc bonus.Service,
+	costSrc cost.Service,
 
 ) {
 
 	bh := &bonusHandler{
-		bonusSrc: bonusSrc,
+		costSrc: costSrc,
 	}
 
 	apis.Handle(rg, http.MethodGet, "/rewardID/:ID", bh.get)
@@ -35,10 +35,10 @@ func NewBonusHandler(
 
 func (h *bonusHandler) update(ctx *gin.Context) {
 	rewardID := ctx.Param("ID")
-	var bonusModel *bonusM.Bonus
-	ctx.BindJSON(&bonusModel)
+	var costModel *costM.Cost
+	ctx.BindJSON(&costModel)
 
-	if err := h.bonusSrc.UpdateByRewardID(ctx, rewardID, bonusModel); err != nil {
+	if err := h.costSrc.UpdateByRewardID(ctx, rewardID, costModel); err != nil {
 		ctx.JSON(http.StatusInternalServerError, "")
 		return
 	}
@@ -48,7 +48,7 @@ func (h *bonusHandler) update(ctx *gin.Context) {
 func (h *bonusHandler) get(ctx *gin.Context) {
 
 	rewardID := ctx.Param("ID")
-	bonus, err := h.bonusSrc.GetByRewardID(ctx, rewardID)
+	bonus, err := h.costSrc.GetByRewardID(ctx, rewardID)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)

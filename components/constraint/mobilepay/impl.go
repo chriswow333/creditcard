@@ -30,9 +30,9 @@ func New(
 	}
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
 
-	constraint := &eventM.Constraint{
+	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
 		Descs:          im.descs,
 		ConstraintType: im.constraintType,
@@ -56,6 +56,9 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint,
 			misses = append(misses, mo.ID)
 		}
 	}
+
+	constraint.Matches = matches
+	constraint.Misses = misses
 
 	switch im.operator {
 	case constraintM.OrOperator:

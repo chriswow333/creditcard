@@ -2,8 +2,8 @@ package constraint
 
 import (
 	"example.com/creditcard/models/bonus"
-	"example.com/creditcard/models/cost"
 	"example.com/creditcard/models/customization"
+	"example.com/creditcard/models/dollar"
 	"example.com/creditcard/models/ecommerce"
 	"example.com/creditcard/models/mobilepay"
 	"example.com/creditcard/models/onlinegame"
@@ -38,7 +38,7 @@ const (
 	ConstraintPayloadType ConstraintType = iota
 	CustomizationType
 	TimeIntervalType
-	CostLimitType
+	DollarLimitType
 	BonusLimitType
 	MobilepayType
 	EcommerceType
@@ -55,8 +55,8 @@ type ConstraintPayload struct {
 
 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
 
-	CostLimit  *cost.CostLimit   `json:"costLimit,omitempty"`
-	BonusLimit *bonus.BonusLimit `json:"bonusLimit,omitempty"`
+	DollarLimit *dollar.DollarLimit `json:"dollarLimit,omitempty"`
+	BonusLimit  *bonus.BonusLimit   `json:"bonusLimit,omitempty"`
 
 	TimeIntervals []*timeinterval.TimeInterval `json:"timeIntervals,omitempty"`
 

@@ -104,7 +104,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 		specificedCardID[c] = true
 	}
 
-	cards := []*eventM.Card{}
+	cards := []*eventM.CardResp{}
 
 	for _, c := range im.cards {
 		if len(e.CardIDs) != 0 {
@@ -128,7 +128,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 	return resp, nil
 }
 
-func (im *impl) evaluateCard(ctx context.Context, e *eventM.Event, cardComp cardComp.Component) (*eventM.Card, error) {
+func (im *impl) evaluateCard(ctx context.Context, e *eventM.Event, cardComp cardComp.Component) (*eventM.CardResp, error) {
 
 	card, err := cardComp.Satisfy(ctx, e)
 	if err != nil {

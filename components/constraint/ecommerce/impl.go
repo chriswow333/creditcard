@@ -31,9 +31,9 @@ func New(
 	}
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.Constraint, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
 
-	constraint := &eventM.Constraint{
+	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
 		Descs:          im.descs,
 		ConstraintType: im.constraintType,

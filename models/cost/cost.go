@@ -1,22 +1,21 @@
 package cost
 
-type CurrencyType int32
+import (
+	"example.com/creditcard/models/bonus"
+	"example.com/creditcard/models/dollar"
+)
+
+type CostType int32
 
 const (
-	NTD CurrencyType = iota
+	Dollar = iota
+	Bonus
 )
 
 type Cost struct {
-	Current  int64        `json:"current"`
-	Total    int64        `json:"total"`
-	Currency CurrencyType `json:"currency"`
-}
+	CostType CostType `json:"costType"`
 
-type CostLimit struct {
-	ID           string       `json:"id"`
-	Name         string       `json:"name"`
-	Desc         string       `json:"desc"`
-	CurrencyType CurrencyType `json:"currencyType"`
-	AtLeast      int64        `json:"atLeast"`
-	AtMost       int64        `json:"atMost"`
+	Dollar *dollar.Dollar `json:"dollar"` // 現金回饋
+	Bonus  *bonus.Bonus   `json:"bonus"`  // 點數回饋
+
 }

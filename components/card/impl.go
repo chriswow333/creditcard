@@ -26,16 +26,17 @@ func New(
 	}
 }
 
-func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Card, error) {
+func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.CardResp, error) {
 
-	card := &eventM.Card{
+	card := &eventM.CardResp{
 		Name:      im.card.Name,
 		Desc:      im.card.Desc,
 		StartDate: im.card.StartDate,
 		EndDate:   im.card.EndDate,
 		LinkURL:   im.card.LinkURL,
 	}
-	rewards := []*eventM.Reward{}
+
+	rewards := []*eventM.RewardResp{}
 
 	totalBonus := &bonusM.Bonus{
 		BonusType: bonusM.Percentage,
@@ -53,12 +54,14 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Card, err
 			}).Error(err)
 			return nil, err
 		}
-		rewards = append(rewards, reward)
-		if reward.Pass {
-			countBonus.Point += reward.Bonus.Point
-		}
 
-		totalBonus.Point += reward.Bonus.Point
+		rewards = append(rewards, reward)
+
+		// if reward.Pass {
+		// 	countBonus.Point += reward.Bonus.Point
+		// }
+
+		// totalBonus.Point += reward.Bonus.Point
 	}
 
 	card.Rewards = rewards
