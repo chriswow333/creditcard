@@ -21,8 +21,6 @@ type Reward struct {
 	EndDate    int64  `json:"endDate"`
 	UpdateDate int64  `json:"updateDate"`
 
-	RewardType RewardType `json:"rewardType"`
-
 	Cost *cost.Cost `json:"cost"`
 
 	Operator    constraint.OperatorType  `json:"operator,omitempty"`

@@ -3,10 +3,11 @@ package customization
 import (
 	"context"
 
-	customizationM "example.com/creditcard/models/customization"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
+
+	customizationM "example.com/creditcard/models/customization"
 )
 
 type impl struct {
@@ -22,7 +23,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_CUSTOMIZARION_STAT = "INSERT INTO customization " +
-	"(\"id\", reward_id, \"name\", descs) VALUES ($1, $2, $3, $4)"
+	"(\"id\", reward_id, \"name\", desc) VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, customization *customizationM.Customization) error {
 
@@ -40,7 +41,7 @@ func (im *impl) Create(ctx context.Context, customization *customizationM.Custom
 		customization.ID,
 		customization.RewardID,
 		customization.Name,
-		customization.Descs,
+		customization.Desc,
 	}
 
 	if _, err := tx.Exec(INSERT_CUSTOMIZARION_STAT, updater...); err != nil {
@@ -56,7 +57,7 @@ func (im *impl) Create(ctx context.Context, customization *customizationM.Custom
 	return nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", reward_id, \"name\", descs " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", reward_id, \"name\", desc " +
 	"FROM customization " +
 	" WHERE \"id\" = $1"
 
@@ -68,7 +69,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*customizationM.Customi
 		&customization.ID,
 		&customization.RewardID,
 		&customization.Name,
-		&customization.Descs,
+		&customization.Desc,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
@@ -82,7 +83,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*customizationM.Customi
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE customization SET " +
-	" reward_id = $1, \"name\" = $2, descs = $3 " +
+	" reward_id = $1, \"name\" = $2, desc = $3 " +
 	" where \"id\" = $4"
 
 func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Customization) error {
@@ -100,7 +101,7 @@ func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Cu
 	updater := []interface{}{
 		customization.RewardID,
 		customization.Name,
-		customization.Descs,
+		customization.Desc,
 		customization.ID,
 	}
 
@@ -115,7 +116,7 @@ func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Cu
 	return nil
 }
 
-const SELECT_BY_REWARDID_STAT = "SELECT \"id\", reward_id, \"name\", descs " +
+const SELECT_BY_REWARDID_STAT = "SELECT \"id\", reward_id, \"name\", desc " +
 	" FROM customization " +
 	" WHERE reward_id = $1"
 
@@ -137,7 +138,7 @@ func (im *impl) GetByRewardID(ctx context.Context, rewardID string) ([]*customiz
 			&customization.ID,
 			&customization.RewardID,
 			&customization.Name,
-			&customization.Descs,
+			&customization.Desc,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
