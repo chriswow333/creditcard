@@ -15,7 +15,7 @@ const (
 type Cost struct {
 	CostType CostType `json:"costType"`
 
-	Dollar *dollar.Dollar `json:"dollar"` // 現金回饋
-	Bonus  *bonus.Bonus   `json:"bonus"`  // 點數回饋
+	Dollar *dollar.Dollar `json:"dollar,omitempty"` // 現金回饋
+	Bonus  *bonus.Bonus   `json:"bonus,omitempty"`  // 點數回饋
 
 }

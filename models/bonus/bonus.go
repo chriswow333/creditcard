@@ -10,15 +10,19 @@ const (
 )
 
 type Bonus struct {
-	Point      float64    `json:"point"`
-	BonusType  BonusType  `json:"bonusType"`
-	BonusLimit BonusLimit `json:"bonusLimit"`
+	Point float64 `json:"point,omitempty"`
+
+	BonusType BonusType `json:"bonusType"`
+
+	BonusLimit BonusLimit `json:"bonusLimit,omitempty"`
 }
 
 type BonusLimit struct {
-	ID   string  `json:"id"`
-	Name string  `json:"name"`
-	Desc string  `json:"desc"`
-	Min  float64 `json:"min"`
-	Max  float64 `json:"max"`
+	ID   string `json:"id"`
+	Name string `json:"name,omitempty"`
+
+	Desc string `json:"desc,omitempty"`
+
+	Min float64 `json:"min,omitempty"`
+	Max float64 `json:"max,omitempty"`
 }

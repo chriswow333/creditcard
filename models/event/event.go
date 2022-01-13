@@ -2,7 +2,6 @@ package event
 
 import (
 	"example.com/creditcard/models/action"
-	"example.com/creditcard/models/bonus"
 	"example.com/creditcard/models/constraint"
 	"example.com/creditcard/models/cost"
 	"example.com/creditcard/models/customization"
@@ -22,17 +21,16 @@ const (
 )
 
 type Event struct {
-	ID string
+	ID string `json:"id"`
 
-	// Dollar *dollar.Dollar `json:"dollar,omitempty"` // 送進來的event 只會有花多少錢, 不會有花多少bonus
 	Cash     float64  `json:"cash"`
 	CashType CashType `json:"cashType"`
 
-	CardIDs []string `json:"cards,omitempty"`
+	CardIDs []string `json:"cards,omitempty"` // 已定義要跑哪幾張卡
 
 	EffictiveTime int64 `json:"effictiveTime"`
 
-	ActionType *action.ActionType `json:"actionType"`
+	ActionType action.ActionType `json:"actionType"`
 
 	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces,omitempty"`
 	Supermarkets []*supermarket.Supermarket `json:"supermarkets,omitempty"`
@@ -51,37 +49,37 @@ type Response struct {
 }
 
 type CardResp struct {
-	Name      string `json:"name"`
-	Desc      string `json:"desc"`
-	StartDate int64  `json:"startDate"`
-	EndDate   int64  `json:"endDate"`
-	LinkURL   string `json:"linkURL"`
+	Name      string `json:"name,omitempty"`
+	Desc      string `json:"desc,omitempty"`
+	StartDate int64  `json:"startDate,omitempty"`
+	EndDate   int64  `json:"endDate,omitempty"`
+	LinkURL   string `json:"linkURL,omitempty"`
 
-	Rewards    []*RewardResp `json:"rewards"`
-	TotalBonus *bonus.Bonus  `json:"totalBonus"`
-	CountBonus *bonus.Bonus  `json:"countBonus"`
+	Rewards []*RewardResp `json:"rewards"`
 }
 
 type RewardResp struct {
-	Pass bool `json:"pass,omitempty"`
+	Pass bool `json:"pass"`
 
 	Cost *cost.Cost `json:"cost"`
 
-	Name        string
-	Desc        string                  `json:"desc"`
-	Operator    constraint.OperatorType `json:"operator,omitempty"`
-	Constraints []*ConstraintResp       `json:"constraints,omitempty"`
+	Name     string                  `json:"name,omitempty"`
+	Desc     string                  `json:"desc,omitempty"`
+	Operator constraint.OperatorType `json:"operator"`
+
+	Constraints []*ConstraintResp `json:"constraints,omitempty"`
 }
 
 type ConstraintResp struct {
-	Pass bool `json:"pass,omitempty"`
+	Pass bool `json:"pass"`
 
 	ConstraintType constraint.ConstraintType `json:"constraintType"`
 
 	Matches []string `json:"matches,omitempty"` // 符合限制的id, ex. supermarket
 	Misses  []string `json:"misses,omitempty"`  // 符合限制的id, ex. supermarket
 
-	Name        string            `json:"name"`
-	Descs       []string          `json:"descs"`
-	Constraints []*ConstraintResp `json:"constraints"`
+	Name string `json:"name,omitempty"`
+	Desc string `json:"desc,omitempty"`
+
+	Constraints []*ConstraintResp `json:"constraints,omitempty"`
 }

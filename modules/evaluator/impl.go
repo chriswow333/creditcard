@@ -3,13 +3,16 @@ package evaluator
 import (
 	"context"
 
+	uuid "github.com/nu7hatch/gouuid"
+	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
 
-	"github.com/sirupsen/logrus"
-
 	"example.com/creditcard/builder/cardreward"
+
 	cardComp "example.com/creditcard/components/card"
+
 	eventM "example.com/creditcard/models/event"
+
 	cardService "example.com/creditcard/service/card"
 	rewardService "example.com/creditcard/service/reward"
 )
@@ -95,6 +98,18 @@ func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) erro
 
 func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
 
+	if e.ID == "" {
+		id, err := uuid.NewV4()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"msg": "",
+			}).Fatal(err)
+
+			return nil, err
+		}
+		e.ID = id.String()
+	}
+
 	resp := &eventM.Response{
 		EventID: e.ID,
 	}
@@ -131,6 +146,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 func (im *impl) evaluateCard(ctx context.Context, e *eventM.Event, cardComp cardComp.Component) (*eventM.CardResp, error) {
 
 	card, err := cardComp.Satisfy(ctx, e)
+
 	if err != nil {
 		return nil, err
 	}

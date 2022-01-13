@@ -6,7 +6,6 @@ import (
 	"example.com/creditcard/components/constraint"
 	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
-	"example.com/creditcard/models/onlinegame"
 	onlinegameM "example.com/creditcard/models/onlinegame"
 )
 
@@ -14,7 +13,7 @@ type impl struct {
 	onlinegames    []*onlinegameM.Onlinegame
 	constraintType constraintM.ConstraintType
 	name           string
-	descs          []string
+	desc           string
 	operator       constraintM.OperatorType
 }
 
@@ -27,7 +26,7 @@ func New(
 		operator:       constraintPayload.Operator,
 		constraintType: constraintPayload.ConstraintType,
 		name:           constraintPayload.Name,
-		descs:          constraintPayload.Descs,
+		desc:           constraintPayload.Desc,
 	}
 }
 
@@ -35,23 +34,23 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Descs:          im.descs,
+		Desc:           im.desc,
 		ConstraintType: im.constraintType,
 	}
 
 	matches := []string{}
 	misses := []string{}
-	onlinegameMap := make(map[string]*onlinegame.Onlinegame)
+	onlinegameMap := make(map[string]*onlinegameM.Onlinegame)
 
 	for _, on := range e.Onlinegames {
 		onlinegameMap[on.ID] = on
 	}
 
-	for _, ec := range im.onlinegames {
-		if _, ok := onlinegameMap[ec.ID]; ok {
-			matches = append(matches, ec.ID)
+	for _, on := range im.onlinegames {
+		if _, ok := onlinegameMap[on.ID]; ok {
+			matches = append(matches, on.ID)
 		} else {
-			misses = append(misses, ec.ID)
+			misses = append(misses, on.ID)
 		}
 	}
 

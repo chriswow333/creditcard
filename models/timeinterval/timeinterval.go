@@ -2,18 +2,18 @@ package timeinterval
 
 type TimeInterval struct {
 	ID   string `json:"id"`
-	Name string `json:"name"`
-	Desc string `json:"desc"`
+	Name string `json:"name,omitempty"`
+	Desc string `json:"desc,omitempty"`
 
-	DayFrom int32 `json:"day"`
-	DayTo   int32 `json:"dayTo"`
+	DayFrom int32 `json:"day,omitempty"`
+	DayTo   int32 `json:"dayTo,omitempty"`
 
-	WeekDayFrom int32 `json:"weekDay"`
-	WeekDayTo   int32 `json:"weekDayTo"`
+	WeekDayFrom int32 `json:"weekDay,omitempty"`
+	WeekDayTo   int32 `json:"weekDayTo,omitempty"`
 
-	HourFrom int32 `json:"hour"`
-	HourTo   int32 `json:"hourTo"`
+	HourFrom int32 `json:"hour,omitempty"`
+	HourTo   int32 `json:"hourTo,omitempty"`
 
-	MinuteFrom int32 `json:"minute"`
-	MinuteTo   int32 `json:"minuteTo"`
+	MinuteFrom int32 `json:"minute,omitempty"`
+	MinuteTo   int32 `json:"minuteTo,omitempty"`
 }

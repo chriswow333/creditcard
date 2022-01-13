@@ -3,11 +3,11 @@ package card
 import (
 	"context"
 
+	"github.com/sirupsen/logrus"
+
 	"example.com/creditcard/components/reward"
-	bonusM "example.com/creditcard/models/bonus"
 	cardM "example.com/creditcard/models/card"
 	eventM "example.com/creditcard/models/event"
-	"github.com/sirupsen/logrus"
 )
 
 type impl struct {
@@ -38,16 +38,10 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.CardResp,
 
 	rewards := []*eventM.RewardResp{}
 
-	totalBonus := &bonusM.Bonus{
-		BonusType: bonusM.Percentage,
-	}
-
-	countBonus := &bonusM.Bonus{
-		BonusType: bonusM.Percentage,
-	}
-
 	for _, r := range im.rewards {
+
 		reward, err := (*r).Satisfy(ctx, e)
+
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"": "",
@@ -56,16 +50,8 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.CardResp,
 		}
 
 		rewards = append(rewards, reward)
-
-		// if reward.Pass {
-		// 	countBonus.Point += reward.Bonus.Point
-		// }
-
-		// totalBonus.Point += reward.Bonus.Point
 	}
 
 	card.Rewards = rewards
-	card.CountBonus = countBonus
-	card.TotalBonus = totalBonus
 	return card, nil
 }

@@ -9,12 +9,12 @@ const (
 )
 
 type Dollar struct {
-	Current int64 `json:"current"` // 該單筆花費多少
-	Total   int64 `json:"total"`   // 目前總共花費多少
+	Current int64 `json:"current,omitempty"` // 該單筆花費多少
+	Total   int64 `json:"total,omitempty"`   // 目前總共花費多少
 
-	DollarBonusBack int64     `json:"dollarBonusGet"` // 實際用多少錢得到回饋
-	DollarBack      float64   `json:"dollarBack"`     // 回饋多少
-	PointBack       PointBack `json:"pointBack"`      // 是否回饋全拿
+	DollarBonusBack int64     `json:"dollarBonusGet,omitempty"` // 實際用多少錢得到回饋
+	DollarBack      float64   `json:"dollarBack,omitempty"`     // 回饋多少
+	PointBack       PointBack `json:"pointBack,omitempty"`      // 是否回饋全拿
 
 	DollarType  DollarType  `json:"currency"`
 	DollarLimit DollarLimit `json:"dollarLimit"`

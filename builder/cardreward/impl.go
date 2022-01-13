@@ -2,7 +2,6 @@ package cardreward
 
 import (
 	"context"
-	"fmt"
 
 	"go.uber.org/dig"
 
@@ -47,7 +46,6 @@ func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*c
 		for _, co := range r.Constraints {
 
 			constraint, _ := im.getConstraintComponent(ctx, co)
-
 			constraints = append(constraints, constraint)
 
 		}
@@ -65,6 +63,11 @@ func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*c
 func (im *impl) getCostComponent(ctx context.Context, cost *costM.Cost) (*costComp.Component, error) {
 
 	var costComponent costComp.Component
+
+	// if cost == nil {
+	// 	return &costComponent, nil
+	// }
+
 	switch cost.CostType {
 	case costM.Dollar:
 		costComponent = dollar.New(cost.Dollar)
@@ -94,7 +97,6 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 	var constraintComponents []*constraintComp.Component
 
 	var constraintComponent constraintComp.Component
-	fmt.Println(payload.ConstraintType)
 
 	switch payload.ConstraintType {
 	case constraintM.ConstraintPayloadType:
@@ -134,11 +136,11 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 	}
 
 	payloadCompoent := constraintpayload.New(constraintComponents, payload)
+
 	return &payloadCompoent, nil
 }
 
 func (im *impl) getRewardComponent(ctx context.Context, r *rewardM.Reward, constraints []*constraintComp.Component, costComp *costComp.Component) (*rewardComp.Component, error) {
-
 	component := rewardComp.New(r, costComp, constraints)
 	return &component, nil
 }

@@ -24,7 +24,7 @@ type Psql struct {
 func NewPsql() *pgx.ConnPool {
 	pgxConfig := pgx.ConnConfig{
 		Host:     "0.0.0.0",
-		Database: "view_card",
+		Database: "postgres",
 		Port:     5432,
 		User:     "postgres",
 		Password: "z20339",

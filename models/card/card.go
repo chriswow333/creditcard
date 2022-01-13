@@ -5,14 +5,16 @@ import (
 )
 
 type Card struct {
-	ID         string `json:"id"`
-	BankID     string `json:"bankID"`
-	Name       string `json:"name"`
-	Desc       string `json:"desc"`
-	StartDate  int64  `json:"startDate"`
-	EndDate    int64  `json:"endDate"`
-	UpdateDate int64  `json:"updateDate"`
-	LinkURL    string `json:"linkURL"`
+	ID     string `json:"id"`
+	BankID string `json:"bankID,omitempty"`
+	Name   string `json:"name,omitempty"`
+	Desc   string `json:"desc,omitempty"`
+
+	StartDate  int64 `json:"startDate,omitempty"`
+	EndDate    int64 `json:"endDate,omitempty"`
+	UpdateDate int64 `json:"updateDate,omitempty"`
+
+	LinkURL string `json:"linkURL,omitempty"`
 
 	Rewards []*reward.Reward `json:"rewards,omitempty"`
 }

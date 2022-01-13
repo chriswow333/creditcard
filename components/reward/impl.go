@@ -45,6 +45,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.RewardRes
 	misses := 0
 
 	for _, c := range im.constraintComps {
+
 		constraint, err := (*c).Judge(ctx, e)
 
 		if err != nil {

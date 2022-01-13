@@ -6,7 +6,6 @@ import (
 	"example.com/creditcard/components/constraint"
 	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
-	"example.com/creditcard/models/supermarket"
 	supermarketM "example.com/creditcard/models/supermarket"
 )
 
@@ -15,7 +14,7 @@ type impl struct {
 	operator       constraintM.OperatorType
 	constraintType constraintM.ConstraintType
 	name           string
-	descs          []string
+	desc           string
 }
 
 func New(
@@ -26,7 +25,7 @@ func New(
 		operator:       constraintPayload.Operator,
 		constraintType: constraintPayload.ConstraintType,
 		name:           constraintPayload.Name,
-		descs:          constraintPayload.Descs,
+		desc:           constraintPayload.Desc,
 	}
 }
 
@@ -34,23 +33,23 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Descs:          im.descs,
+		Desc:           im.desc,
 		ConstraintType: im.constraintType,
 	}
 
 	matches := []string{}
 	misses := []string{}
-	supermarketMap := make(map[string]*supermarket.Supermarket)
+	supermarketMap := make(map[string]*supermarketM.Supermarket)
 
 	for _, su := range e.Supermarkets {
 		supermarketMap[su.ID] = su
 	}
 
-	for _, ec := range im.supermarkets {
-		if _, ok := supermarketMap[ec.ID]; ok {
-			matches = append(matches, ec.ID)
+	for _, su := range im.supermarkets {
+		if _, ok := supermarketMap[su.ID]; ok {
+			matches = append(matches, su.ID)
 		} else {
-			misses = append(misses, ec.ID)
+			misses = append(misses, su.ID)
 		}
 	}
 

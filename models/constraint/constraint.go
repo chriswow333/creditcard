@@ -1,9 +1,7 @@
 package constraint
 
 import (
-	"example.com/creditcard/models/bonus"
 	"example.com/creditcard/models/customization"
-	"example.com/creditcard/models/dollar"
 	"example.com/creditcard/models/ecommerce"
 	"example.com/creditcard/models/mobilepay"
 	"example.com/creditcard/models/onlinegame"
@@ -21,13 +19,13 @@ const (
 
 type Constraint struct {
 	ID       string `json:"id"`
-	RewardID string `json:"rewardID"`
-	Name     string `json:"name"`
-	Desc     string `json:"desc"`
+	RewardID string `json:"rewardID,omitempty"`
+	Name     string `json:"name,omitempty"`
+	Desc     string `json:"desc,omitempty"`
 
-	StartDate  int64 `json:"startDate"`
-	EndDate    int64 `json:"endDate"`
-	UpdateDate int64 `json:"updateDate"`
+	StartDate  int64 `json:"startDate,omitempty"`
+	EndDate    int64 `json:"endDate,omitempty"`
+	UpdateDate int64 `json:"updateDate,omitempty"`
 
 	ConstraintPayload *ConstraintPayload `json:"constraintPayload,omitempty"`
 }
@@ -38,8 +36,6 @@ const (
 	ConstraintPayloadType ConstraintType = iota
 	CustomizationType
 	TimeIntervalType
-	DollarLimitType
-	BonusLimitType
 	MobilepayType
 	EcommerceType
 	SupermarketType
@@ -48,15 +44,13 @@ const (
 )
 
 type ConstraintPayload struct {
-	Name           string         `json:"name"`
-	Operator       OperatorType   `json:"operator"`
-	Descs          []string       `json:"descs"`
+	Name     string       `json:"name,omitempty"`
+	Operator OperatorType `json:"operator"`
+	Desc     string       `json:"desc,omitempty"`
+
 	ConstraintType ConstraintType `json:"constraintType"`
 
 	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
-
-	DollarLimit *dollar.DollarLimit `json:"dollarLimit,omitempty"`
-	BonusLimit  *bonus.BonusLimit   `json:"bonusLimit,omitempty"`
 
 	TimeIntervals []*timeinterval.TimeInterval `json:"timeIntervals,omitempty"`
 

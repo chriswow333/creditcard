@@ -6,7 +6,6 @@ import (
 	"example.com/creditcard/components/constraint"
 	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
-	"example.com/creditcard/models/streaming"
 	streamingM "example.com/creditcard/models/streaming"
 )
 
@@ -15,7 +14,7 @@ type impl struct {
 	operator       constraintM.OperatorType
 	constraintType constraintM.ConstraintType
 	name           string
-	descs          []string
+	desc           string
 }
 
 func New(
@@ -26,30 +25,30 @@ func New(
 		operator:       constraintPayload.Operator,
 		constraintType: constraintPayload.ConstraintType,
 		name:           constraintPayload.Name,
-		descs:          constraintPayload.Descs,
+		desc:           constraintPayload.Desc,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Descs:          im.descs,
+		Desc:           im.desc,
 		ConstraintType: im.constraintType,
 	}
 
 	matches := []string{}
 	misses := []string{}
-	streamingMap := make(map[string]*streaming.Streaming)
+	streamingMap := make(map[string]*streamingM.Streaming)
 
 	for _, st := range e.Streamings {
 		streamingMap[st.ID] = st
 	}
 
-	for _, ec := range im.streamings {
-		if _, ok := streamingMap[ec.ID]; ok {
-			matches = append(matches, ec.ID)
+	for _, st := range im.streamings {
+		if _, ok := streamingMap[st.ID]; ok {
+			matches = append(matches, st.ID)
 		} else {
-			misses = append(misses, ec.ID)
+			misses = append(misses, st.ID)
 		}
 	}
 

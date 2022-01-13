@@ -13,7 +13,7 @@ type impl struct {
 	customizations []*customizationM.Customization
 	operator       constraintM.OperatorType
 	name           string
-	descs          []string
+	desc           string
 }
 
 func New(
@@ -23,7 +23,7 @@ func New(
 		customizations: constraintPayload.Customizations,
 		operator:       constraintPayload.Operator,
 		name:           constraintPayload.Name,
-		descs:          constraintPayload.Descs,
+		desc:           constraintPayload.Desc,
 	}
 }
 
@@ -31,7 +31,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Descs:          im.descs,
+		Desc:           im.desc,
 		ConstraintType: constraintM.CustomizationType,
 	}
 

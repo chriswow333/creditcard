@@ -13,7 +13,7 @@ type impl struct {
 	timeIntervals []*timeinterval.TimeInterval
 	operator      constraintM.OperatorType
 	name          string
-	descs         []string
+	desc          string
 }
 
 func New(
@@ -23,7 +23,7 @@ func New(
 		timeIntervals: constraintPayload.TimeIntervals,
 		operator:      constraintPayload.Operator,
 		name:          constraintPayload.Name,
-		descs:         constraintPayload.Descs,
+		desc:          constraintPayload.Desc,
 	}
 }
 
@@ -32,7 +32,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	// TODO Get Range from time
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Descs:          im.descs,
+		Desc:           im.desc,
 		ConstraintType: constraintM.TimeIntervalType,
 	}
 
