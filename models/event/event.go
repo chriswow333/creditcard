@@ -49,37 +49,46 @@ type Response struct {
 }
 
 type CardResp struct {
-	Name      string `json:"name,omitempty"`
-	Desc      string `json:"desc,omitempty"`
-	StartDate int64  `json:"startDate,omitempty"`
-	EndDate   int64  `json:"endDate,omitempty"`
-	LinkURL   string `json:"linkURL,omitempty"`
+	ID     string `json:"id,omitempty"`
+	BankID string `json:"bankID,omitempty"`
+
+	Name string `json:"name,omitempty"`
+	Desc string `json:"desc,omitempty"`
+
+	StartDate  int64 `json:"startDate,omitempty"`
+	EndDate    int64 `json:"endDate,omitempty"`
+	UpdateDate int64 `json:"updateDate,omitempty"`
+
+	LinkURL string `json:"linkURL,omitempty"`
 
 	Rewards []*RewardResp `json:"rewards"`
 }
 
 type RewardResp struct {
+	Name string `json:"name,omitempty"`
+	Desc string `json:"desc,omitempty"`
+
+	StartDate  int64 `json:"startDate,omitempty"`
+	EndDate    int64 `json:"endDate,omitempty"`
+	UpdateDate int64 `json:"updateDate,omitempty"`
+
 	Pass bool `json:"pass"`
 
 	Cost *cost.Cost `json:"cost"`
 
-	Name     string                  `json:"name,omitempty"`
-	Desc     string                  `json:"desc,omitempty"`
-	Operator constraint.OperatorType `json:"operator"`
-
-	Constraints []*ConstraintResp `json:"constraints,omitempty"`
+	Operator    constraint.OperatorType `json:"operator"`
+	Constraints []*ConstraintResp       `json:"constraints,omitempty"`
 }
 
 type ConstraintResp struct {
 	Pass bool `json:"pass"`
 
-	ConstraintType constraint.ConstraintType `json:"constraintType"`
+	Name string `json:"name,omitempty"`
+	Desc string `json:"desc,omitempty"`
 
 	Matches []string `json:"matches,omitempty"` // 符合限制的id, ex. supermarket
 	Misses  []string `json:"misses,omitempty"`  // 符合限制的id, ex. supermarket
 
-	Name string `json:"name,omitempty"`
-	Desc string `json:"desc,omitempty"`
-
-	Constraints []*ConstraintResp `json:"constraints,omitempty"`
+	ConstraintType constraint.ConstraintType `json:"constraintType"`
+	Constraints    []*ConstraintResp         `json:"constraints,omitempty"`
 }

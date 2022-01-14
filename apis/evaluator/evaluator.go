@@ -3,12 +3,13 @@ package evaluator
 import (
 	"net/http"
 
-	"example.com/creditcard/middlewares/apis"
-	eventM "example.com/creditcard/models/event"
-	"example.com/creditcard/modules/evaluator"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
+
+	"example.com/creditcard/middlewares/apis"
+	eventM "example.com/creditcard/models/event"
+	"example.com/creditcard/modules/evaluator"
 )
 
 type evaluatorHandler struct {
@@ -21,7 +22,6 @@ func NewEvaluatorHandler(
 	rg *gin.RouterGroup,
 
 	evaluatorModule evaluator.Module,
-
 ) {
 
 	eh := &evaluatorHandler{

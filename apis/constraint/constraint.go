@@ -6,6 +6,7 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/gin-gonic/gin"
+	uuid "github.com/nu7hatch/gouuid"
 	"github.com/sirupsen/logrus"
 
 	"example.com/creditcard/middlewares/apis"
@@ -40,6 +41,19 @@ func (h *constraintHandler) update(ctx *gin.Context) {
 
 	var constraintModels []*constraintM.Constraint
 	ctx.BindJSON(&constraintModels)
+
+	// new id
+	for _, c := range constraintModels {
+		id, err := uuid.NewV4()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"msg": "",
+			}).Fatal(err)
+
+			return
+		}
+		c.ID = id.String()
+	}
 
 	if err := h.constraintService.UpdateByRewardID(ctx, rewardID, constraintModels); err != nil {
 		logrus.Error(err)

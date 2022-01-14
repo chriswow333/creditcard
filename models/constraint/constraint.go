@@ -20,12 +20,9 @@ const (
 type Constraint struct {
 	ID       string `json:"id"`
 	RewardID string `json:"rewardID,omitempty"`
-	Name     string `json:"name,omitempty"`
-	Desc     string `json:"desc,omitempty"`
 
-	StartDate  int64 `json:"startDate,omitempty"`
-	EndDate    int64 `json:"endDate,omitempty"`
-	UpdateDate int64 `json:"updateDate,omitempty"`
+	Name string `json:"name,omitempty"`
+	Desc string `json:"desc,omitempty"`
 
 	ConstraintPayload *ConstraintPayload `json:"constraintPayload,omitempty"`
 }
@@ -33,14 +30,14 @@ type Constraint struct {
 type ConstraintType int32
 
 const (
-	ConstraintPayloadType ConstraintType = iota
-	CustomizationType
-	TimeIntervalType
-	MobilepayType
-	EcommerceType
-	SupermarketType
-	OnlinegameType
-	StreamingType
+	ConstraintPayloadType ConstraintType = iota //  abstract layer, there are several nested layers.
+	CustomizationType                           // setting layer, ex. 綁定數位帳號
+	TimeIntervalType                            // time range
+	MobilepayType                               // ex. line pay, google pay.
+	EcommerceType                               // ex. shopee, momo
+	SupermarketType                             // ex. px mart
+	OnlinegameType                              // ex.
+	StreamingType                               // ex. netflix
 )
 
 type ConstraintPayload struct {

@@ -2,7 +2,6 @@ package dollar
 
 import (
 	"context"
-	"fmt"
 
 	costM "example.com/creditcard/models/cost"
 	dollarM "example.com/creditcard/models/dollar"
@@ -53,14 +52,13 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*cos
 		},
 	}
 
-	total := cost.Dollar.Total + cash
+	// total := cost.Dollar.Total + cash // no increment for now
+	total := cash
 
 	// 先定義一下
 	var dollarBonusBack int64 = 0
 	var dollarBack float64 = 0.0
 	var pointBack dollarM.PointBack = dollarM.None
-
-	fmt.Println(pass)
 
 	if pass {
 		// 取得可使用的回饋花費金額

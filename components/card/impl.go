@@ -29,11 +29,14 @@ func New(
 func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.CardResp, error) {
 
 	card := &eventM.CardResp{
-		Name:      im.card.Name,
-		Desc:      im.card.Desc,
-		StartDate: im.card.StartDate,
-		EndDate:   im.card.EndDate,
-		LinkURL:   im.card.LinkURL,
+		ID:         im.card.ID,
+		BankID:     im.card.BankID,
+		Name:       im.card.Name,
+		Desc:       im.card.Desc,
+		StartDate:  im.card.StartDate,
+		EndDate:    im.card.EndDate,
+		UpdateDate: im.card.UpdateDate,
+		LinkURL:    im.card.LinkURL,
 	}
 
 	rewards := []*eventM.RewardResp{}
