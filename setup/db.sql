@@ -31,6 +31,7 @@ create table card (
 );
 
 
+
 DROP TABLE  IF EXISTS reward;
 create table reward (
     "id" VARCHAR(36) PRIMARY KEY,
