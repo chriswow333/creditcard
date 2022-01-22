@@ -2,6 +2,7 @@ package ecommerce
 
 import (
 	"context"
+	"fmt"
 
 	"example.com/creditcard/components/constraint"
 
@@ -41,6 +42,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	matches := []string{}
 	misses := []string{}
+
 	ecommerceMap := make(map[string]*ecommerceM.Ecommerce)
 
 	for _, ec := range e.Ecommerces {
@@ -48,6 +50,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	}
 
 	for _, ec := range im.ecommerces {
+		fmt.Println(ec.ID)
 
 		if _, ok := ecommerceMap[ec.ID]; ok {
 			matches = append(matches, ec.ID)

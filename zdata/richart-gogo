@@ -1,0 +1,264 @@
+
+
+// 卡片
+{
+    "bankID":"6ffe8b01-7b8b-42cf-a8d3-47dc88935ac9",
+    "name":"GoGo御璽卡",
+    "desc":"",
+    "startDate":1642154179,
+    "endDate":2532383999,
+    "linkURL":"https://www.taishinbank.com.tw/TSB/personal/credit/intro/overview/cg021/card001/"
+}
+
+
+//回饋 reward
+
+{
+    "name":"基本0.2%",
+    "cardID":"b4b69053-ca75-46db-7eb6-90da51aadbd2",
+    "desc":"基本0.2%無上限",
+    "startDate":1625097600,
+    "endDate":1643587200,
+    "updateDate":1624412547
+}
+
+
+// constraint
+{
+    "name": "基本回饋無上限",
+    "desc": "",
+    "constraintType": 1,
+    "operator": 1,
+    "cost":{
+        "costType":0,
+        "dollar":{
+            "dollarType":0,
+            "dollarLimit":{
+                "point":0.002,
+                "min":0,
+                "max":99999999
+            }
+        }
+    },
+    "customizations":[
+        {
+            "id":"8f931a21-901e-45a4-b805-3a88215eac06"
+        }
+    ]
+}
+
+
+
+
+// 0.8 reward
+{
+    "name":"任務0.8%",
+    "cardID":"b4b69053-ca75-46db-7eb6-90da51aadbd2",
+    "desc":"當期帳單「成功以Richart帳戶自動扣繳@GoGo卡信用卡帳單，且@GoGo卡消費金額滿NT$5,000(含)」，消費採同品牌項下(含@GoGo悠遊卡/icash/虛擬卡)正附卡合併計算(四捨五入計)，分期以每期入帳金額計算，不含信用卡年費/預借現金/利息/違約金/手續費等非消費交易，其餘消費皆可認列(例：學費/稅/公用事業代扣繳費用(水/電/瓦斯/電信費)…等)。",
+    "startDate":1625097600,
+    "endDate":1643587200,
+    "updateDate":1624412547,
+}
+
+
+
+// constraint
+{
+    "name": "任務0.8%",
+    "desc": "Richart帳戶自動扣繳@GoGo卡信用卡帳單，且@GoGo卡消費金額滿NT$5,000(含)",
+    "operator": 0,
+    "constraintType": 1,
+    "cost":{
+        "costType":0,
+        "dollar":{
+            "dollarType":0,
+            "dollarLimit":{
+                "point":0.008,
+                "min":5000,
+                "max":25000
+            }
+        }
+    },
+    "customizations":[
+        {
+            "id":"3d434ba6-9a43-4e5a-90e2-d61d0deb5bde"
+        }
+    ]
+}
+
+
+
+
+// 指定2% reward
+
+{
+    "name":"10大指定2%",
+    "cardID":"b4b69053-ca75-46db-7eb6-90da51aadbd2",
+    "desc":"10大指定",
+    "startDate":1625097600,
+    "endDate":1643587200,
+    "updateDate":1624412547,
+}
+
+// constraint
+ {
+    "name": "10大指定2%",
+    "desc": "",
+    "cost":{
+        "costType":0,
+        "dollar":{
+            "dollarType":0,
+            "dollarLimit":{
+                "point":0.02,
+                "min":0,
+                "max":25000
+            }
+        }
+    },
+    "constraintType": 0,
+    "operator": 1,
+    "constraintPayloads":[
+        {
+            "name":"超市",
+            "operator":1,
+            "desc":"",
+            "constraintType":5,
+            "supermarkets":[
+                {"id":"5979e574-045e-4763-a437-664adca9fc1b"}
+            ]
+        },
+        {
+            "name":"網購",
+            "operator":1,
+            "desc":"",
+            "constraintType":4,
+            "ecommerces":[
+                {"id":"d38a5e4a-2795-485c-9b1b-f2d4d82f7543"},
+                {"id":"174a5bf3-6aff-47f0-b838-910fcf6babd9"},
+                {"id":"a08bc08e-f618-433f-97b3-ca4d99682892"},
+                {"id":"da0274a4-dd9c-40b8-aa38-70d5c8b4ec71"},
+                {"id":"b7b06d0f-4332-4d8c-9b29-9c4858636b09"},
+                {"id":"f8044710-2838-4876-b988-3fb9377b9f43"}
+            ]
+        },
+        {
+            "name":"影音",
+            "operator":1,
+            "desc":"",
+            "constraintType":7,
+            "streamings":[
+                {"id":"fb259da3-bf1a-4962-b311-ff4418847570"},
+                {"id":"fe3a89a8-d7ad-4a96-99bc-e3e894ae7422"},
+                {"id":"51ce00e9-ce62-4e50-9321-a79dcd9d0442"}
+            ]
+        },
+        {
+            "name":"遊戲",
+            "operator":1,
+            "desc":"",
+            "constraintType":6,
+            "streamings":[
+                {"id":"e2f23d5c-ef63-4b62-8090-3b613d5cc7e3"},
+                {"id":"9acf5a6a-3d98-4ae8-83ae-266776d92d6e"},
+                {"id":"16f41770-b15a-4395-9f5a-e8603fd0c583"}
+            ]
+        },
+        {
+            "name":"行動支付",
+            "operator":1,
+            "desc":"",
+            "constraintType":3,
+            "mobilepays":[
+                {"id":"2dcfdc0b-99d2-4057-a50d-2bef6abf3eda"},
+                {"id":"67eb4a3e-5b03-4776-b9f5-44f8f743f8bc"},
+                {"id":"dac3fd6c-0c83-4949-afce-16a9f832d4b9"},
+                {"id":"00c7397a-41b5-436b-aa09-3072d36d1222"},
+                {"id":"62136673-136b-46e1-ad37-5b97e3ee0cf7"}
+            ]
+        }
+    ]
+}
+
+
+
+
+// 週六3% reward
+
+{
+    "name":"週六3%",
+    "cardID":"b4b69053-ca75-46db-7eb6-90da51aadbd2",
+    "desc":"",
+    "startDate":1625097600,
+    "endDate":1643587200,
+    "updateDate":1624412547
+}
+
+
+
+
+// 週六3% constraint
+{
+    "name": "週六3%",
+    "desc": "",
+    "cost":{
+        "costType":0,
+        "dollar":{
+            "dollarType":0,
+            "dollarLimit":{
+                "point":0.03,
+                "min":0,
+                "max":25000
+            }
+        }
+    },
+    "operator": 0,
+    "constraintType": 0,
+    "constraintPayloads":[
+        {
+            "name":"週六",
+            "operator":1,
+            "desc":"",
+            "constraintType":2,
+            "timeIntervals":[
+                {
+                    "id":"weekDay-6",
+                    "timeType":0,
+                    "weekDayFrom":7,
+                    "weekDayTo":7
+                }
+            ]
+        },
+        {
+            "name": "內層constraints",
+            "operator": 0,
+            "desc": "",
+            "constraintType": 1,
+            "constraintPayloads":[
+                {
+                    "name":"網購",
+                    "operator":1,
+                    "desc":"",
+                    "constraintType":4,
+                    "ecommerces":[
+                        {"id":"da0274a4-dd9c-40b8-aa38-70d5c8b4ec71"},
+                        {"id":"b7b06d0f-4332-4d8c-9b29-9c4858636b09"},
+                        {"id":"f8044710-2838-4876-b988-3fb9377b9f43"}
+                    ]
+                },
+                {
+                    "name":"行動支付",
+                    "operator":1,
+                    "desc":"",
+                    "constraintType":3,
+                        "mobilepays":[
+                            {"id":"2dcfdc0b-99d2-4057-a50d-2bef6abf3eda"},
+                            {"id":"67eb4a3e-5b03-4776-b9f5-44f8f743f8bc"},
+                            {"id":"dac3fd6c-0c83-4949-afce-16a9f832d4b9"},
+                            {"id":"00c7397a-41b5-436b-aa09-3072d36d1222"},
+                            {"id":"62136673-136b-46e1-ad37-5b97e3ee0cf7"}
+                        ]
+                }
+            ]
+        }
+    ]
+}

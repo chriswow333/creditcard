@@ -9,12 +9,12 @@ const (
 )
 
 type Dollar struct {
-	Current int64 `json:"current,omitempty"` // 該單筆花費多少
-	Total   int64 `json:"total,omitempty"`   // 目前總共花費多少
+	Current int64 `json:"current"` // 該單筆花費多少
+	Total   int64 `json:"total"`   // 目前總共花費多少
 
-	DollarBonusBack int64     `json:"dollarBonusGet,omitempty"` // 實際用多少錢得到回饋
-	DollarBack      float64   `json:"dollarBack,omitempty"`     // 回饋多少
-	PointBack       PointBack `json:"pointBack,omitempty"`      // 是否回饋全拿
+	DollarBonsCost int64         `json:"dollarBonsCost"` // 實際用多少錢得到回饋
+	DollarBonus    float64       `json:"dollarBonus"`    // 回饋多少
+	PointBackType  PointBackType `json:"pointBackType"`  // 是否回饋全拿
 
 	DollarType  DollarType  `json:"currency"`
 	DollarLimit DollarLimit `json:"dollarLimit"`
@@ -26,7 +26,7 @@ type DollarLimit struct {
 	Max   int64   `json:"max"`
 }
 
-type PointBack int32
+type PointBackType int32
 
 const (
 	Full = iota

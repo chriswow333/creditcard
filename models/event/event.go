@@ -32,6 +32,8 @@ type Event struct {
 
 	ActionType action.ActionType `json:"actionType"`
 
+	DefaultCustomization bool `json:"defaultCustomization"`
+
 	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces,omitempty"`
 	Supermarkets []*supermarket.Supermarket `json:"supermarkets,omitempty"`
 	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames,omitempty"`
@@ -76,8 +78,8 @@ type RewardResp struct {
 
 	Cost *cost.Cost `json:"cost"`
 
-	Operator    constraint.OperatorType `json:"operator"`
-	Constraints []*ConstraintResp       `json:"constraints,omitempty"`
+	Operator   constraint.OperatorType `json:"operator"`
+	Constraint *ConstraintResp         `json:"constraint,omitempty"`
 }
 
 type ConstraintResp struct {
@@ -85,6 +87,8 @@ type ConstraintResp struct {
 
 	Name string `json:"name,omitempty"`
 	Desc string `json:"desc,omitempty"`
+
+	Cost *cost.Cost `json:"cost,omitempty"`
 
 	Matches []string `json:"matches,omitempty"` // 符合限制的id, ex. supermarket
 	Misses  []string `json:"misses,omitempty"`  // 符合限制的id, ex. supermarket

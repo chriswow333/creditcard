@@ -3,7 +3,6 @@ package cost
 import (
 	"context"
 
-	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
 
 	costM "example.com/creditcard/models/cost"
@@ -26,29 +25,29 @@ func New(
 
 func (im *impl) UpdateByRewardID(ctx context.Context, rewardID string, cost *costM.Cost) error {
 
-	reward, err := im.rewardStore.GetByID(ctx, rewardID)
-	if err != nil {
-		logrus.Error(err)
-		return err
-	}
+	// reward, err := im.rewardStore.GetByID(ctx, rewardID)
+	// if err != nil {
+	// 	logrus.Error(err)
+	// 	return err
+	// }
 
-	reward.Cost = cost
+	// reward.Cost = cost
 
-	if err := im.rewardStore.UpdateByID(ctx, reward); err != nil {
-		logrus.Error(err)
-		return err
-	}
+	// if err := im.rewardStore.UpdateByID(ctx, reward); err != nil {
+	// 	logrus.Error(err)
+	// 	return err
+	// }
 	return nil
 }
 
 func (im *impl) GetByRewardID(ctx context.Context, rewardID string) (*costM.Cost, error) {
 
-	rewardModel, err := im.rewardStore.GetByID(ctx, rewardID)
+	// rewardModel, err := im.rewardStore.GetByID(ctx, rewardID)
 
-	if err != nil {
-		logrus.Error(err)
-		return nil, err
-	}
-
-	return rewardModel.Cost, nil
+	// if err != nil {
+	// 	logrus.Error(err)
+	// 	return nil, err
+	// }
+	return nil, nil
+	// return rewardModel.Cost, nil
 }

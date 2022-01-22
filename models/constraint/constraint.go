@@ -1,6 +1,7 @@
 package constraint
 
 import (
+	"example.com/creditcard/models/cost"
 	"example.com/creditcard/models/customization"
 	"example.com/creditcard/models/ecommerce"
 	"example.com/creditcard/models/mobilepay"
@@ -45,13 +46,13 @@ type ConstraintPayload struct {
 	Operator OperatorType `json:"operator"`
 	Desc     string       `json:"desc,omitempty"`
 
+	Cost *cost.Cost `json:"cost,omitempty"`
+
 	ConstraintType ConstraintType `json:"constraintType"`
 
-	ConstraintPayloads []*ConstraintPayload `json:"constraintPayloads,omitempty"`
-
-	TimeIntervals []*timeinterval.TimeInterval `json:"timeIntervals,omitempty"`
-
-	Customizations []*customization.Customization `json:"customizations,omitempty"`
+	ConstraintPayloads []*ConstraintPayload           `json:"constraintPayloads,omitempty"`
+	TimeIntervals      []*timeinterval.TimeInterval   `json:"timeIntervals,omitempty"`
+	Customizations     []*customization.Customization `json:"customizations,omitempty"`
 
 	Mobilepays   []*mobilepay.Mobilepay     `json:"mobilepays,omitempty"`
 	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces,omitempty"`

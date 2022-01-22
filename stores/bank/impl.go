@@ -23,8 +23,8 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_BANK_STAT = "INSERT INTO bank " +
-	" (\"id\", \"name\", \"desc\", start_date, end_date, update_date) " +
-	" VALUES($1, $2, $3, $4, $5, $6)"
+	" (\"id\", \"name\", \"desc\", update_date, link_url) " +
+	" VALUES($1, $2, $3, $4, $5)"
 
 func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 
@@ -41,9 +41,8 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 		bank.ID,
 		bank.Name,
 		bank.Desc,
-		bank.StartDate,
-		bank.EndDate,
 		bank.UpdateDate,
+		bank.LinkURL,
 	}
 
 	if _, err := tx.Exec(INSERT_BANK_STAT, updater...); err != nil {
@@ -60,8 +59,8 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE bank SET " +
-	" \"name\" = $1, desc = $2, start_date = $3, end_date = $4, update_date = $5 " +
-	" where \"id\" = $6"
+	" \"name\" = $1, desc = $2, update_date = $3, link_url = $4 " +
+	" where \"id\" = $5"
 
 func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
 
@@ -78,9 +77,8 @@ func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
 	updater := []interface{}{
 		bank.Name,
 		bank.Desc,
-		bank.StartDate,
-		bank.EndDate,
 		bank.UpdateDate,
+		bank.LinkURL,
 		bank.ID,
 	}
 
@@ -94,7 +92,7 @@ func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date " +
+const SELECT_STAT = "SELECT \"id\", \"name\", \"desc\", update_date, link_url " +
 	" FROM bank " +
 	" WHERE \"id\" = $1"
 
@@ -106,9 +104,8 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 		&bank.ID,
 		&bank.Name,
 		&bank.Desc,
-		&bank.StartDate,
-		&bank.EndDate,
 		&bank.UpdateDate,
+		&bank.LinkURL,
 	}
 
 	if err := im.psql.QueryRow(SELECT_STAT, ID).Scan(selector...); err != nil {
@@ -122,7 +119,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 	return bank, nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", start_date, end_date, update_date " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", update_date, link_url " +
 	" FROM bank"
 
 func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
@@ -143,9 +140,8 @@ func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
 			&bank.ID,
 			&bank.Name,
 			&bank.Desc,
-			&bank.StartDate,
-			&bank.EndDate,
 			&bank.UpdateDate,
+			&bank.LinkURL,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

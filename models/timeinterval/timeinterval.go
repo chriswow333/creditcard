@@ -1,19 +1,28 @@
 package timeinterval
 
+type TimeType int32
+
+const (
+	WeekDay TimeType = iota
+)
+
 type TimeInterval struct {
-	ID   string `json:"id"`
-	Name string `json:"name,omitempty"`
-	Desc string `json:"desc,omitempty"`
+	ID string `json:"id"`
 
-	DayFrom int32 `json:"day,omitempty"`
-	DayTo   int32 `json:"dayTo,omitempty"`
+	TimeType TimeType `json:"timeType"`
 
-	WeekDayFrom int32 `json:"weekDay,omitempty"`
-	WeekDayTo   int32 `json:"weekDayTo,omitempty"`
+	Name string `json:"name"`
+	Desc string `json:"desc"`
 
-	HourFrom int32 `json:"hour,omitempty"`
-	HourTo   int32 `json:"hourTo,omitempty"`
+	WeekDayFrom int32 `json:"weekDayFrom"`
+	WeekDayTo   int32 `json:"weekDayTo"`
 
-	MinuteFrom int32 `json:"minute,omitempty"`
-	MinuteTo   int32 `json:"minuteTo,omitempty"`
+	DayFrom int32 `json:"dayFrom"`
+	DayTo   int32 `json:"dayTo"`
+
+	HourFrom int32 `json:"hourFrom"`
+	HourTo   int32 `json:"hourTo"`
+
+	MinuteFrom int32 `json:"minuteFrom"`
+	MinuteTo   int32 `json:"minuteTo"`
 }

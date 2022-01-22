@@ -7,8 +7,6 @@ import (
 	"example.com/creditcard/stores/reward"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
-
-	uuid "github.com/nu7hatch/gouuid"
 )
 
 type impl struct {
@@ -25,7 +23,7 @@ func New(
 	}
 }
 
-func (im *impl) UpdateByRewardID(ctx context.Context, rewardID string, constraints []*constraintM.Constraint) error {
+func (im *impl) UpdateByRewardID(ctx context.Context, rewardID string, constraintPayload *constraintM.ConstraintPayload) error {
 
 	reward, err := im.rewardStore.GetByID(ctx, rewardID)
 	if err != nil {
@@ -33,18 +31,18 @@ func (im *impl) UpdateByRewardID(ctx context.Context, rewardID string, constrain
 		return err
 	}
 
-	for _, c := range constraints {
-		if c.ID != "" {
-			id, err := uuid.NewV4()
-			if err != nil {
-				logrus.Error(err)
-				return err
-			}
-			c.ID = id.String()
-		}
-	}
+	// for _, c := range constraints {
+	// 	if c.ID != "" {
+	// 		id, err := uuid.NewV4()
+	// 		if err != nil {
+	// 			logrus.Error(err)
+	// 			return err
+	// 		}
+	// 		c.ID = id.String()
+	// 	}
+	// }
 
-	reward.Constraints = constraints
+	reward.ConstraintPayload = constraintPayload
 	if err := im.rewardStore.UpdateByID(ctx, reward); err != nil {
 		logrus.Error(err)
 		return err
@@ -52,11 +50,11 @@ func (im *impl) UpdateByRewardID(ctx context.Context, rewardID string, constrain
 	return nil
 }
 
-func (im *impl) GetByRewardID(ctx context.Context, rewardID string) ([]*constraintM.Constraint, error) {
+func (im *impl) GetByRewardID(ctx context.Context, rewardID string) (*constraintM.ConstraintPayload, error) {
 	rewardModel, err := im.rewardStore.GetByID(ctx, rewardID)
 	if err != nil {
 		logrus.Error(err)
 		return nil, err
 	}
-	return rewardModel.Constraints, nil
+	return rewardModel.ConstraintPayload, nil
 }

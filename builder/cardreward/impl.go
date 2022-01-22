@@ -41,18 +41,22 @@ func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*c
 
 	for _, r := range setting.Rewards {
 
-		constraints := []*constraintComp.Component{}
+		// constraints := []*constraintComp.Component{}
 
-		for _, co := range r.Constraints {
-
-			constraint, _ := im.getConstraintComponent(ctx, co)
-			constraints = append(constraints, constraint)
-
+		constraint, err := im.getConstraintPayloadComponent(ctx, r.ConstraintPayload)
+		if err != nil {
+			return nil, err
 		}
+		// for _, co := range r.Constraints {
 
-		costComponent, _ := im.getCostComponent(ctx, r.Cost)
+		// 	constraint, _ := im.getConstraintComponent(ctx, co)
+		// 	constraints = append(constraints, constraint)
 
-		reward, _ := im.getRewardComponent(ctx, r, constraints, costComponent)
+		// }
+
+		// costComponent, _ := im.getCostComponent(ctx, r.Cost)
+
+		reward, _ := im.getRewardComponent(ctx, r, constraint)
 		rewards = append(rewards, reward)
 	}
 
@@ -61,6 +65,10 @@ func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*c
 }
 
 func (im *impl) getCostComponent(ctx context.Context, cost *costM.Cost) (*costComp.Component, error) {
+
+	if cost == nil {
+		return nil, nil
+	}
 
 	var costComponent costComp.Component
 
@@ -80,17 +88,17 @@ func (im *impl) getCostComponent(ctx context.Context, cost *costM.Cost) (*costCo
 	return &costComponent, nil
 }
 
-func (im *impl) getConstraintComponent(ctx context.Context, c *constraintM.Constraint) (*constraintComp.Component, error) {
+// func (im *impl) getConstraintComponent(ctx context.Context, c *constraintM.Constraint) (*constraintComp.Component, error) {
 
-	constraintComponent, err := im.getConstraintPayloadComponent(ctx, c.ConstraintPayload)
-	if err != nil {
-		return nil, err
-	}
+// 	constraintComponent, err := im.getConstraintPayloadComponent(ctx, c.ConstraintPayload)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	component := constraintComp.New(c, constraintComponent)
+// 	component := constraintComp.New(c, constraintComponent)
 
-	return &component, nil
-}
+// 	return &component, nil
+// }
 
 func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *constraintM.ConstraintPayload) (*constraintComp.Component, error) {
 
@@ -135,13 +143,15 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 		constraintComponents = append(constraintComponents, &constraintComponent)
 	}
 
-	payloadCompoent := constraintpayload.New(constraintComponents, payload)
+	costComponent, _ := im.getCostComponent(ctx, payload.Cost)
+
+	payloadCompoent := constraintpayload.New(constraintComponents, costComponent, payload)
 
 	return &payloadCompoent, nil
 }
 
-func (im *impl) getRewardComponent(ctx context.Context, r *rewardM.Reward, constraints []*constraintComp.Component, costComp *costComp.Component) (*rewardComp.Component, error) {
-	component := rewardComp.New(r, costComp, constraints)
+func (im *impl) getRewardComponent(ctx context.Context, r *rewardM.Reward, constraint *constraintComp.Component) (*rewardComp.Component, error) {
+	component := rewardComp.New(r, constraint)
 	return &component, nil
 }
 

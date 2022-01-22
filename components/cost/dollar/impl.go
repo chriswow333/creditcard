@@ -56,20 +56,26 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*cos
 	total := cash
 
 	// 先定義一下
-	var dollarBonusBack int64 = 0
-	var dollarBack float64 = 0.0
-	var pointBack dollarM.PointBack = dollarM.None
+	var dollarBonsCost int64 = 0
+	var dollarBonus float64 = 0.0
+	var pointBackType dollarM.PointBackType = dollarM.None
 
 	if pass {
 		// 取得可使用的回饋花費金額
-		dollarBonusBack, dollarBack, pointBack = im.takeDollarBonusBack(ctx, total)
+		dollarBonsCost, dollarBonus, pointBackType = im.takeDollarBonusBack(ctx, total)
 	}
 
 	cost.Dollar.Total = total
 
-	cost.Dollar.DollarBonusBack = dollarBonusBack
-	cost.Dollar.DollarBack = dollarBack
-	cost.Dollar.PointBack = pointBack
+	cost.Dollar.DollarBonsCost = dollarBonsCost
+	cost.Dollar.DollarBonus = dollarBonus
+	cost.Dollar.PointBackType = pointBackType
+
+	if pointBackType == dollarM.None {
+		cost.IsRewardGet = false
+	} else {
+		cost.IsRewardGet = true
+	}
 
 	// set cache
 	im.Dollar.Total = total
@@ -79,7 +85,7 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*cos
 }
 
 // 實際可以用多少錢拿回饋, 回饋多少, 回饋是否全拿
-func (im *impl) takeDollarBonusBack(ctx context.Context, cash int64) (int64, float64, dollarM.PointBack) {
+func (im *impl) takeDollarBonusBack(ctx context.Context, cash int64) (int64, float64, dollarM.PointBackType) {
 
 	if im.Dollar.DollarLimit.Min <= cash && cash <= im.Dollar.DollarLimit.Max {
 		return cash, im.Dollar.DollarLimit.Point * float64(cash), dollarM.Full

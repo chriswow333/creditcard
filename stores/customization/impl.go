@@ -23,7 +23,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_CUSTOMIZARION_STAT = "INSERT INTO customization " +
-	"(\"id\", reward_id, \"name\", desc) VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", desc, link_url) VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, customization *customizationM.Customization) error {
 
@@ -39,9 +39,9 @@ func (im *impl) Create(ctx context.Context, customization *customizationM.Custom
 
 	updater := []interface{}{
 		customization.ID,
-		customization.RewardID,
 		customization.Name,
 		customization.Desc,
+		customization.LinkURL,
 	}
 
 	if _, err := tx.Exec(INSERT_CUSTOMIZARION_STAT, updater...); err != nil {
@@ -57,7 +57,7 @@ func (im *impl) Create(ctx context.Context, customization *customizationM.Custom
 	return nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", reward_id, \"name\", desc " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", desc, link_url " +
 	"FROM customization " +
 	" WHERE \"id\" = $1"
 
@@ -67,8 +67,8 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*customizationM.Customi
 
 	selector := []interface{}{
 		&customization.ID,
-		&customization.RewardID,
 		&customization.Name,
+		&customization.LinkURL,
 		&customization.Desc,
 	}
 
@@ -83,7 +83,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*customizationM.Customi
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE customization SET " +
-	" reward_id = $1, \"name\" = $2, desc = $3 " +
+	" name = $1, \"desc\" = $2, link_url = $3 " +
 	" where \"id\" = $4"
 
 func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Customization) error {
@@ -99,9 +99,9 @@ func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Cu
 	defer tx.Rollback()
 
 	updater := []interface{}{
-		customization.RewardID,
 		customization.Name,
 		customization.Desc,
+		customization.LinkURL,
 		customization.ID,
 	}
 
@@ -114,42 +114,4 @@ func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Cu
 
 	tx.Commit()
 	return nil
-}
-
-const SELECT_BY_REWARDID_STAT = "SELECT \"id\", reward_id, \"name\", desc " +
-	" FROM customization " +
-	" WHERE reward_id = $1"
-
-func (im *impl) GetByRewardID(ctx context.Context, rewardID string) ([]*customizationM.Customization, error) {
-
-	customizations := []*customizationM.Customization{}
-	rows, err := im.psql.Query(SELECT_BY_REWARDID_STAT)
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
-		return nil, err
-	}
-
-	for rows.Next() {
-
-		customization := &customizationM.Customization{}
-		selector := []interface{}{
-			&customization.ID,
-			&customization.RewardID,
-			&customization.Name,
-			&customization.Desc,
-		}
-
-		if err := rows.Scan(selector...); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
-			return nil, err
-		}
-
-		customizations = append(customizations, customization)
-	}
-
-	return customizations, nil
 }

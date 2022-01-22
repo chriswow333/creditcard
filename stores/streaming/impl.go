@@ -22,7 +22,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO streaming " +
-	"(\"id\", \"name\", actionType, desc) VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", desc, link_url) VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, streaming *streamingM.Streaming) error {
 	tx, err := im.psql.Begin()
@@ -38,8 +38,8 @@ func (im *impl) Create(ctx context.Context, streaming *streamingM.Streaming) err
 	updater := []interface{}{
 		streaming.ID,
 		streaming.Name,
-		streaming.ActionType,
 		streaming.Desc,
+		streaming.LinkURL,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -56,7 +56,7 @@ func (im *impl) Create(ctx context.Context, streaming *streamingM.Streaming) err
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE streaming SET " +
-	" \"name\" = $1, actionType = $2, desc = $3 " +
+	" \"name\" = $1, desc = $2, link_url = $3 " +
 	" where \"id\" = $4"
 
 func (im *impl) UpdateByID(ctx context.Context, streaming *streamingM.Streaming) error {
@@ -72,8 +72,8 @@ func (im *impl) UpdateByID(ctx context.Context, streaming *streamingM.Streaming)
 
 	updater := []interface{}{
 		streaming.Name,
-		streaming.ActionType,
 		streaming.Desc,
+		streaming.LinkURL,
 		streaming.ID,
 	}
 
@@ -107,8 +107,8 @@ func (im *impl) GetAll(ctx context.Context) ([]*streamingM.Streaming, error) {
 		selector := []interface{}{
 			&streaming.ID,
 			&streaming.Name,
-			&streaming.ActionType,
 			&streaming.Desc,
+			&streaming.LinkURL,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

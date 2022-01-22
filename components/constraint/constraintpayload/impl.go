@@ -4,6 +4,9 @@ import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
+	costComp "example.com/creditcard/components/cost"
+
+	costM "example.com/creditcard/models/cost"
 	eventM "example.com/creditcard/models/event"
 
 	constraintM "example.com/creditcard/models/constraint"
@@ -11,21 +14,27 @@ import (
 
 type impl struct {
 	constraints []*constraint.Component
-	operator    constraintM.OperatorType
-	name        string
-	desc        string
+
+	costComp *costComp.Component
+
+	operator constraintM.OperatorType
+	name     string
+	desc     string
 }
 
 func New(
 	constraints []*constraint.Component,
+	costComp *costComp.Component,
 	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 
 	return &impl{
 		constraints: constraints,
-		operator:    constraintPayload.Operator,
-		name:        constraintPayload.Name,
-		desc:        constraintPayload.Desc,
+		costComp:    costComp,
+
+		operator: constraintPayload.Operator,
+		name:     constraintPayload.Name,
+		desc:     constraintPayload.Desc,
 	}
 }
 
@@ -71,6 +80,43 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint.Constraints = eventConstraints
 
+	if im.costComp != nil {
+
+		var cost *costM.Cost
+		var err error
+
+		if constraint.Pass {
+			cost, err = im.processCost(ctx, e, true)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			cost, err = im.processCost(ctx, e, false)
+
+		}
+		if err != nil {
+			return nil, err
+		}
+
+		constraint.Cost = cost
+
+		if !cost.IsRewardGet {
+			constraint.Pass = false
+		}
+
+	}
+
 	return constraint, nil
 
+}
+
+func (im *impl) processCost(ctx context.Context, e *eventM.Event, pass bool) (*costM.Cost, error) {
+
+	// 計算回饋額
+	cost, err := (*im.costComp).Calculate(ctx, e, pass)
+	if err != nil {
+		return nil, err
+	}
+
+	return cost, nil
 }

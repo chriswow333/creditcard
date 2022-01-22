@@ -47,6 +47,9 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	for _, cust := range im.customizations {
 		if _, ok := customizationMap[cust.ID]; ok {
 			matches = append(matches, cust.ID)
+		} else if e.DefaultCustomization {
+			// alway given true
+			matches = append(matches, cust.ID)
 		} else {
 			misses = append(misses, cust.ID)
 		}

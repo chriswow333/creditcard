@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/antihax/optional v1.0.0 // indirect
 	github.com/braintree/manners v0.0.0-20160418043613-82a8879fc5fd // indirect
+	github.com/cbelsole/cal v0.0.0-20171208000459-0b87dc280a3a // indirect
 	github.com/cncf/udpa/go v0.0.0-20201120205902-5459f2c99403 // indirect
 	github.com/cncf/xds/go v0.0.0-20210312221358-fbca930ec8ed // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -17,6 +18,7 @@ require (
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
 	github.com/nyaruka/phonenumbers v1.0.69
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rickar/cal v1.0.5
 	github.com/sirupsen/logrus v1.8.1
 	go.uber.org/dig v1.10.0 // indirect
 	golang.org/x/net v0.0.0-20210726213435-c6fcb2dbf985 // indirect
