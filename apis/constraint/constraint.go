@@ -40,7 +40,6 @@ func (h *constraintHandler) update(ctx *gin.Context) {
 
 	var constraintPlayload *constraintM.ConstraintPayload
 	ctx.BindJSON(&constraintPlayload)
-
 	// new id
 	// for _, c := range constraintModels {
 	// 	id, err := uuid.NewV4()

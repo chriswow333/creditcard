@@ -3,9 +3,9 @@ package event
 import (
 	"example.com/creditcard/models/action"
 	"example.com/creditcard/models/constraint"
-	"example.com/creditcard/models/cost"
 	"example.com/creditcard/models/customization"
 	"example.com/creditcard/models/ecommerce"
+	"example.com/creditcard/models/feedback"
 	"example.com/creditcard/models/mobilepay"
 	"example.com/creditcard/models/onlinegame"
 	"example.com/creditcard/models/streaming"
@@ -63,6 +63,8 @@ type CardResp struct {
 
 	LinkURL string `json:"linkURL,omitempty"`
 
+	CardBonus *CardBonus `json:"cardBonus"`
+
 	Rewards []*RewardResp `json:"rewards"`
 }
 
@@ -76,7 +78,7 @@ type RewardResp struct {
 
 	Pass bool `json:"pass"`
 
-	Cost *cost.Cost `json:"cost"`
+	Feedback *feedback.Feedback `json:"feedback"`
 
 	Operator   constraint.OperatorType `json:"operator"`
 	Constraint *ConstraintResp         `json:"constraint,omitempty"`
@@ -88,11 +90,18 @@ type ConstraintResp struct {
 	Name string `json:"name,omitempty"`
 	Desc string `json:"desc,omitempty"`
 
-	Cost *cost.Cost `json:"cost,omitempty"`
+	Feedback *feedback.Feedback `json:"feedback"`
 
 	Matches []string `json:"matches,omitempty"` // 符合限制的id, ex. supermarket
 	Misses  []string `json:"misses,omitempty"`  // 符合限制的id, ex. supermarket
 
 	ConstraintType constraint.ConstraintType `json:"constraintType"`
 	Constraints    []*ConstraintResp         `json:"constraints,omitempty"`
+}
+
+type CardBonus struct {
+	TotalCost int64 `json:"totalCost"`
+
+	TotalBonus float64 `json:"totalBonus"`
+	TotalPoint float64 `json:"totalPoint"`
 }

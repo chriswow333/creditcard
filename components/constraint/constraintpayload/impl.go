@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
-	costComp "example.com/creditcard/components/cost"
+	feedbackComp "example.com/creditcard/components/feedback"
 
-	costM "example.com/creditcard/models/cost"
 	eventM "example.com/creditcard/models/event"
+	feedbackM "example.com/creditcard/models/feedback"
 
 	constraintM "example.com/creditcard/models/constraint"
 )
@@ -15,7 +15,7 @@ import (
 type impl struct {
 	constraints []*constraint.Component
 
-	costComp *costComp.Component
+	feedbackComponent *feedbackComp.Component
 
 	operator constraintM.OperatorType
 	name     string
@@ -24,13 +24,13 @@ type impl struct {
 
 func New(
 	constraints []*constraint.Component,
-	costComp *costComp.Component,
+	feedbackComponent *feedbackComp.Component,
 	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 
 	return &impl{
-		constraints: constraints,
-		costComp:    costComp,
+		constraints:       constraints,
+		feedbackComponent: feedbackComponent,
 
 		operator: constraintPayload.Operator,
 		name:     constraintPayload.Name,
@@ -80,27 +80,27 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint.Constraints = eventConstraints
 
-	if im.costComp != nil {
+	if im.feedbackComponent != nil {
 
-		var cost *costM.Cost
+		var feedback *feedbackM.Feedback
 		var err error
 
 		if constraint.Pass {
-			cost, err = im.processCost(ctx, e, true)
+			feedback, err = im.processFeedback(ctx, e, true)
 			if err != nil {
 				return nil, err
 			}
 		} else {
-			cost, err = im.processCost(ctx, e, false)
+			feedback, err = im.processFeedback(ctx, e, false)
 
 		}
 		if err != nil {
 			return nil, err
 		}
 
-		constraint.Cost = cost
+		constraint.Feedback = feedback
 
-		if !cost.IsRewardGet {
+		if !feedback.IsRewardGet {
 			constraint.Pass = false
 		}
 
@@ -110,13 +110,13 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 }
 
-func (im *impl) processCost(ctx context.Context, e *eventM.Event, pass bool) (*costM.Cost, error) {
+func (im *impl) processFeedback(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.Feedback, error) {
 
 	// 計算回饋額
-	cost, err := (*im.costComp).Calculate(ctx, e, pass)
+	feedback, err := (*im.feedbackComponent).Calculate(ctx, e, pass)
 	if err != nil {
 		return nil, err
 	}
 
-	return cost, nil
+	return feedback, nil
 }

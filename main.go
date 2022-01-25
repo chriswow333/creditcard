@@ -2,7 +2,6 @@ package main
 
 import (
 	"example.com/creditcard/apis/bank"
-	"example.com/creditcard/apis/bonus"
 	"example.com/creditcard/apis/card"
 	"example.com/creditcard/apis/constraint"
 	"example.com/creditcard/apis/customization"
@@ -25,7 +24,6 @@ import (
 	bankService "example.com/creditcard/service/bank"
 	cardService "example.com/creditcard/service/card"
 	constraintService "example.com/creditcard/service/constraint"
-	costService "example.com/creditcard/service/cost"
 	customizationService "example.com/creditcard/service/customization"
 	ecommerceService "example.com/creditcard/service/ecommerce"
 	mobilepayService "example.com/creditcard/service/mobilepay"
@@ -59,7 +57,6 @@ func BuildContainer() *dig.Container {
 	container.Provide(cardService.New)
 	container.Provide(rewardService.New)
 	container.Provide(constraintService.New)
-	container.Provide(costService.New)
 	container.Provide(customizationService.New)
 	container.Provide(ecommerceService.New)
 	container.Provide(mobilepayService.New)
@@ -94,7 +91,6 @@ func NewServer(
 	cardSrc cardService.Service,
 	rewardSrc rewardService.Service,
 	constraintSrc constraintService.Service,
-	costSrc costService.Service,
 	customizationSrc customizationService.Service,
 	ecommerceSrc ecommerceService.Service,
 	mobilepaySrc mobilepayService.Service,
@@ -115,7 +111,6 @@ func NewServer(
 	card.NewCardHandler(v1.Group("/card"), cardSrc)
 	reward.NewrewardHandler(v1.Group("/reward"), rewardSrc)
 	constraint.NewConstraintHandler(v1.Group("/constraint"), constraintSrc)
-	bonus.NewBonusHandler(v1.Group("/cost"), costSrc)
 	customization.NewCustomizationHandler(v1.Group("/customization"), customizationSrc)
 	ecommerce.NewEcommerceHandler(v1.Group("/ecommerce"), ecommerceSrc)
 	mobilepay.NewMobilepayHandler(v1.Group("/mobilepay"), mobilepaySrc)

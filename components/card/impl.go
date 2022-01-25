@@ -56,5 +56,29 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.CardResp,
 	}
 
 	card.Rewards = rewards
+
+	im.calculateCardBonus(ctx, card)
+
 	return card, nil
+}
+
+func (im *impl) calculateCardBonus(ctx context.Context, card *eventM.CardResp) {
+
+	card.CardBonus = &eventM.CardBonus{}
+
+	// for _, r := range card.Rewards {
+	// 	if r.Pass {
+	// 		switch r.Cost.CostType {
+	// 		case costM.Dollar:
+
+	// 			break
+	// 		case costM.Bonus:
+	// 			break
+	// 		default:
+
+	// 		}
+
+	// 	}
+	// }
+
 }

@@ -2,6 +2,7 @@ package cardreward
 
 import (
 	"context"
+	"errors"
 
 	"go.uber.org/dig"
 
@@ -15,13 +16,13 @@ import (
 	"example.com/creditcard/components/constraint/streaming"
 	"example.com/creditcard/components/constraint/supermarket"
 	"example.com/creditcard/components/constraint/timeinterval"
-	costComp "example.com/creditcard/components/cost"
-	"example.com/creditcard/components/cost/dollar"
+	feedbackComp "example.com/creditcard/components/feedback"
+	cashBackComp "example.com/creditcard/components/feedback/cash_back"
 	rewardComp "example.com/creditcard/components/reward"
 
 	cardM "example.com/creditcard/models/card"
 	constraintM "example.com/creditcard/models/constraint"
-	costM "example.com/creditcard/models/cost"
+	feedbackM "example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
 )
 
@@ -41,20 +42,10 @@ func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*c
 
 	for _, r := range setting.Rewards {
 
-		// constraints := []*constraintComp.Component{}
-
 		constraint, err := im.getConstraintPayloadComponent(ctx, r.ConstraintPayload)
 		if err != nil {
 			return nil, err
 		}
-		// for _, co := range r.Constraints {
-
-		// 	constraint, _ := im.getConstraintComponent(ctx, co)
-		// 	constraints = append(constraints, constraint)
-
-		// }
-
-		// costComponent, _ := im.getCostComponent(ctx, r.Cost)
 
 		reward, _ := im.getRewardComponent(ctx, r, constraint)
 		rewards = append(rewards, reward)
@@ -64,47 +55,14 @@ func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*c
 	return card, nil
 }
 
-func (im *impl) getCostComponent(ctx context.Context, cost *costM.Cost) (*costComp.Component, error) {
-
-	if cost == nil {
-		return nil, nil
-	}
-
-	var costComponent costComp.Component
-
-	// if cost == nil {
-	// 	return &costComponent, nil
-	// }
-
-	switch cost.CostType {
-	case costM.Dollar:
-		costComponent = dollar.New(cost.Dollar)
-	case costM.Bonus:
-		// costComponent = bonus.New()
-	default:
-		return nil, nil
-	}
-
-	return &costComponent, nil
-}
-
-// func (im *impl) getConstraintComponent(ctx context.Context, c *constraintM.Constraint) (*constraintComp.Component, error) {
-
-// 	constraintComponent, err := im.getConstraintPayloadComponent(ctx, c.ConstraintPayload)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	component := constraintComp.New(c, constraintComponent)
-
-// 	return &component, nil
-// }
-
 func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *constraintM.ConstraintPayload) (*constraintComp.Component, error) {
 
 	var constraintComponents []*constraintComp.Component
 
 	var constraintComponent constraintComp.Component
+	if payload == nil {
+		return nil, errors.New("no payload")
+	}
 
 	switch payload.ConstraintType {
 	case constraintM.ConstraintPayloadType:
@@ -127,10 +85,6 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 		constraintComponent = onlinegame.New(payload)
 	case constraintM.StreamingType:
 		constraintComponent = streaming.New(payload)
-	// case constraintM.CostLimitType:
-	// 	constraintComponent = costlimit.New(payload)
-	// case constraintM.BonusLimitType:
-	// 	constraintComponent = bonuslimit.New(payload)
 	case constraintM.TimeIntervalType:
 		constraintComponent = timeinterval.New(payload)
 	case constraintM.CustomizationType:
@@ -143,9 +97,9 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 		constraintComponents = append(constraintComponents, &constraintComponent)
 	}
 
-	costComponent, _ := im.getCostComponent(ctx, payload.Cost)
+	feedbackComponent, _ := im.getFeedbackComponent(ctx, payload.Feedback)
 
-	payloadCompoent := constraintpayload.New(constraintComponents, costComponent, payload)
+	payloadCompoent := constraintpayload.New(constraintComponents, feedbackComponent, payload)
 
 	return &payloadCompoent, nil
 }
@@ -156,7 +110,28 @@ func (im *impl) getRewardComponent(ctx context.Context, r *rewardM.Reward, const
 }
 
 func (im *impl) getCardComponent(ctx context.Context, card *cardM.Card, rewards []*rewardComp.Component) (*cardComp.Component, error) {
-
 	component := cardComp.New(card, rewards)
 	return &component, nil
+}
+
+func (im *impl) getFeedbackComponent(ctx context.Context, cost *feedbackM.Feedback) (*feedbackComp.Component, error) {
+
+	if cost == nil {
+		return nil, nil
+	}
+
+	var feedbackComponent feedbackComp.Component
+
+	switch cost.FeedbackType {
+	case feedbackM.Cash:
+		feedbackComponent = cashBackComp.New(
+			cost, cost.CashBack,
+		)
+	case feedbackM.Point:
+		// costComponent = bonus.New()
+	default:
+		return nil, nil
+	}
+
+	return &feedbackComponent, nil
 }

@@ -15,7 +15,7 @@
 
 {
     "name":"基本0.2%",
-    "cardID":"b4b69053-ca75-46db-7eb6-90da51aadbd2",
+    "cardID":"d46e37bf-ba84-4136-7ce7-1976365e1ef9",
     "desc":"基本0.2%無上限",
     "startDate":1625097600,
     "endDate":1643587200,
@@ -29,12 +29,12 @@
     "desc": "",
     "constraintType": 1,
     "operator": 1,
-    "cost":{
-        "costType":0,
-        "dollar":{
-            "dollarType":0,
-            "dollarLimit":{
-                "point":0.002,
+    "feedback":{
+        "feedbackType":0,
+        "cashBack":{
+            "cashBackType":0,
+            "cashBackLimit":{
+                "bonus":0.002,
                 "min":0,
                 "max":99999999
             }
@@ -53,11 +53,11 @@
 // 0.8 reward
 {
     "name":"任務0.8%",
-    "cardID":"b4b69053-ca75-46db-7eb6-90da51aadbd2",
+    "cardID":"d46e37bf-ba84-4136-7ce7-1976365e1ef9",
     "desc":"當期帳單「成功以Richart帳戶自動扣繳@GoGo卡信用卡帳單，且@GoGo卡消費金額滿NT$5,000(含)」，消費採同品牌項下(含@GoGo悠遊卡/icash/虛擬卡)正附卡合併計算(四捨五入計)，分期以每期入帳金額計算，不含信用卡年費/預借現金/利息/違約金/手續費等非消費交易，其餘消費皆可認列(例：學費/稅/公用事業代扣繳費用(水/電/瓦斯/電信費)…等)。",
     "startDate":1625097600,
     "endDate":1643587200,
-    "updateDate":1624412547,
+    "updateDate":1624412547
 }
 
 
@@ -68,12 +68,12 @@
     "desc": "Richart帳戶自動扣繳@GoGo卡信用卡帳單，且@GoGo卡消費金額滿NT$5,000(含)",
     "operator": 0,
     "constraintType": 1,
-    "cost":{
-        "costType":0,
-        "dollar":{
-            "dollarType":0,
-            "dollarLimit":{
-                "point":0.008,
+    "feedback":{
+        "feedbackType":0,
+        "cashBack":{
+            "cashBackType":0,
+            "cashBackLimit":{
+                "bonus":0.008,
                 "min":5000,
                 "max":25000
             }
@@ -93,11 +93,11 @@
 
 {
     "name":"10大指定2%",
-    "cardID":"b4b69053-ca75-46db-7eb6-90da51aadbd2",
+    "cardID":"d46e37bf-ba84-4136-7ce7-1976365e1ef9",
     "desc":"10大指定",
     "startDate":1625097600,
     "endDate":1643587200,
-    "updateDate":1624412547,
+    "updateDate":1624412547
 }
 
 // constraint
@@ -186,7 +186,7 @@
 
 {
     "name":"週六3%",
-    "cardID":"b4b69053-ca75-46db-7eb6-90da51aadbd2",
+    "cardID":"d46e37bf-ba84-4136-7ce7-1976365e1ef9",
     "desc":"",
     "startDate":1625097600,
     "endDate":1643587200,

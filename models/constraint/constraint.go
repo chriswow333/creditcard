@@ -1,9 +1,9 @@
 package constraint
 
 import (
-	"example.com/creditcard/models/cost"
 	"example.com/creditcard/models/customization"
 	"example.com/creditcard/models/ecommerce"
+	"example.com/creditcard/models/feedback"
 	"example.com/creditcard/models/mobilepay"
 	"example.com/creditcard/models/onlinegame"
 	"example.com/creditcard/models/streaming"
@@ -42,11 +42,12 @@ const (
 )
 
 type ConstraintPayload struct {
-	Name     string       `json:"name,omitempty"`
-	Operator OperatorType `json:"operator"`
-	Desc     string       `json:"desc,omitempty"`
+	Name string `json:"name,omitempty"`
+	Desc string `json:"desc,omitempty"`
 
-	Cost *cost.Cost `json:"cost,omitempty"`
+	Operator OperatorType `json:"operator"`
+
+	Feedback *feedback.Feedback `json:"feedback,omitempty"`
 
 	ConstraintType ConstraintType `json:"constraintType"`
 
