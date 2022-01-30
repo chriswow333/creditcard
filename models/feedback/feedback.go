@@ -1,18 +1,10 @@
 package feedback
 
-type FeedbackType int32
-
-const (
-	Cash FeedbackType = iota
-	Point
-)
-
 type Feedback struct {
 	Current int64   `json:"current"`
 	Total   float64 `json:"total"`
 
-	IsRewardGet    bool           `json:"isRewardGet"`
-	FeedbackType   FeedbackType   `json:"feedbackType"`
+	IsFeedbackGet  bool           `json:"isFeedbackGet"`
 	FeedbackStatus FeedbackStatus `json:"feedbackStatus"` // 是否回饋全拿
 
 	CashBack  *CashBack  `json:"cashBack,omitempty"`

@@ -29,6 +29,7 @@ func NewCustomizationHandler(
 	apis.Handle(rg, http.MethodGet, "/:ID", ch.getByID)
 	apis.Handle(rg, http.MethodPost, "/:ID", ch.update)
 	apis.Handle(rg, http.MethodGet, "/rewardID/:ID", ch.getByRewardID)
+	apis.Handle(rg, http.MethodGet, "/cardID/:ID", ch.getByCardID)
 }
 
 func (h *customizationHandler) create(ctx *gin.Context) {
@@ -76,6 +77,17 @@ func (h *customizationHandler) getByRewardID(ctx *gin.Context) {
 
 	ID := ctx.Param("ID")
 	customizations, err := h.customizationService.GetByRewardID(ctx, ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, customizations)
+}
+
+func (h *customizationHandler) getByCardID(ctx *gin.Context) {
+
+	ID := ctx.Param("ID")
+	customizations, err := h.customizationService.GetByCardID(ctx, ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 		return

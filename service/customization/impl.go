@@ -61,8 +61,18 @@ func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Cu
 	return nil
 }
 
+func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*customizationM.Customization, error) {
+	customizations, err := im.customizationStore.GetByCardID(ctx, cardID)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return customizations, nil
+}
+
 func (im *impl) GetByRewardID(ctx context.Context, rewardID string) ([]*customizationM.Customization, error) {
-	customizations, err := im.GetByRewardID(ctx, rewardID)
+	customizations, err := im.customizationStore.GetByRewardID(ctx, rewardID)
 	if err != nil {
 		logrus.Error(err)
 		return nil, err

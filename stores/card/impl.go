@@ -63,7 +63,7 @@ func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE card SET " +
-	" bank_id = $1, \"name\" = $2, desc = $3, start_date = $4, end_date = $5, update_date = $6, link_url = $7 " +
+	" bank_id = $1, \"name\" = $2, \"desc\" = $3, start_date = $4, end_date = $5, update_date = $6, link_url = $7 " +
 	" where \"id\" = $8"
 
 func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {

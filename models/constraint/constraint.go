@@ -42,22 +42,22 @@ const (
 )
 
 type ConstraintPayload struct {
-	Name string `json:"name,omitempty"`
-	Desc string `json:"desc,omitempty"`
+	Name string `json:"name"`
+	Desc string `json:"desc"`
 
-	Operator OperatorType `json:"operator"`
+	ConstraintOperator OperatorType `json:"constraintOperator"`
 
-	Feedback *feedback.Feedback `json:"feedback,omitempty"`
+	Feedback *feedback.Feedback `json:"feedback"`
 
 	ConstraintType ConstraintType `json:"constraintType"`
 
-	ConstraintPayloads []*ConstraintPayload           `json:"constraintPayloads,omitempty"`
-	TimeIntervals      []*timeinterval.TimeInterval   `json:"timeIntervals,omitempty"`
-	Customizations     []*customization.Customization `json:"customizations,omitempty"`
+	ConstraintPayloads []*ConstraintPayload           `json:"constraintPayloads"`
+	TimeIntervals      []*timeinterval.TimeInterval   `json:"timeIntervals"`
+	Customizations     []*customization.Customization `json:"customizations"`
 
-	Mobilepays   []*mobilepay.Mobilepay     `json:"mobilepays,omitempty"`
-	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces,omitempty"`
-	Supermarkets []*supermarket.Supermarket `json:"supermarkets,omitempty"`
-	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames,omitempty"`
-	Streamings   []*streaming.Streaming     `json:"streamings,omitempty"`
+	Mobilepays   []*mobilepay.Mobilepay     `json:"mobilepays"`
+	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces"`
+	Supermarkets []*supermarket.Supermarket `json:"supermarkets"`
+	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames"`
+	Streamings   []*streaming.Streaming     `json:"streamings"`
 }

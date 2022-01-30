@@ -8,6 +8,7 @@ import (
 	"example.com/creditcard/models/feedback"
 	"example.com/creditcard/models/mobilepay"
 	"example.com/creditcard/models/onlinegame"
+	"example.com/creditcard/models/reward"
 	"example.com/creditcard/models/streaming"
 	"example.com/creditcard/models/supermarket"
 )
@@ -26,7 +27,9 @@ type Event struct {
 	Cash     float64  `json:"cash"`
 	CashType CashType `json:"cashType"`
 
-	CardIDs []string `json:"cards,omitempty"` // 已定義要跑哪幾張卡
+	RewardType reward.RewardType `json:"rewardType"`
+
+	CardIDs []string `json:"cards"` // 已定義要跑哪幾張卡
 
 	EffictiveTime int64 `json:"effictiveTime"`
 
@@ -34,20 +37,19 @@ type Event struct {
 
 	DefaultCustomization bool `json:"defaultCustomization"`
 
-	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces,omitempty"`
-	Supermarkets []*supermarket.Supermarket `json:"supermarkets,omitempty"`
-	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames,omitempty"`
-	Streamings   []*streaming.Streaming     `json:"streamings,omitempty"`
+	Ecommerces   []*ecommerce.Ecommerce     `json:"ecommerces"`
+	Supermarkets []*supermarket.Supermarket `json:"supermarkets"`
+	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames"`
+	Streamings   []*streaming.Streaming     `json:"streamings"`
 
-	Mobilepays []*mobilepay.Mobilepay `json:"mobilpays,omitempty"`
+	Mobilepays []*mobilepay.Mobilepay `json:"mobilpays"`
 
-	Customizations []*customization.Customization `json:"customizations,omitempty"`
-	// BankAccounts   []*bankaccount.BankAccount     `json:"bankAccounts,omitempty"`
+	Customizations []*customization.Customization `json:"customizations"`
 }
 
 type Response struct {
 	EventID string      `json:"eventID"`
-	Cards   []*CardResp `json:"cards,omitempty"`
+	Cards   []*CardResp `json:"cards"`
 }
 
 type CardResp struct {
@@ -55,7 +57,6 @@ type CardResp struct {
 	BankID string `json:"bankID,omitempty"`
 
 	Name string `json:"name,omitempty"`
-	Desc string `json:"desc,omitempty"`
 
 	StartDate  int64 `json:"startDate,omitempty"`
 	EndDate    int64 `json:"endDate,omitempty"`
@@ -63,45 +64,43 @@ type CardResp struct {
 
 	LinkURL string `json:"linkURL,omitempty"`
 
-	CardBonus *CardBonus `json:"cardBonus"`
+	CardRewards []*CardReward `json:"cardRewards"`
+}
+
+type CardReward struct {
+	RewardType reward.RewardType `json:"rewardType"`
+	TotalCost  float64           `json:"totalCost"`
+
+	TotalGetBonus float64 `json:"totalGetBonus"`
+	TotalGetCash  float64 `json:"totalGetCash"`
+	TotalGetPoint float64 `json:"totalGetPoint"`
 
 	Rewards []*RewardResp `json:"rewards"`
 }
 
 type RewardResp struct {
 	Name string `json:"name,omitempty"`
-	Desc string `json:"desc,omitempty"`
 
-	StartDate  int64 `json:"startDate,omitempty"`
-	EndDate    int64 `json:"endDate,omitempty"`
-	UpdateDate int64 `json:"updateDate,omitempty"`
+	StartDate  int64 `json:"startDate"`
+	EndDate    int64 `json:"endDate"`
+	UpdateDate int64 `json:"updateDate"`
 
 	Pass bool `json:"pass"`
 
-	Feedback *feedback.Feedback `json:"feedback"`
-
-	Operator   constraint.OperatorType `json:"operator"`
-	Constraint *ConstraintResp         `json:"constraint,omitempty"`
+	RewardOperator constraint.OperatorType `json:"rewardOperator"`
+	Constraint     *ConstraintResp         `json:"constraint"`
 }
 
 type ConstraintResp struct {
 	Pass bool `json:"pass"`
 
-	Name string `json:"name,omitempty"`
-	Desc string `json:"desc,omitempty"`
+	Name string `json:"name"`
 
 	Feedback *feedback.Feedback `json:"feedback"`
 
-	Matches []string `json:"matches,omitempty"` // 符合限制的id, ex. supermarket
-	Misses  []string `json:"misses,omitempty"`  // 符合限制的id, ex. supermarket
+	Matches []string `json:"matches"` // 符合限制的id, ex. supermarket
+	Misses  []string `json:"misses"`  // 符合限制的id, ex. supermarket
 
 	ConstraintType constraint.ConstraintType `json:"constraintType"`
-	Constraints    []*ConstraintResp         `json:"constraints,omitempty"`
-}
-
-type CardBonus struct {
-	TotalCost int64 `json:"totalCost"`
-
-	TotalBonus float64 `json:"totalBonus"`
-	TotalPoint float64 `json:"totalPoint"`
+	Constraints    []*ConstraintResp         `json:"constraints"`
 }

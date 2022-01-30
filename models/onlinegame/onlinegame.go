@@ -2,7 +2,7 @@ package onlinegame
 
 type Onlinegame struct {
 	ID      string `json:"id"`
-	Name    string `json:"name,omitempty"`
-	Desc    string `json:"desc,omitempty"`
-	LinkURL string `json:"linkURL,omitempty"`
+	Name    string `json:"name"`
+	Desc    string `json:"desc"`
+	LinkURL string `json:"linkURL"`
 }

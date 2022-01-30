@@ -10,20 +10,18 @@ import (
 )
 
 type impl struct {
-	customizations []*customizationM.Customization
-	operator       constraintM.OperatorType
-	name           string
-	desc           string
+	customizations     []*customizationM.Customization
+	constraintOperator constraintM.OperatorType
+	name               string
 }
 
 func New(
 	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 	return &impl{
-		customizations: constraintPayload.Customizations,
-		operator:       constraintPayload.Operator,
-		name:           constraintPayload.Name,
-		desc:           constraintPayload.Desc,
+		customizations:     constraintPayload.Customizations,
+		constraintOperator: constraintPayload.ConstraintOperator,
+		name:               constraintPayload.Name,
 	}
 }
 
@@ -31,7 +29,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Desc:           im.desc,
 		ConstraintType: constraintM.CustomizationType,
 	}
 
@@ -58,7 +55,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	constraint.Matches = matches
 	constraint.Misses = misses
 
-	switch im.operator {
+	switch im.constraintOperator {
 	case constraintM.OrOperator:
 		if len(matches) > 0 {
 			constraint.Pass = true

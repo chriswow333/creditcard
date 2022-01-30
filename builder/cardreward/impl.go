@@ -38,24 +38,29 @@ func New() Builder {
 
 func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*cardComp.Component, error) {
 
-	rewards := []*rewardComp.Component{}
-
+	rewardMapper := make(map[rewardM.RewardType][]*rewardComp.Component)
 	for _, r := range setting.Rewards {
 
-		constraint, err := im.getConstraintPayloadComponent(ctx, r.ConstraintPayload)
+		constraint, err := im.getConstraintPayloadComponent(ctx, r.RewardType, r.ConstraintPayload)
 		if err != nil {
 			return nil, err
 		}
 
 		reward, _ := im.getRewardComponent(ctx, r, constraint)
-		rewards = append(rewards, reward)
+
+		if _, ok := rewardMapper[r.RewardType]; ok {
+			rewardMapper[r.RewardType] = append(rewardMapper[r.RewardType], reward)
+		} else {
+			rewardMapper[r.RewardType] = []*rewardComp.Component{reward}
+		}
 	}
 
-	card, _ := im.getCardComponent(ctx, setting, rewards)
+	card, _ := im.getCardComponent(ctx, setting, rewardMapper)
+
 	return card, nil
 }
 
-func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *constraintM.ConstraintPayload) (*constraintComp.Component, error) {
+func (im *impl) getConstraintPayloadComponent(ctx context.Context, rewardType rewardM.RewardType, payload *constraintM.ConstraintPayload) (*constraintComp.Component, error) {
 
 	var constraintComponents []*constraintComp.Component
 
@@ -68,7 +73,7 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 	case constraintM.ConstraintPayloadType:
 
 		for _, p := range payload.ConstraintPayloads {
-			constraintComponentTemp, err := im.getConstraintPayloadComponent(ctx, p)
+			constraintComponentTemp, err := im.getConstraintPayloadComponent(ctx, rewardType, p)
 			if err != nil {
 				return nil, err
 			}
@@ -97,7 +102,7 @@ func (im *impl) getConstraintPayloadComponent(ctx context.Context, payload *cons
 		constraintComponents = append(constraintComponents, &constraintComponent)
 	}
 
-	feedbackComponent, _ := im.getFeedbackComponent(ctx, payload.Feedback)
+	feedbackComponent, _ := im.getFeedbackComponent(ctx, rewardType, payload.Feedback)
 
 	payloadCompoent := constraintpayload.New(constraintComponents, feedbackComponent, payload)
 
@@ -109,25 +114,25 @@ func (im *impl) getRewardComponent(ctx context.Context, r *rewardM.Reward, const
 	return &component, nil
 }
 
-func (im *impl) getCardComponent(ctx context.Context, card *cardM.Card, rewards []*rewardComp.Component) (*cardComp.Component, error) {
-	component := cardComp.New(card, rewards)
+func (im *impl) getCardComponent(ctx context.Context, card *cardM.Card, rewardMapper map[rewardM.RewardType][]*rewardComp.Component) (*cardComp.Component, error) {
+	component := cardComp.New(card, rewardMapper)
 	return &component, nil
 }
 
-func (im *impl) getFeedbackComponent(ctx context.Context, cost *feedbackM.Feedback) (*feedbackComp.Component, error) {
+func (im *impl) getFeedbackComponent(ctx context.Context, rewardType rewardM.RewardType, feedback *feedbackM.Feedback) (*feedbackComp.Component, error) {
 
-	if cost == nil {
+	if feedback == nil {
 		return nil, nil
 	}
 
 	var feedbackComponent feedbackComp.Component
 
-	switch cost.FeedbackType {
-	case feedbackM.Cash:
+	switch rewardType {
+	case rewardM.Cash:
 		feedbackComponent = cashBackComp.New(
-			cost, cost.CashBack,
+			feedback, feedback.CashBack,
 		)
-	case feedbackM.Point:
+	case rewardM.Point:
 		// costComponent = bonus.New()
 	default:
 		return nil, nil

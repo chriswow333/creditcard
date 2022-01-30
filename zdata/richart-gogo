@@ -19,7 +19,8 @@
     "desc":"基本0.2%無上限",
     "startDate":1625097600,
     "endDate":1643587200,
-    "updateDate":1624412547
+    "updateDate":1624412547,
+    "rewardType":0
 }
 
 
@@ -28,7 +29,7 @@
     "name": "基本回饋無上限",
     "desc": "",
     "constraintType": 1,
-    "operator": 1,
+    "constraintOperator": 1,
     "feedback":{
         "feedbackType":0,
         "cashBack":{
@@ -42,7 +43,7 @@
     },
     "customizations":[
         {
-            "id":"8f931a21-901e-45a4-b805-3a88215eac06"
+            "id":"3ae89011-ea39-46a2-b635-1f2ad8cd8c9a"
         }
     ]
 }
@@ -81,7 +82,7 @@
     },
     "customizations":[
         {
-            "id":"3d434ba6-9a43-4e5a-90e2-d61d0deb5bde"
+            "id":"39cf5e19-9b71-4c9a-a196-ce60de1552fb"
         }
     ]
 }

@@ -12,20 +12,18 @@ import (
 )
 
 type impl struct {
-	timeIntervals []*timeintervalM.TimeInterval
-	operator      constraintM.OperatorType
-	name          string
-	desc          string
+	timeIntervals      []*timeintervalM.TimeInterval
+	constraintOperator constraintM.OperatorType
+	name               string
 }
 
 func New(
 	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 	impl := &impl{
-		timeIntervals: constraintPayload.TimeIntervals,
-		operator:      constraintPayload.Operator,
-		name:          constraintPayload.Name,
-		desc:          constraintPayload.Desc,
+		timeIntervals:      constraintPayload.TimeIntervals,
+		constraintOperator: constraintPayload.ConstraintOperator,
+		name:               constraintPayload.Name,
 	}
 
 	return impl
@@ -36,7 +34,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	// TODO Get Range from time
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Desc:           im.desc,
 		ConstraintType: constraintM.TimeIntervalType,
 	}
 
@@ -58,7 +55,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint.Matches = matches
 	constraint.Misses = misses
-	switch im.operator {
+	switch im.constraintOperator {
 	case constraintM.OrOperator:
 		if len(matches) > 0 {
 			constraint.Pass = true

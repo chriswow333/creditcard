@@ -9,6 +9,7 @@ require (
 	github.com/cncf/udpa/go v0.0.0-20201120205902-5459f2c99403 // indirect
 	github.com/cncf/xds/go v0.0.0-20210312221358-fbca930ec8ed // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/gzip v0.0.3
 	github.com/gin-gonic/gin v1.7.2
 	github.com/google/uuid v1.2.0 // indirect

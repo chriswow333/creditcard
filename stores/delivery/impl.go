@@ -1,10 +1,10 @@
-package ecommerce
+package delivery
 
 import (
 	"context"
 
-	"example.com/creditcard/models/ecommerce"
-	ecommerceM "example.com/creditcard/models/ecommerce"
+	"example.com/creditcard/models/delivery"
+	delivertM "example.com/creditcard/models/delivery"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -22,10 +22,10 @@ func New(psql *pgx.ConnPool) Store {
 	}
 }
 
-const INSERT_ECOMMERCE_STAT = "INSERT INTO ecommerce " +
+const INSERT_DELIVERY_STAT = "INSERT INTO delivery " +
 	"(\"id\", \"name\", \"desc\", link_url) VALUES ($1, $2, $3, $4)"
 
-func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) error {
+func (im *impl) Create(ctx context.Context, delivery *delivertM.Delivery) error {
 	tx, err := im.psql.Begin()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -37,13 +37,13 @@ func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) err
 	defer tx.Rollback()
 
 	updater := []interface{}{
-		ecommerce.ID,
-		ecommerce.Name,
-		ecommerce.Desc,
-		ecommerce.LinkURL,
+		delivery.ID,
+		delivery.Name,
+		delivery.Desc,
+		delivery.LinkURL,
 	}
 
-	if _, err := tx.Exec(INSERT_ECOMMERCE_STAT, updater...); err != nil {
+	if _, err := tx.Exec(INSERT_DELIVERY_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
 		}).Fatal(err)
@@ -56,11 +56,11 @@ func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) err
 	return nil
 }
 
-const UPDATE_BY_ID_STAT = "UPDATE ecommerce SET " +
+const UPDATE_BY_ID_STAT = "UPDATE delivery SET " +
 	" \"name\" = $1, \"desc\" = $2, link_url = $3 " +
 	" where \"id\" = $4"
 
-func (im *impl) UpdateByID(ctx context.Context, ecommerce *ecommerce.Ecommerce) error {
+func (im *impl) UpdateByID(ctx context.Context, delivery *delivery.Delivery) error {
 	tx, err := im.psql.Begin()
 
 	if err != nil {
@@ -72,10 +72,10 @@ func (im *impl) UpdateByID(ctx context.Context, ecommerce *ecommerce.Ecommerce) 
 	defer tx.Rollback()
 
 	updater := []interface{}{
-		ecommerce.Name,
-		ecommerce.Desc,
-		ecommerce.LinkURL,
-		ecommerce.ID,
+		delivery.Name,
+		delivery.Desc,
+		delivery.LinkURL,
+		delivery.ID,
 	}
 
 	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
@@ -90,10 +90,10 @@ func (im *impl) UpdateByID(ctx context.Context, ecommerce *ecommerce.Ecommerce) 
 }
 
 const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", link_url " +
-	" FROM ecommerce "
+	" FROM delivery "
 
-func (im *impl) GetAll(ctx context.Context) ([]*ecommerceM.Ecommerce, error) {
-	ecommerces := []*ecommerceM.Ecommerce{}
+func (im *impl) GetAll(ctx context.Context) ([]*delivertM.Delivery, error) {
+	deliverys := []*delivertM.Delivery{}
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -104,12 +104,12 @@ func (im *impl) GetAll(ctx context.Context) ([]*ecommerceM.Ecommerce, error) {
 
 	for rows.Next() {
 
-		ecommerce := &ecommerceM.Ecommerce{}
+		delivery := &delivertM.Delivery{}
 		selector := []interface{}{
-			&ecommerce.ID,
-			&ecommerce.Name,
-			&ecommerce.Desc,
-			&ecommerce.LinkURL,
+			&delivery.ID,
+			&delivery.Name,
+			&delivery.Desc,
+			&delivery.LinkURL,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -119,8 +119,8 @@ func (im *impl) GetAll(ctx context.Context) ([]*ecommerceM.Ecommerce, error) {
 			return nil, err
 		}
 
-		ecommerces = append(ecommerces, ecommerce)
+		deliverys = append(deliverys, delivery)
 	}
 
-	return ecommerces, nil
+	return deliverys, nil
 }

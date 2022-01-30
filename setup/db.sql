@@ -38,6 +38,7 @@ create table reward (
     card_id VARCHAR(36), 
 	"name" VARCHAR(100),
 	"desc" TEXT,
+	"type" INT,
 	start_date BIGINT,
 	end_date BIGINT,
 	update_date BIGINT,
@@ -49,29 +50,36 @@ create table reward (
 DROP TABLE  IF EXISTS customization; 
 CREATE TABLE customization (
     "id" VARCHAR(36) PRIMARY KEY,
+	"card_id" VARCHAR(36),
+	"reward_id" VARCHAR(36),
     "name" VARCHAR(100),
     "desc" TEXT,
+	"default_pass" BOOLEAN,
 	"link_url" TEXT
 );
 
-INSERT INTO customization("id", "name", "desc", "link_url") 
-	VALUES(uuid_generate_v4(), '回饋無上限', '', '');
+INSERT INTO customization("id", "card_id", "reward_id", "name", "desc", "default_pass", "link_url") 
+	VALUES(uuid_generate_v4(), '95feb363-80c5-43eb-5b2b-e723ff37cdb5', 'cd96ba5e-59c4-4ca3-72e8-3b330a8e428b', '回饋無上限', '', '');
 
-INSERT INTO customization("id", "name", "desc", "link_url") 
+
+
+
+
+INSERT INTO customization("id", "card_id", "reward_id", "name", "desc", "default_pass", "link_url") 
 	VALUES(uuid_generate_v4(), 'Richart帳戶自動扣繳@GoGo卡信用卡帳單，且@GoGo卡消費金額滿NT$5,000(含)', '', '');
 
 
-INSERT INTO customization("id", "name", "desc", "link_url") 
+INSERT INTO customization("id", "card_id", "reward_id", "name", "desc", "default_pass", "link_url") 
 	VALUES(uuid_generate_v4(), '永豐幣倍卡-任務一', '綁定本行新台幣帳戶(含數位帳戶)自動扣繳信用卡帳款設定完成且扣款成功。及②使用電子或行動帳單完成設定且寄送成功並取消實體帳單。前述兩項須同時必備達成始符合【任務一】；若僅達成其中一項，恕無法提供加碼回饋。', '');
 
-INSERT INTO customization("id", "name", "desc", "link_url") 
+INSERT INTO customization("id", "card_id", "reward_id", "name", "desc", "default_pass", "link_url") 
 	VALUES(uuid_generate_v4(), '永豐幣倍卡-任務二(懂匯)', '於本行①台外幣帳戶間換匯單筆金額或②外幣存款月平均餘額或③臨櫃投保外幣保單月扣繳單筆金額達等值台幣：1元~10萬元 屬【懂匯】資格；10萬元以上屬【超匯】資格。', '');
 
-INSERT INTO customization("id", "name", "desc", "link_url") 
+INSERT INTO customization("id", "card_id", "reward_id", "name", "desc", "default_pass", "link_url") 
 	VALUES(uuid_generate_v4(), '永豐幣倍卡-任務二(超匯)', '於本行①台外幣帳戶間換匯單筆金額或②外幣存款月平均餘額或③臨櫃投保外幣保單月扣繳單筆金額達等值台幣：1元~10萬元 屬【懂匯】資格；10萬元以上屬【超匯】資格。', '');
 
 
-INSERT INTO customization("id", "name", "desc", "link_url") 
+INSERT INTO customization("id", "card_id", "reward_id", "name", "desc", "default_pass", "link_url") 
 	VALUES(uuid_generate_v4(), '豐城海外村', '豐城網頁版進入海外村內任一商店，輸入”身分證字號+生日”就能作為登入依據，或可從豐城APP版(下載汗水不白流APP)登入後點選【豐城】再連結海外村內任一商店，APP登入且點選【豐城】紀錄就能作為導購流程的依據。幣倍卡持卡人須有豐城登入紀錄且登入後24小時內，透過點擊連結至海外村內任一商家並成功以幣倍卡完成刷卡消費，即可納入計算。', '');
 
 
@@ -95,6 +103,21 @@ INSERT INTO public.mobilepay(id, "name", "desc", "link_url")values (uuid_generat
 INSERT INTO public.mobilepay(id, "name", "desc", "link_url")values (uuid_generate_v4(), 'Samsung Pay',  '三星支付', '');
 INSERT INTO public.mobilepay(id, "name", "desc", "link_url")values (uuid_generate_v4(), 'Garmin Pay',  'Garmin Pay', '');
 INSERT INTO public.mobilepay(id, "name", "desc", "link_url")values (uuid_generate_v4(), 'Fitbit Pay',  'Fitbit Pay', '');
+
+
+
+
+DROP TABLE  IF EXISTS delivery;
+create table delivery (
+    "id" VARCHAR(36),
+	"name" VARCHAR(100),
+    "desc" TEXT,
+	"link_url" TEXT,
+	PRIMARY KEY("id")
+);
+
+INSERT INTO public.delivery(id, "name", "desc", "link_url")values (uuid_generate_v4(), 'FOOD PANDA',  'FOOD PANDA', '');
+INSERT INTO public.delivery(id, "name", "desc", "link_url")values (uuid_generate_v4(), 'Uber Eats',  'Uber Eats', '');
 
 
 

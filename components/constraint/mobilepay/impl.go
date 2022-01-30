@@ -11,22 +11,20 @@ import (
 )
 
 type impl struct {
-	mobilepays     []*mobilepayM.Mobilepay
-	operator       constraintM.OperatorType
-	constraintType constraintM.ConstraintType
-	name           string
-	desc           string
+	mobilepays         []*mobilepayM.Mobilepay
+	constraintOperator constraintM.OperatorType
+	constraintType     constraintM.ConstraintType
+	name               string
 }
 
 func New(
 	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 	return &impl{
-		mobilepays:     constraintPayload.Mobilepays,
-		operator:       constraintPayload.Operator,
-		constraintType: constraintPayload.ConstraintType,
-		name:           constraintPayload.Name,
-		desc:           constraintPayload.Desc,
+		mobilepays:         constraintPayload.Mobilepays,
+		constraintOperator: constraintPayload.ConstraintOperator,
+		constraintType:     constraintPayload.ConstraintType,
+		name:               constraintPayload.Name,
 	}
 }
 
@@ -34,7 +32,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Desc:           im.desc,
 		ConstraintType: im.constraintType,
 	}
 
@@ -60,7 +57,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	constraint.Matches = matches
 	constraint.Misses = misses
 
-	switch im.operator {
+	switch im.constraintOperator {
 	case constraintM.OrOperator:
 		if len(matches) > 0 {
 			constraint.Pass = true

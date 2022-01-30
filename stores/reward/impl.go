@@ -23,8 +23,8 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_REWARD_STAT = "INSERT INTO reward " +
-	"(\"id\", \"card_id\", \"name\", \"desc\", start_date, end_date, update_date, constraint_payload)" +
-	" VALUES($1, $2, $3, $4, $5, $6, $7, $8)"
+	"(\"id\", \"card_id\", \"name\", \"desc\", \"type\", start_date, end_date, update_date, constraint_payload)" +
+	" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 
 func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 
@@ -44,6 +44,7 @@ func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 		reward.CardID,
 		reward.Name,
 		reward.Desc,
+		reward.RewardType,
 		reward.StartDate,
 		reward.EndDate,
 		reward.UpdateDate,
@@ -60,7 +61,7 @@ func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date, constraint_payload " +
+const SELECT_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", \"type\", start_date, end_date, update_date, constraint_payload " +
 	"FROM reward WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error) {
@@ -72,6 +73,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error)
 		&reward.CardID,
 		&reward.Name,
 		&reward.Desc,
+		&reward.RewardType,
 		&reward.StartDate,
 		&reward.EndDate,
 		&reward.UpdateDate,
@@ -86,7 +88,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error)
 	return reward, nil
 }
 
-const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", start_date, end_date, update_date, constraint_payload " +
+const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", \"type\", start_date, end_date, update_date, constraint_payload " +
 	"FROM reward WHERE card_id = $1"
 
 func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Reward, error) {
@@ -114,6 +116,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 			&reward.CardID,
 			&reward.Name,
 			&reward.Desc,
+			&reward.RewardType,
 			&reward.StartDate,
 			&reward.EndDate,
 			&reward.UpdateDate,
@@ -136,8 +139,8 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE reward SET " +
-	" card_id = $1, \"name\" = $2, \"desc\" = $3, start_date = $4, end_date = $5, update_date = $6, constraint_payload = $7 " +
-	" WHERE \"id\" = $8"
+	" card_id = $1, \"name\" = $2, \"desc\" = $3, \"type\" = $4, start_date = $5, end_date = $6, update_date = $7, constraint_payload = $8 " +
+	" WHERE \"id\" = $9"
 
 func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
 	tx, err := im.psql.Begin()
@@ -154,6 +157,7 @@ func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
 		reward.CardID,
 		reward.Name,
 		reward.Desc,
+		reward.RewardType,
 		reward.StartDate,
 		reward.EndDate,
 		reward.UpdateDate,

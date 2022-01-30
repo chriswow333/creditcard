@@ -2,27 +2,28 @@ package card
 
 import (
 	"context"
-
-	"github.com/sirupsen/logrus"
+	"errors"
 
 	"example.com/creditcard/components/reward"
 	cardM "example.com/creditcard/models/card"
 	eventM "example.com/creditcard/models/event"
+	feedbackM "example.com/creditcard/models/feedback"
+	rewardM "example.com/creditcard/models/reward"
+	"github.com/sirupsen/logrus"
 )
 
 type impl struct {
-	card    *cardM.Card
-	rewards []*reward.Component
+	card         *cardM.Card
+	rewardMapper map[rewardM.RewardType][]*reward.Component
 }
 
 func New(
 	card *cardM.Card,
-	rewards []*reward.Component,
+	rewardMapper map[rewardM.RewardType][]*reward.Component,
 ) Component {
-
 	return &impl{
-		card:    card,
-		rewards: rewards,
+		card:         card,
+		rewardMapper: rewardMapper,
 	}
 }
 
@@ -32,53 +33,89 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.CardResp,
 		ID:         im.card.ID,
 		BankID:     im.card.BankID,
 		Name:       im.card.Name,
-		Desc:       im.card.Desc,
 		StartDate:  im.card.StartDate,
 		EndDate:    im.card.EndDate,
 		UpdateDate: im.card.UpdateDate,
 		LinkURL:    im.card.LinkURL,
 	}
 
-	rewards := []*eventM.RewardResp{}
+	cardRewards := []*eventM.CardReward{}
 
-	for _, r := range im.rewards {
+	if e.RewardType != 0 {
+		// means using specficed type
 
-		reward, err := (*r).Satisfy(ctx, e)
+	} else {
+		for rewardType, rs := range im.rewardMapper {
 
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
-			return nil, err
+			rewards := []*eventM.RewardResp{}
+
+			for _, r := range rs {
+				reward, err := (*r).Satisfy(ctx, e)
+
+				if err != nil {
+					logrus.WithFields(logrus.Fields{
+						"": "",
+					}).Error(err)
+					return nil, err
+				}
+				rewards = append(rewards, reward)
+			}
+
+			cardReward, err := im.calculateCardReward(ctx, rewardType, rewards)
+			if err != nil {
+				return nil, err
+			}
+			cardRewards = append(cardRewards, cardReward)
 		}
-
-		rewards = append(rewards, reward)
 	}
 
-	card.Rewards = rewards
-
-	im.calculateCardBonus(ctx, card)
+	card.CardRewards = cardRewards
 
 	return card, nil
 }
 
-func (im *impl) calculateCardBonus(ctx context.Context, card *eventM.CardResp) {
+func (im *impl) calculateCardReward(ctx context.Context, rewardType rewardM.RewardType, rewards []*eventM.RewardResp) (*eventM.CardReward, error) {
 
-	card.CardBonus = &eventM.CardBonus{}
+	var total float64
 
-	// for _, r := range card.Rewards {
-	// 	if r.Pass {
-	// 		switch r.Cost.CostType {
-	// 		case costM.Dollar:
+	cardReward := &eventM.CardReward{}
 
-	// 			break
-	// 		case costM.Bonus:
-	// 			break
-	// 		default:
+	for _, r := range rewards {
 
-	// 		}
+		if r.Constraint.Feedback == nil {
+			return nil, errors.New("no feedback")
+		}
 
-	// 	}
-	// }
+		total = r.Constraint.Feedback.Total
+		if r.Pass {
+			switch rewardType {
+			case rewardM.Cash:
+
+				bonus, actualCashback := im.getCashBonus(ctx, r.Constraint.Feedback)
+
+				cardReward.TotalGetBonus += bonus
+				cardReward.TotalGetCash += actualCashback
+
+			case rewardM.Point:
+
+			default:
+
+			}
+
+		}
+	}
+	cardReward.TotalCost = total
+	cardReward.Rewards = rewards
+	return cardReward, nil
+
+}
+
+func (im *impl) getCashBonus(ctx context.Context, feedbackResp *feedbackM.Feedback) (float64, float64) {
+
+	if feedbackResp.IsFeedbackGet {
+		return feedbackResp.CashBack.CashBackLimit.Bonus, feedbackResp.CashBack.ActualCashBack
+	} else {
+		return 0.0, 0.0
+	}
 
 }

@@ -10,29 +10,26 @@ import (
 )
 
 type impl struct {
-	streamings     []*streamingM.Streaming
-	operator       constraintM.OperatorType
-	constraintType constraintM.ConstraintType
-	name           string
-	desc           string
+	streamings         []*streamingM.Streaming
+	constraintOperator constraintM.OperatorType
+	constraintType     constraintM.ConstraintType
+	name               string
 }
 
 func New(
 	constraintPayload *constraintM.ConstraintPayload,
 ) constraint.Component {
 	return &impl{
-		streamings:     constraintPayload.Streamings,
-		operator:       constraintPayload.Operator,
-		constraintType: constraintPayload.ConstraintType,
-		name:           constraintPayload.Name,
-		desc:           constraintPayload.Desc,
+		streamings:         constraintPayload.Streamings,
+		constraintOperator: constraintPayload.ConstraintOperator,
+		constraintType:     constraintPayload.ConstraintType,
+		name:               constraintPayload.Name,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Desc:           im.desc,
 		ConstraintType: im.constraintType,
 	}
 
@@ -55,7 +52,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	constraint.Matches = matches
 	constraint.Misses = misses
 
-	switch im.operator {
+	switch im.constraintOperator {
 	case constraintM.OrOperator:
 		if len(matches) > 0 {
 			constraint.Pass = true

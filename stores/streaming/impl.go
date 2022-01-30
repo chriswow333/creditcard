@@ -22,7 +22,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO streaming " +
-	"(\"id\", \"name\", desc, link_url) VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"desc\", link_url) VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, streaming *streamingM.Streaming) error {
 	tx, err := im.psql.Begin()
@@ -56,7 +56,7 @@ func (im *impl) Create(ctx context.Context, streaming *streamingM.Streaming) err
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE streaming SET " +
-	" \"name\" = $1, desc = $2, link_url = $3 " +
+	" \"name\" = $1, \"desc\" = $2, link_url = $3 " +
 	" where \"id\" = $4"
 
 func (im *impl) UpdateByID(ctx context.Context, streaming *streamingM.Streaming) error {
@@ -88,7 +88,7 @@ func (im *impl) UpdateByID(ctx context.Context, streaming *streamingM.Streaming)
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", actionType, desc " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", link_url" +
 	" FROM streaming "
 
 func (im *impl) GetAll(ctx context.Context) ([]*streamingM.Streaming, error) {

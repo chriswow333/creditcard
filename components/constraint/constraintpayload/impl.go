@@ -17,9 +17,8 @@ type impl struct {
 
 	feedbackComponent *feedbackComp.Component
 
-	operator constraintM.OperatorType
-	name     string
-	desc     string
+	constraintOperator constraintM.OperatorType
+	name               string
 }
 
 func New(
@@ -29,12 +28,12 @@ func New(
 ) constraint.Component {
 
 	return &impl{
-		constraints:       constraints,
+		constraints: constraints,
+
 		feedbackComponent: feedbackComponent,
 
-		operator: constraintPayload.Operator,
-		name:     constraintPayload.Name,
-		desc:     constraintPayload.Desc,
+		constraintOperator: constraintPayload.ConstraintOperator,
+		name:               constraintPayload.Name,
 	}
 }
 
@@ -42,7 +41,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Desc:           im.desc,
 		ConstraintType: constraintM.ConstraintPayloadType,
 	}
 
@@ -63,7 +61,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 		}
 	}
 
-	switch im.operator {
+	switch im.constraintOperator {
 	case constraintM.OrOperator:
 		if matches > 0 {
 			constraint.Pass = true
@@ -100,7 +98,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 		constraint.Feedback = feedback
 
-		if !feedback.IsRewardGet {
+		if !feedback.IsFeedbackGet {
 			constraint.Pass = false
 		}
 

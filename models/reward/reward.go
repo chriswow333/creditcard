@@ -7,20 +7,21 @@ import (
 type RewardType int32
 
 const (
-	Bonus RewardType = iota
-	Dollar
+	Cash RewardType = iota + 1
+	Point
 )
 
 type Reward struct {
 	ID     string `json:"id"`
 	CardID string `json:"cardID"`
 
-	Name string `json:"name,omitempty"`
-	Desc string `json:"desc,omitempty"`
+	Name string `json:"name"`
+	Desc string `json:"desc"`
 
-	StartDate  int64 `json:"startDate,omitempty"`
-	EndDate    int64 `json:"endDate,omitempty"`
-	UpdateDate int64 `json:"updateDate,omitempty"`
+	StartDate  int64 `json:"startDate"`
+	EndDate    int64 `json:"endDate"`
+	UpdateDate int64 `json:"updateDate"`
 
-	ConstraintPayload *constraint.ConstraintPayload `json:"constraintPayload,omitempty"`
+	RewardType        RewardType                    `json:"rewardType"`
+	ConstraintPayload *constraint.ConstraintPayload `json:"constraintPayload"`
 }

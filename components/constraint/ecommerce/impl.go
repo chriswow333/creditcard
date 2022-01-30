@@ -2,7 +2,6 @@ package ecommerce
 
 import (
 	"context"
-	"fmt"
 
 	"example.com/creditcard/components/constraint"
 
@@ -12,11 +11,10 @@ import (
 )
 
 type impl struct {
-	ecommerces     []*ecommerceM.Ecommerce
-	operator       constraintM.OperatorType
-	constraintType constraintM.ConstraintType
-	name           string
-	desc           string
+	ecommerces         []*ecommerceM.Ecommerce
+	constraintOperator constraintM.OperatorType
+	constraintType     constraintM.ConstraintType
+	name               string
 }
 
 func New(
@@ -24,11 +22,10 @@ func New(
 ) constraint.Component {
 
 	return &impl{
-		ecommerces:     constraintPayload.Ecommerces,
-		operator:       constraintPayload.Operator,
-		constraintType: constraintPayload.ConstraintType,
-		name:           constraintPayload.Name,
-		desc:           constraintPayload.Desc,
+		ecommerces:         constraintPayload.Ecommerces,
+		constraintOperator: constraintPayload.ConstraintOperator,
+		constraintType:     constraintPayload.ConstraintType,
+		name:               constraintPayload.Name,
 	}
 }
 
@@ -36,7 +33,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	constraint := &eventM.ConstraintResp{
 		Name:           im.name,
-		Desc:           im.desc,
 		ConstraintType: im.constraintType,
 	}
 
@@ -50,8 +46,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	}
 
 	for _, ec := range im.ecommerces {
-		fmt.Println(ec.ID)
-
 		if _, ok := ecommerceMap[ec.ID]; ok {
 			matches = append(matches, ec.ID)
 		} else {
@@ -62,7 +56,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	constraint.Matches = matches
 	constraint.Misses = misses
 
-	switch im.operator {
+	switch im.constraintOperator {
 	case constraintM.OrOperator:
 		if len(matches) > 0 {
 			constraint.Pass = true

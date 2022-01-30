@@ -11,4 +11,5 @@ type Service interface {
 	GetByID(ctx context.Context, ID string) (*customizationM.Customization, error)
 	UpdateByID(ctx context.Context, customization *customizationM.Customization) error
 	GetByRewardID(ctx context.Context, rewardID string) ([]*customizationM.Customization, error)
+	GetByCardID(ctx context.Context, cardID string) ([]*customizationM.Customization, error)
 }

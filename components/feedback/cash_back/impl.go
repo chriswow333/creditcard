@@ -45,7 +45,6 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 	cash := int64(e.Cash)
 
 	feedback := &feedbackM.Feedback{
-		FeedbackType:   im.Feedback.FeedbackType,
 		FeedbackStatus: feedbackM.None,
 		CashBack: &feedbackM.CashBack{
 			ActualUseCash:  0,
@@ -75,9 +74,9 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 	feedback.FeedbackStatus = feedbackStatus
 
 	if feedbackStatus == feedbackM.None {
-		feedback.IsRewardGet = false
+		feedback.IsFeedbackGet = false
 	} else {
-		feedback.IsRewardGet = true
+		feedback.IsFeedbackGet = true
 	}
 
 	// set cache

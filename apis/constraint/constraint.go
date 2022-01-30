@@ -37,21 +37,8 @@ func NewConstraintHandler(
 func (h *constraintHandler) update(ctx *gin.Context) {
 
 	rewardID := ctx.Param("ID")
-
 	var constraintPlayload *constraintM.ConstraintPayload
 	ctx.BindJSON(&constraintPlayload)
-	// new id
-	// for _, c := range constraintModels {
-	// 	id, err := uuid.NewV4()
-	// 	if err != nil {
-	// 		logrus.WithFields(logrus.Fields{
-	// 			"msg": "",
-	// 		}).Fatal(err)
-
-	// 		return
-	// 	}
-	// 	c.ID = id.String()
-	// }
 
 	if err := h.constraintService.UpdateByRewardID(ctx, rewardID, constraintPlayload); err != nil {
 		logrus.Error(err)

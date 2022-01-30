@@ -30,7 +30,6 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.RewardRes
 
 	reward := &eventM.RewardResp{
 		Name: im.reward.Name,
-		Desc: im.reward.Desc,
 	}
 
 	if !(im.reward.StartDate <= e.EffictiveTime && e.EffictiveTime <= im.reward.EndDate) {

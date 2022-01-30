@@ -23,7 +23,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_CUSTOMIZARION_STAT = "INSERT INTO customization " +
-	"(\"id\", \"name\", desc, link_url) VALUES ($1, $2, $3, $4)"
+	"(\"id\", card_id, reward_id, \"name\", \"desc\", default_pass, link_url) VALUES ($1, $2, $3, $4, $5, $6, $7)"
 
 func (im *impl) Create(ctx context.Context, customization *customizationM.Customization) error {
 
@@ -39,8 +39,11 @@ func (im *impl) Create(ctx context.Context, customization *customizationM.Custom
 
 	updater := []interface{}{
 		customization.ID,
+		customization.CardID,
+		customization.RewardID,
 		customization.Name,
 		customization.Desc,
+		customization.DefaultPass,
 		customization.LinkURL,
 	}
 
@@ -57,7 +60,7 @@ func (im *impl) Create(ctx context.Context, customization *customizationM.Custom
 	return nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", desc, link_url " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", card_id, reward_id, \"name\", \"desc\", default_pass, link_url " +
 	"FROM customization " +
 	" WHERE \"id\" = $1"
 
@@ -67,9 +70,12 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*customizationM.Customi
 
 	selector := []interface{}{
 		&customization.ID,
+		&customization.CardID,
+		&customization.RewardID,
 		&customization.Name,
-		&customization.LinkURL,
 		&customization.Desc,
+		&customization.DefaultPass,
+		&customization.LinkURL,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
@@ -83,8 +89,8 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*customizationM.Customi
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE customization SET " +
-	" name = $1, \"desc\" = $2, link_url = $3 " +
-	" where \"id\" = $4"
+	" card_id = $1, reward_id = $2, \"name\" = $3, \"desc\" = $4, default_pass = $5, link_url = $6 " +
+	" where \"id\" = $7"
 
 func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Customization) error {
 
@@ -99,8 +105,11 @@ func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Cu
 	defer tx.Rollback()
 
 	updater := []interface{}{
+		customization.CardID,
+		customization.RewardID,
 		customization.Name,
 		customization.Desc,
+		customization.DefaultPass,
 		customization.LinkURL,
 		customization.ID,
 	}
@@ -114,4 +123,84 @@ func (im *impl) UpdateByID(ctx context.Context, customization *customizationM.Cu
 
 	tx.Commit()
 	return nil
+}
+
+const SELECT_BY_REWARD_ID_STAT = "SELECT \"id\", card_id, reward_id, \"name\", \"desc\", default_pass, link_url " +
+	"FROM customization " +
+	" WHERE reward_id = $1"
+
+func (im *impl) GetByRewardID(ctx context.Context, rewardID string) ([]*customizationM.Customization, error) {
+	customizations := []*customizationM.Customization{}
+
+	rows, err := im.psql.Query(SELECT_BY_REWARD_ID_STAT, rewardID)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"": "",
+		}).Error(err)
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		customization := &customizationM.Customization{}
+		selector := []interface{}{
+			&customization.ID,
+			&customization.CardID,
+			&customization.RewardID,
+			&customization.Name,
+			&customization.Desc,
+			&customization.DefaultPass,
+			&customization.LinkURL,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.WithFields(logrus.Fields{
+				"": "",
+			}).Error(err)
+			return nil, err
+		}
+
+		customizations = append(customizations, customization)
+	}
+	return customizations, nil
+}
+
+const SELECT_BY_CARD_ID_STAT = "SELECT \"id\", card_id, reward_id, \"name\", \"desc\", default_pass, link_url " +
+	"FROM customization " +
+	" WHERE card_id = $1"
+
+func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*customizationM.Customization, error) {
+	customizations := []*customizationM.Customization{}
+
+	rows, err := im.psql.Query(SELECT_BY_CARD_ID_STAT, cardID)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"": "",
+		}).Error(err)
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		customization := &customizationM.Customization{}
+		selector := []interface{}{
+			&customization.ID,
+			&customization.CardID,
+			&customization.RewardID,
+			&customization.Name,
+			&customization.Desc,
+			&customization.DefaultPass,
+			&customization.LinkURL,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.WithFields(logrus.Fields{
+				"": "",
+			}).Error(err)
+			return nil, err
+		}
+
+		customizations = append(customizations, customization)
+	}
+	return customizations, nil
 }
