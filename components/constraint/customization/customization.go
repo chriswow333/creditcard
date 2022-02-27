@@ -12,23 +12,20 @@ import (
 type impl struct {
 	customizations     []*customizationM.Customization
 	constraintOperator constraintM.OperatorType
-	name               string
 }
 
 func New(
-	constraintPayload *constraintM.ConstraintPayload,
+	constraint *constraintM.Constraint,
 ) constraint.Component {
 	return &impl{
-		customizations:     constraintPayload.Customizations,
-		constraintOperator: constraintPayload.ConstraintOperator,
-		name:               constraintPayload.Name,
+		customizations:     constraint.Customizations,
+		constraintOperator: constraint.ConstraintOperator,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
 
 	constraint := &eventM.ConstraintResp{
-		Name:           im.name,
 		ConstraintType: constraintM.CustomizationType,
 	}
 

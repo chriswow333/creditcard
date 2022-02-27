@@ -29,8 +29,6 @@ type Event struct {
 
 	RewardType reward.RewardType `json:"rewardType"`
 
-	CardIDs []string `json:"cards"` // 已定義要跑哪幾張卡
-
 	EffictiveTime int64 `json:"effictiveTime"`
 
 	ActionType action.ActionType `json:"actionType"`
@@ -58,49 +56,54 @@ type CardResp struct {
 
 	Name string `json:"name,omitempty"`
 
-	StartDate  int64 `json:"startDate,omitempty"`
-	EndDate    int64 `json:"endDate,omitempty"`
-	UpdateDate int64 `json:"updateDate,omitempty"`
+	StartDate  string `json:"startDate,omitempty"`
+	EndDate    string `json:"endDate,omitempty"`
+	UpdateDate string `json:"updateDate,omitempty"`
 
-	LinkURL string `json:"linkURL,omitempty"`
+	ImagePath string `json:"imagePath"`
+	LinkURL   string `json:"linkURL,omitempty"`
 
-	CardRewards []*CardReward `json:"cardRewards"`
+	InCashRewardResp *InCashRewardResp `json:"inCashRewardResp"`
 }
 
-type CardReward struct {
-	RewardType reward.RewardType `json:"rewardType"`
-	TotalCost  float64           `json:"totalCost"`
+type InCashRewardResp struct {
+	FeedReturn *feedback.FeedReturn `json:"feedReturn"`
 
-	TotalGetBonus float64 `json:"totalGetBonus"`
-	TotalGetCash  float64 `json:"totalGetCash"`
-	TotalGetPoint float64 `json:"totalGetPoint"`
-
-	Rewards []*RewardResp `json:"rewards"`
+	RewardResps []*RewardResp `json:"rewardResps"`
 }
 
 type RewardResp struct {
-	Name string `json:"name,omitempty"`
+	ID string `json:"id"`
 
-	StartDate  int64 `json:"startDate"`
-	EndDate    int64 `json:"endDate"`
-	UpdateDate int64 `json:"updateDate"`
+	Order int32 `json:"order"`
 
+	Title    string `json:"title"`
+	SubTitle string `json:"subTitle"`
+
+	StartDate  string `json:"startDate"`
+	EndDate    string `json:"endDate"`
+	UpdateDate string `json:"updateDate"`
+
+	FeedReturn      *feedback.FeedReturn   `json:"feedReturn"`
+	PayloadOperator reward.PayloadOperator `json:"payloadOperator"`
+	PayloadResps    []*PayloadResp         `json:"payloadResps"`
+}
+
+type PayloadResp struct {
 	Pass bool `json:"pass"`
 
-	RewardOperator constraint.OperatorType `json:"rewardOperator"`
-	Constraint     *ConstraintResp         `json:"constraint"`
+	Feedback   *feedback.Feedback   `json:"feedback"`
+	FeedReturn *feedback.FeedReturn `json:"feedReturn"`
+
+	ConstraintResp *ConstraintResp `json:"constraintResp"`
 }
 
 type ConstraintResp struct {
 	Pass bool `json:"pass"`
 
-	Name string `json:"name"`
-
-	Feedback *feedback.Feedback `json:"feedback"`
-
 	Matches []string `json:"matches"` // 符合限制的id, ex. supermarket
 	Misses  []string `json:"misses"`  // 符合限制的id, ex. supermarket
 
 	ConstraintType constraint.ConstraintType `json:"constraintType"`
-	Constraints    []*ConstraintResp         `json:"constraints"`
+	Constraints    []*ConstraintResp         `json:"constraints,omitempty"`
 }

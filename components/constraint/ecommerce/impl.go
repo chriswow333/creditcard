@@ -14,25 +14,22 @@ type impl struct {
 	ecommerces         []*ecommerceM.Ecommerce
 	constraintOperator constraintM.OperatorType
 	constraintType     constraintM.ConstraintType
-	name               string
 }
 
 func New(
-	constraintPayload *constraintM.ConstraintPayload,
+	constraint *constraintM.Constraint,
 ) constraint.Component {
 
 	return &impl{
-		ecommerces:         constraintPayload.Ecommerces,
-		constraintOperator: constraintPayload.ConstraintOperator,
-		constraintType:     constraintPayload.ConstraintType,
-		name:               constraintPayload.Name,
+		ecommerces:         constraint.Ecommerces,
+		constraintOperator: constraint.ConstraintOperator,
+		constraintType:     constraint.ConstraintType,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
 
 	constraint := &eventM.ConstraintResp{
-		Name:           im.name,
 		ConstraintType: im.constraintType,
 	}
 

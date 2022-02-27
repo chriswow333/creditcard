@@ -13,24 +13,21 @@ type impl struct {
 	supermarkets       []*supermarketM.Supermarket
 	constraintOperator constraintM.OperatorType
 	constraintType     constraintM.ConstraintType
-	name               string
 }
 
 func New(
-	constraintPayload *constraintM.ConstraintPayload,
+	constraint *constraintM.Constraint,
 ) constraint.Component {
 	return &impl{
-		supermarkets:       constraintPayload.Supermarkets,
-		constraintOperator: constraintPayload.ConstraintOperator,
-		constraintType:     constraintPayload.ConstraintType,
-		name:               constraintPayload.Name,
+		supermarkets:       constraint.Supermarkets,
+		constraintOperator: constraint.ConstraintOperator,
+		constraintType:     constraint.ConstraintType,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
 
 	constraint := &eventM.ConstraintResp{
-		Name:           im.name,
 		ConstraintType: im.constraintType,
 	}
 

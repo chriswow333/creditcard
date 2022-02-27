@@ -2,14 +2,11 @@ package cardreward
 
 import (
 	"context"
-	"errors"
 
 	"go.uber.org/dig"
 
 	cardComp "example.com/creditcard/components/card"
 	constraintComp "example.com/creditcard/components/constraint"
-	"example.com/creditcard/components/constraint/constraintpayload"
-	"example.com/creditcard/components/constraint/customization"
 	"example.com/creditcard/components/constraint/ecommerce"
 	"example.com/creditcard/components/constraint/mobilepay"
 	"example.com/creditcard/components/constraint/onlinegame"
@@ -17,12 +14,13 @@ import (
 	"example.com/creditcard/components/constraint/supermarket"
 	"example.com/creditcard/components/constraint/timeinterval"
 	feedbackComp "example.com/creditcard/components/feedback"
-	cashBackComp "example.com/creditcard/components/feedback/cash_back"
+	cashbackComp "example.com/creditcard/components/feedback/cashback"
+	payloadComp "example.com/creditcard/components/payload"
 	rewardComp "example.com/creditcard/components/reward"
 
 	cardM "example.com/creditcard/models/card"
 	constraintM "example.com/creditcard/models/constraint"
-	feedbackM "example.com/creditcard/models/feedback"
+	"example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
 )
 
@@ -39,104 +37,100 @@ func New() Builder {
 func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*cardComp.Component, error) {
 
 	rewardMapper := make(map[rewardM.RewardType][]*rewardComp.Component)
+
 	for _, r := range setting.Rewards {
-
-		constraint, err := im.getConstraintPayloadComponent(ctx, r.RewardType, r.ConstraintPayload)
-		if err != nil {
-			return nil, err
-		}
-
-		reward, _ := im.getRewardComponent(ctx, r, constraint)
-
-		if _, ok := rewardMapper[r.RewardType]; ok {
-			rewardMapper[r.RewardType] = append(rewardMapper[r.RewardType], reward)
-		} else {
-			rewardMapper[r.RewardType] = []*rewardComp.Component{reward}
-		}
-	}
-
-	card, _ := im.getCardComponent(ctx, setting, rewardMapper)
-
-	return card, nil
-}
-
-func (im *impl) getConstraintPayloadComponent(ctx context.Context, rewardType rewardM.RewardType, payload *constraintM.ConstraintPayload) (*constraintComp.Component, error) {
-
-	var constraintComponents []*constraintComp.Component
-
-	var constraintComponent constraintComp.Component
-	if payload == nil {
-		return nil, errors.New("no payload")
-	}
-
-	switch payload.ConstraintType {
-	case constraintM.ConstraintPayloadType:
-
-		for _, p := range payload.ConstraintPayloads {
-			constraintComponentTemp, err := im.getConstraintPayloadComponent(ctx, rewardType, p)
+		payloadComponents := []*payloadComp.Component{}
+		for _, p := range r.Payloads {
+			constraintComponent, err := im.getConstraintComponent(ctx, p.Constraint)
 			if err != nil {
 				return nil, err
 			}
-			constraintComponents = append(constraintComponents, constraintComponentTemp)
+
+			feedbackComponent, err := im.getFeedbackComponent(ctx, r.RewardType, p.Feedback)
+			if err != nil {
+				return nil, err
+			}
+
+			payloadComponent := payloadComp.New(constraintComponent, feedbackComponent)
+			payloadComponents = append(payloadComponents, &payloadComponent)
 		}
 
-	case constraintM.MobilepayType:
-		constraintComponent = mobilepay.New(payload)
-	case constraintM.EcommerceType:
-		constraintComponent = ecommerce.New(payload)
-	case constraintM.SupermarketType:
-		constraintComponent = supermarket.New(payload)
-	case constraintM.OnlinegameType:
-		constraintComponent = onlinegame.New(payload)
-	case constraintM.StreamingType:
-		constraintComponent = streaming.New(payload)
-	case constraintM.TimeIntervalType:
-		constraintComponent = timeinterval.New(payload)
+		rewardComponent := rewardComp.New(r, payloadComponents)
+
+		if rewardComponents, ok := rewardMapper[r.RewardType]; ok {
+			rewardComponents = append(rewardComponents, &rewardComponent)
+		} else {
+			rewardComponents := []*rewardComp.Component{}
+			rewardComponents = append(rewardComponents, &rewardComponent)
+			rewardMapper[r.RewardType] = rewardComponents
+		}
+	}
+
+	cardComponent := cardComp.New(setting, rewardMapper, nil)
+
+	return &cardComponent, nil
+}
+
+func (im *impl) getConstraintComponent(ctx context.Context, constraint *constraintM.Constraint) (*constraintComp.Component, error) {
+
+	constraintComponents := []*constraintComp.Component{}
+
+	constraintType := constraint.ConstraintType
+
+	var constraintComponent constraintComp.Component
+
+	switch constraintType {
+	case constraintM.InnerConstraintType:
+		for _, c := range constraint.InnerConstraints {
+			constraintComponent, err := im.getConstraintComponent(ctx, c)
+			if err != nil {
+				return nil, err
+			}
+			constraintComponents = append(constraintComponents, constraintComponent)
+		}
+
 	case constraintM.CustomizationType:
-		constraintComponent = customization.New(payload)
-	default:
-		return nil, nil
+		constraintComponent = timeinterval.New(constraint)
+
+	case constraintM.TimeIntervalType:
+		constraintComponent = timeinterval.New(constraint)
+
+	case constraintM.MobilepayType:
+		constraintComponent = mobilepay.New(constraint)
+
+	case constraintM.EcommerceType:
+		constraintComponent = ecommerce.New(constraint)
+
+	case constraintM.SupermarketType:
+		constraintComponent = supermarket.New(constraint)
+
+	case constraintM.OnlinegameType:
+		constraintComponent = onlinegame.New(constraint)
+
+	case constraintM.StreamingType:
+		constraintComponent = streaming.New(constraint)
+
 	}
 
-	if payload.ConstraintType != constraintM.ConstraintPayloadType {
-		constraintComponents = append(constraintComponents, &constraintComponent)
-	}
+	constraintComponents = append(constraintComponents, &constraintComponent)
 
-	feedbackComponent, _ := im.getFeedbackComponent(ctx, rewardType, payload.Feedback)
+	parentConstraintCompoent := constraintComp.New(constraintComponents, constraint)
 
-	payloadCompoent := constraintpayload.New(constraintComponents, feedbackComponent, payload)
-
-	return &payloadCompoent, nil
+	return &parentConstraintCompoent, nil
 }
 
-func (im *impl) getRewardComponent(ctx context.Context, r *rewardM.Reward, constraint *constraintComp.Component) (*rewardComp.Component, error) {
-	component := rewardComp.New(r, constraint)
-	return &component, nil
-}
-
-func (im *impl) getCardComponent(ctx context.Context, card *cardM.Card, rewardMapper map[rewardM.RewardType][]*rewardComp.Component) (*cardComp.Component, error) {
-	component := cardComp.New(card, rewardMapper)
-	return &component, nil
-}
-
-func (im *impl) getFeedbackComponent(ctx context.Context, rewardType rewardM.RewardType, feedback *feedbackM.Feedback) (*feedbackComp.Component, error) {
-
-	if feedback == nil {
-		return nil, nil
-	}
-
-	var feedbackComponent feedbackComp.Component
+func (im *impl) getFeedbackComponent(ctx context.Context, rewardType rewardM.RewardType, feedback *feedback.Feedback) (*feedbackComp.Component, error) {
 
 	switch rewardType {
-	case rewardM.Cash:
-		feedbackComponent = cashBackComp.New(
-			feedback, feedback.CashBack,
-		)
+	case rewardM.InCash:
+		cashbackComponent := cashbackComp.New(feedback.Cashback)
+		return &cashbackComponent, nil
+	case rewardM.OutCash:
+		cashbackComponent := cashbackComp.New(feedback.Cashback)
+		return &cashbackComponent, nil
 	case rewardM.Point:
-		// costComponent = bonus.New()
+		return nil, nil
 	default:
 		return nil, nil
 	}
-
-	return &feedbackComponent, nil
 }

@@ -114,29 +114,14 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 		EventID: e.ID,
 	}
 
-	specificedCardID := make(map[string]bool)
-	for _, c := range e.CardIDs {
-		specificedCardID[c] = true
-	}
-
 	cards := []*eventM.CardResp{}
 
 	for _, c := range im.cards {
-		if len(e.CardIDs) != 0 {
-			if _, ok := specificedCardID[c.ID]; ok {
-				card, err := im.evaluateCard(ctx, e, *c.cardCompnent)
-				if err != nil {
-					return nil, err
-				}
-				cards = append(cards, card)
-			}
-		} else {
-			card, err := im.evaluateCard(ctx, e, *c.cardCompnent)
-			if err != nil {
-				return nil, err
-			}
-			cards = append(cards, card)
+		card, err := im.evaluateCard(ctx, e, *c.cardCompnent)
+		if err != nil {
+			return nil, err
 		}
+		cards = append(cards, card)
 	}
 
 	resp.Cards = cards

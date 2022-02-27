@@ -17,19 +17,17 @@ type impl struct {
 }
 
 func New(
-	constraintPayload *constraintM.ConstraintPayload,
+	constraint *constraintM.Constraint,
 ) constraint.Component {
 	return &impl{
-		streamings:         constraintPayload.Streamings,
-		constraintOperator: constraintPayload.ConstraintOperator,
-		constraintType:     constraintPayload.ConstraintType,
-		name:               constraintPayload.Name,
+		streamings:         constraint.Streamings,
+		constraintOperator: constraint.ConstraintOperator,
+		constraintType:     constraint.ConstraintType,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
 	constraint := &eventM.ConstraintResp{
-		Name:           im.name,
 		ConstraintType: im.constraintType,
 	}
 

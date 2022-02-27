@@ -36,6 +36,7 @@ func (h *evaluatorHandler) evaluate(ctx *gin.Context) {
 	var eventModel eventM.Event
 
 	ctx.BindJSON(&eventModel)
+
 	resp, err := h.evaluatorModule.Evaluate(ctx, &eventModel)
 	if err != nil {
 		logrus.Error(err)

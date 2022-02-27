@@ -23,8 +23,9 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_REWARD_STAT = "INSERT INTO reward " +
-	"(\"id\", \"card_id\", \"name\", \"desc\", \"type\", start_date, end_date, update_date, constraint_payload)" +
-	" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	"(\"id\", \"card_id\", \"order\", \"title\", \"sub_title\", " +
+	" start_date, end_date, update_date, reward_type, payload_operator, payload)" +
+	" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
 
 func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 
@@ -42,13 +43,15 @@ func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 	updater := []interface{}{
 		reward.ID,
 		reward.CardID,
-		reward.Name,
-		reward.Desc,
-		reward.RewardType,
+		reward.Order,
+		reward.Title,
+		reward.SubTitle,
 		reward.StartDate,
 		reward.EndDate,
 		reward.UpdateDate,
-		reward.ConstraintPayload,
+		reward.RewardType,
+		reward.PayloadOperator,
+		reward.Payloads,
 	}
 	if _, err := tx.Exec(INSERT_REWARD_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -61,8 +64,9 @@ func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", \"type\", start_date, end_date, update_date, constraint_payload " +
-	"FROM reward WHERE \"id\" = $1"
+const SELECT_STAT = "SELECT \"id\", card_id, \"order\", \"title\", \"sub_title\", " +
+	" start_date, end_date, update_date, reward_type, payload_operator, payload " +
+	" FROM reward WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error) {
 
@@ -71,13 +75,15 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error)
 	selector := []interface{}{
 		&reward.ID,
 		&reward.CardID,
-		&reward.Name,
-		&reward.Desc,
-		&reward.RewardType,
+		&reward.Order,
+		&reward.Title,
+		&reward.SubTitle,
 		&reward.StartDate,
 		&reward.EndDate,
 		&reward.UpdateDate,
-		&reward.ConstraintPayload,
+		&reward.RewardType,
+		&reward.PayloadOperator,
+		&reward.Payloads,
 	}
 
 	if err := im.psql.QueryRow(SELECT_STAT, ID).Scan(selector...); err != nil {
@@ -88,8 +94,9 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*rewardM.Reward, error)
 	return reward, nil
 }
 
-const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"name\", \"desc\", \"type\", start_date, end_date, update_date, constraint_payload " +
-	"FROM reward WHERE card_id = $1"
+const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, \"order\", \"title\", \"sub_title\", " +
+	" start_date, end_date, update_date, reward_type, payload_operator, payload " +
+	" FROM reward WHERE card_id = $1"
 
 func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Reward, error) {
 
@@ -114,13 +121,15 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 		selector := []interface{}{
 			&reward.ID,
 			&reward.CardID,
-			&reward.Name,
-			&reward.Desc,
-			&reward.RewardType,
+			&reward.Order,
+			&reward.Title,
+			&reward.SubTitle,
 			&reward.StartDate,
 			&reward.EndDate,
 			&reward.UpdateDate,
-			&reward.ConstraintPayload,
+			&reward.RewardType,
+			&reward.PayloadOperator,
+			&reward.Payloads,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -139,8 +148,10 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*rewardM.Rewa
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE reward SET " +
-	" card_id = $1, \"name\" = $2, \"desc\" = $3, \"type\" = $4, start_date = $5, end_date = $6, update_date = $7, constraint_payload = $8 " +
-	" WHERE \"id\" = $9"
+	" card_id = $1, \"order\" = $2, \"title\" = $3, \"sub_title\" = $4, " +
+	" start_date = $5, end_date = $6, update_date = $7, reward_type = $8, " +
+	" payload_operator = $9, payload = $10 " +
+	" WHERE \"id\" = $12"
 
 func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
 	tx, err := im.psql.Begin()
@@ -155,13 +166,15 @@ func (im *impl) UpdateByID(ctx context.Context, reward *rewardM.Reward) error {
 
 	updater := []interface{}{
 		reward.CardID,
-		reward.Name,
-		reward.Desc,
-		reward.RewardType,
+		reward.Order,
+		reward.Title,
+		reward.SubTitle,
 		reward.StartDate,
 		reward.EndDate,
 		reward.UpdateDate,
-		reward.ConstraintPayload,
+		reward.RewardType,
+		reward.PayloadOperator,
+		reward.Payloads,
 		reward.ID,
 	}
 

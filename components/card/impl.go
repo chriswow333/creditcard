@@ -3,6 +3,7 @@ package card
 import (
 	"context"
 	"errors"
+	"time"
 
 	"example.com/creditcard/components/reward"
 	cardM "example.com/creditcard/models/card"
@@ -13,19 +14,24 @@ import (
 )
 
 type impl struct {
-	card         *cardM.Card
-	rewardMapper map[rewardM.RewardType][]*reward.Component
+	card                  *cardM.Card
+	rewardMapper          map[rewardM.RewardType][]*reward.Component
+	payloadOperatorMapper map[rewardM.RewardType]*rewardM.PayloadOperator
 }
 
 func New(
 	card *cardM.Card,
 	rewardMapper map[rewardM.RewardType][]*reward.Component,
+	payloadOperatorMapper map[rewardM.RewardType]*rewardM.PayloadOperator,
 ) Component {
 	return &impl{
-		card:         card,
-		rewardMapper: rewardMapper,
+		card:                  card,
+		rewardMapper:          rewardMapper,
+		payloadOperatorMapper: payloadOperatorMapper,
 	}
 }
+
+const DATE_FORMAT = "2006/01/02"
 
 func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.CardResp, error) {
 
@@ -33,21 +39,21 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.CardResp,
 		ID:         im.card.ID,
 		BankID:     im.card.BankID,
 		Name:       im.card.Name,
-		StartDate:  im.card.StartDate,
-		EndDate:    im.card.EndDate,
-		UpdateDate: im.card.UpdateDate,
+		StartDate:  time.Unix(im.card.StartDate, 0).Format(DATE_FORMAT),
+		EndDate:    time.Unix(im.card.EndDate, 0).Format(DATE_FORMAT),
+		UpdateDate: time.Unix(im.card.UpdateDate, 0).Format(DATE_FORMAT),
+		ImagePath:  im.card.ImagePath,
 		LinkURL:    im.card.LinkURL,
 	}
-
-	cardRewards := []*eventM.CardReward{}
 
 	if e.RewardType != 0 {
 		// means using specficed type
 
 	} else {
+
 		for rewardType, rs := range im.rewardMapper {
 
-			rewards := []*eventM.RewardResp{}
+			rewardResps := []*eventM.RewardResp{}
 
 			for _, r := range rs {
 				reward, err := (*r).Satisfy(ctx, e)
@@ -58,64 +64,103 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.CardResp,
 					}).Error(err)
 					return nil, err
 				}
-				rewards = append(rewards, reward)
+				rewardResps = append(rewardResps, reward)
 			}
 
-			cardReward, err := im.calculateCardReward(ctx, rewardType, rewards)
-			if err != nil {
-				return nil, err
+			switch rewardType {
+			case rewardM.InCash:
+				card.InCashRewardResp = &eventM.InCashRewardResp{
+					RewardResps: rewardResps,
+				}
+				if payloadOperator, ok := im.payloadOperatorMapper[rewardType]; ok {
+					cashReturn, err := im.calculateCashFeedReturn(ctx, *payloadOperator, rewardResps)
+
+					if err != nil {
+						return nil, err
+					}
+					card.InCashRewardResp.FeedReturn = &feedbackM.FeedReturn{
+						CashReturn: cashReturn,
+					}
+
+				} else {
+					return nil, errors.New("")
+				}
+				continue
+			case rewardM.Point:
+				// card.PointReward = cardReward
+				continue
+			default:
+
 			}
-			cardRewards = append(cardRewards, cardReward)
 		}
 	}
-
-	card.CardRewards = cardRewards
 
 	return card, nil
 }
 
-func (im *impl) calculateCardReward(ctx context.Context, rewardType rewardM.RewardType, rewards []*eventM.RewardResp) (*eventM.CardReward, error) {
+func (im *impl) calculateCashFeedReturn(ctx context.Context, operator rewardM.PayloadOperator, rewardResps []*eventM.RewardResp) (*feedbackM.CashReturn, error) {
 
-	var total float64
+	cashReturn := &feedbackM.CashReturn{}
 
-	cardReward := &eventM.CardReward{}
+	switch operator {
+	case rewardM.AddPayloadOperator:
 
-	for _, r := range rewards {
+		var totalCash float64 = 0.0
+		var currentCash int64 = 0
 
-		if r.Constraint.Feedback == nil {
-			return nil, errors.New("no feedback")
-		}
+		var isCashbackGet bool = false
+		var cashbackBonus float64 = 0.0
 
-		total = r.Constraint.Feedback.Total
-		if r.Pass {
-			switch rewardType {
-			case rewardM.Cash:
+		var actualUseCash int64 = 0
+		var actualCashReturn float64 = 0.0
+		for _, r := range rewardResps {
 
-				bonus, actualCashback := im.getCashBonus(ctx, r.Constraint.Feedback)
+			totalCash = r.FeedReturn.CashReturn.TotalCash
+			currentCash = r.FeedReturn.CashReturn.CurrentCash
 
-				cardReward.TotalGetBonus += bonus
-				cardReward.TotalGetCash += actualCashback
+			if r.FeedReturn.CashReturn.IsCashbackGet {
+				isCashbackGet = true
 
-			case rewardM.Point:
-
-			default:
+				if actualUseCash < r.FeedReturn.CashReturn.ActualUseCash {
+					// get max actual use cash
+					actualUseCash = r.FeedReturn.CashReturn.ActualUseCash
+				}
+				cashbackBonus += r.FeedReturn.CashReturn.CashbackBonus
+				actualCashReturn += r.FeedReturn.CashReturn.ActualCashReturn
 
 			}
 
 		}
+
+		cashReturn.IsCashbackGet = isCashbackGet
+		cashReturn.ActualCashReturn = actualCashReturn
+		cashReturn.ActualUseCash = actualUseCash
+		cashReturn.CurrentCash = currentCash
+		cashReturn.TotalCash = totalCash
+		cashReturn.CashbackBonus = cashbackBonus
+
+		break
+	case rewardM.XORHighPayloadOperator:
+
+		var maxBonus float64 = 0.0
+		finalReward := &eventM.RewardResp{}
+		for _, r := range rewardResps {
+			if r.FeedReturn.CashReturn.IsCashbackGet {
+				if maxBonus < r.FeedReturn.CashReturn.CashbackBonus {
+					finalReward = r
+					maxBonus = r.FeedReturn.CashReturn.CashbackBonus
+				}
+			}
+		}
+		cashReturn.IsCashbackGet = finalReward.FeedReturn.CashReturn.IsCashbackGet
+		cashReturn.ActualCashReturn = finalReward.FeedReturn.CashReturn.ActualCashReturn
+		cashReturn.ActualUseCash = finalReward.FeedReturn.CashReturn.ActualUseCash
+		cashReturn.CurrentCash = finalReward.FeedReturn.CashReturn.CurrentCash
+		cashReturn.TotalCash = finalReward.FeedReturn.CashReturn.TotalCash
+		cashReturn.CashbackBonus = maxBonus
+		break
+	default:
 	}
-	cardReward.TotalCost = total
-	cardReward.Rewards = rewards
-	return cardReward, nil
 
-}
-
-func (im *impl) getCashBonus(ctx context.Context, feedbackResp *feedbackM.Feedback) (float64, float64) {
-
-	if feedbackResp.IsFeedbackGet {
-		return feedbackResp.CashBack.CashBackLimit.Bonus, feedbackResp.CashBack.ActualCashBack
-	} else {
-		return 0.0, 0.0
-	}
-
+	return cashReturn, nil
 }

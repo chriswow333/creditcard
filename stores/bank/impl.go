@@ -23,7 +23,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_BANK_STAT = "INSERT INTO bank " +
-	" (\"id\", \"name\", \"desc\", update_date, link_url) " +
+	" (\"id\", \"name\", update_date, image_path, link_url) " +
 	" VALUES($1, $2, $3, $4, $5)"
 
 func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
@@ -40,8 +40,8 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 	updater := []interface{}{
 		bank.ID,
 		bank.Name,
-		bank.Desc,
 		bank.UpdateDate,
+		bank.ImagePath,
 		bank.LinkURL,
 	}
 
@@ -59,7 +59,7 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE bank SET " +
-	" \"name\" = $1, \"desc\" = $2, update_date = $3, link_url = $4 " +
+	" \"name\" = $1, update_date = $2, image_path = $3, link_url = $4 " +
 	" where \"id\" = $5"
 
 func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
@@ -76,8 +76,8 @@ func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
 
 	updater := []interface{}{
 		bank.Name,
-		bank.Desc,
 		bank.UpdateDate,
+		bank.ImagePath,
 		bank.LinkURL,
 		bank.ID,
 	}
@@ -92,7 +92,7 @@ func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", \"name\", \"desc\", update_date, link_url " +
+const SELECT_STAT = "SELECT \"id\", \"name\", update_date, image_path, link_url " +
 	" FROM bank " +
 	" WHERE \"id\" = $1"
 
@@ -103,8 +103,8 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 	selector := []interface{}{
 		&bank.ID,
 		&bank.Name,
-		&bank.Desc,
 		&bank.UpdateDate,
+		&bank.ImagePath,
 		&bank.LinkURL,
 	}
 
@@ -119,7 +119,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 	return bank, nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", update_date, link_url " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", update_date, image_path, link_url " +
 	" FROM bank"
 
 func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
@@ -139,8 +139,8 @@ func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
 		selector := []interface{}{
 			&bank.ID,
 			&bank.Name,
-			&bank.Desc,
 			&bank.UpdateDate,
+			&bank.ImagePath,
 			&bank.LinkURL,
 		}
 

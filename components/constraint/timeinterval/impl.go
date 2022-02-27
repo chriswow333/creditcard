@@ -14,16 +14,14 @@ import (
 type impl struct {
 	timeIntervals      []*timeintervalM.TimeInterval
 	constraintOperator constraintM.OperatorType
-	name               string
 }
 
 func New(
-	constraintPayload *constraintM.ConstraintPayload,
+	constraint *constraintM.Constraint,
 ) constraint.Component {
 	impl := &impl{
-		timeIntervals:      constraintPayload.TimeIntervals,
-		constraintOperator: constraintPayload.ConstraintOperator,
-		name:               constraintPayload.Name,
+		timeIntervals:      constraint.TimeIntervals,
+		constraintOperator: constraint.ConstraintOperator,
 	}
 
 	return impl
@@ -33,7 +31,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 
 	// TODO Get Range from time
 	constraint := &eventM.ConstraintResp{
-		Name:           im.name,
 		ConstraintType: constraintM.TimeIntervalType,
 	}
 

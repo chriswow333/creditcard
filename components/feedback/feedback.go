@@ -8,5 +8,6 @@ import (
 )
 
 type Component interface {
-	Calculate(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.Feedback, error)
+	Calculate(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.FeedReturn, error)
+	GetFeedback(ctx context.Context) *feedbackM.Feedback
 }

@@ -14,24 +14,21 @@ type impl struct {
 	mobilepays         []*mobilepayM.Mobilepay
 	constraintOperator constraintM.OperatorType
 	constraintType     constraintM.ConstraintType
-	name               string
 }
 
 func New(
-	constraintPayload *constraintM.ConstraintPayload,
+	constraint *constraintM.Constraint,
 ) constraint.Component {
 	return &impl{
-		mobilepays:         constraintPayload.Mobilepays,
-		constraintOperator: constraintPayload.ConstraintOperator,
-		constraintType:     constraintPayload.ConstraintType,
-		name:               constraintPayload.Name,
+		mobilepays:         constraint.Mobilepays,
+		constraintOperator: constraint.ConstraintOperator,
+		constraintType:     constraint.ConstraintType,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
 
 	constraint := &eventM.ConstraintResp{
-		Name:           im.name,
 		ConstraintType: im.constraintType,
 	}
 
