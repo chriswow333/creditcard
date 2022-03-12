@@ -11,6 +11,7 @@ import (
 
 	cardComp "example.com/creditcard/components/card"
 
+	cardM "example.com/creditcard/models/card"
 	eventM "example.com/creditcard/models/event"
 
 	cardService "example.com/creditcard/service/card"
@@ -76,13 +77,13 @@ func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) erro
 		return err
 	}
 
-	rewards, err := im.rewardService.GetByCardID(ctx, cardID)
-	if err != nil {
-		logrus.Error(err)
-		return err
-	}
+	// rewards, err := im.rewardService.GetByCardID(ctx, cardID)
+	// if err != nil {
+	// 	logrus.Error(err)
+	// 	return err
+	// }
 
-	card.Rewards = rewards
+	// card.Rewards = rewards
 
 	cardCompnent, err := im.cardBuilder.BuildCardComponent(ctx, card)
 	if err != nil {
@@ -114,7 +115,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 		EventID: e.ID,
 	}
 
-	cards := []*eventM.CardResp{}
+	cards := []*cardM.CardResp{}
 
 	for _, c := range im.cards {
 		card, err := im.evaluateCard(ctx, e, *c.cardCompnent)
@@ -128,7 +129,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 	return resp, nil
 }
 
-func (im *impl) evaluateCard(ctx context.Context, e *eventM.Event, cardComp cardComp.Component) (*eventM.CardResp, error) {
+func (im *impl) evaluateCard(ctx context.Context, e *eventM.Event, cardComp cardComp.Component) (*cardM.CardResp, error) {
 
 	card, err := cardComp.Satisfy(ctx, e)
 

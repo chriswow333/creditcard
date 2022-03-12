@@ -9,6 +9,8 @@ import (
 
 	eventM "example.com/creditcard/models/event"
 	feedbackM "example.com/creditcard/models/feedback"
+
+	payloadM "example.com/creditcard/models/payload"
 )
 
 type impl struct {
@@ -27,9 +29,9 @@ func New(
 	}
 }
 
-func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.PayloadResp, error) {
+func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.PayloadResp, error) {
 
-	payloadResp := &eventM.PayloadResp{}
+	payloadResp := &payloadM.PayloadResp{}
 
 	constraintResp, err := (*im.constraintComponent).Judge(ctx, e)
 	if err != nil {
@@ -48,8 +50,8 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.PayloadRe
 		}
 	} else {
 		feedReturn, err = im.processFeedReturn(ctx, e, false)
-
 	}
+
 	if err != nil {
 		return nil, err
 	}

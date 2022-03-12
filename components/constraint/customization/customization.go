@@ -2,6 +2,7 @@ package customization
 
 import (
 	"context"
+	"fmt"
 
 	"example.com/creditcard/components/constraint"
 	constraintM "example.com/creditcard/models/constraint"
@@ -23,9 +24,9 @@ func New(
 	}
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintResp, error) {
 
-	constraint := &eventM.ConstraintResp{
+	constraint := &constraintM.ConstraintResp{
 		ConstraintType: constraintM.CustomizationType,
 	}
 
@@ -41,8 +42,9 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintR
 	for _, cust := range im.customizations {
 		if _, ok := customizationMap[cust.ID]; ok {
 			matches = append(matches, cust.ID)
-		} else if e.DefaultCustomization {
+		} else if cust.DefaultPass {
 			// alway given true
+			fmt.Println(cust.ID)
 			matches = append(matches, cust.ID)
 		} else {
 			misses = append(misses, cust.ID)

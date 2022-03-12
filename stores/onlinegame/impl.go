@@ -22,7 +22,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO onlinegame " +
-	"(\"id\", \"name\", \"desc\", link_url) VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, onlinegame *onlinegameM.Onlinegame) error {
 	tx, err := im.psql.Begin()
@@ -38,8 +38,7 @@ func (im *impl) Create(ctx context.Context, onlinegame *onlinegameM.Onlinegame) 
 	updater := []interface{}{
 		onlinegame.ID,
 		onlinegame.Name,
-		onlinegame.Desc,
-		onlinegame.LinkURL,
+		onlinegame.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -56,8 +55,8 @@ func (im *impl) Create(ctx context.Context, onlinegame *onlinegameM.Onlinegame) 
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE onlinegame SET " +
-	" \"name\" = $1, \"desc\" = $2, link_url = $3 " +
-	" where \"id\" = $4"
+	" \"name\" = $1, \"image_path\" = $2 " +
+	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, onlinegame *onlinegameM.Onlinegame) error {
 	tx, err := im.psql.Begin()
@@ -72,8 +71,7 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *onlinegameM.Onlinega
 
 	updater := []interface{}{
 		onlinegame.Name,
-		onlinegame.Desc,
-		onlinegame.LinkURL,
+		onlinegame.ImagePath,
 		onlinegame.ID,
 	}
 
@@ -88,7 +86,7 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *onlinegameM.Onlinega
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", link_url " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
 	" FROM onlinegame "
 
 func (im *impl) GetAll(ctx context.Context) ([]*onlinegameM.Onlinegame, error) {
@@ -107,8 +105,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*onlinegameM.Onlinegame, error) {
 		selector := []interface{}{
 			&onlinegame.ID,
 			&onlinegame.Name,
-			&onlinegame.Desc,
-			&onlinegame.LinkURL,
+			&onlinegame.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

@@ -15,8 +15,6 @@ INSERT INTO bank ("id", "name", "update_date", "image_path", "link_url")VALUES(u
 INSERT INTO bank ("id", "name", "update_date", "image_path", "link_url")VALUES(uuid_generate_v4(),'永豐銀行', 1645533270, '', '');
 
 
-
-
 DROP TABLE  IF EXISTS  card;
 create table card (
     "id" VARCHAR(36) PRIMARY KEY,
@@ -29,13 +27,21 @@ create table card (
 	"link_url" TEXT,
     FOREIGN KEY(bank_id) REFERENCES BANK("id")
 );
+DROP TABLE  IF EXISTS card_reward;
+create table card_reward (
+    "id" VARCHAR(36) PRIMARY KEY,
+	"card_id" VARCHAR(36), 
+	"reward_operator" INT,
+	"reward_type" INT,
+    FOREIGN KEY(card_id) REFERENCES card("id")
+);
 
 
 
 DROP TABLE  IF EXISTS reward;
 create table reward (
     "id" VARCHAR(36) PRIMARY KEY,
-    card_id VARCHAR(36), 
+    card_reward_id VARCHAR(36), 
 	"order" INT, 
 	"title" TEXT,
 	"sub_title" TEXT,
@@ -44,12 +50,23 @@ create table reward (
 	end_date BIGINT,
 	update_date BIGINT,
 	
-	"reward_type" INT,
 	payload_operator INT, 
     payload JSON,
-	feedback JSON,
+	FOREIGN KEY(card_reward_id) REFERENCES card_reward("id")
+);
+
+DROP TABLE  IF EXISTS customization;
+create table customization (
+    "id" VARCHAR(36) PRIMARY KEY,
+	"name" VARCHAR(100),
+	"card_id" VARCHAR(36),
+	"default_pass" BOOLEAN, 
 	FOREIGN KEY(card_id) REFERENCES card("id")
 );
+
+
+INSERT INTO public.customization(id, "name", "card_id", "default_pass")values (uuid_generate_v4() , '基本0.2%', '60e45bac-61f5-4c6e-4d88-1f09e04599af', true);
+INSERT INTO public.customization(id, "name", "card_id", "default_pass")values (uuid_generate_v4() , '任務', '60e45bac-61f5-4c6e-4d88-1f09e04599af', false);
 
 
 DROP TABLE  IF EXISTS mobilepay;

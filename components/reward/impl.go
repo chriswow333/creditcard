@@ -9,19 +9,24 @@ import (
 	eventM "example.com/creditcard/models/event"
 	feedbackM "example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
+
+	payloadM "example.com/creditcard/models/payload"
 )
 
 type impl struct {
+	rewardType        rewardM.RewardType
 	reward            *rewardM.Reward
 	payloadComponents []*payloadComp.Component
 }
 
 func New(
+	rewardType rewardM.RewardType,
 	reward *rewardM.Reward,
 	payloadComponents []*payloadComp.Component,
 ) Component {
 
 	return &impl{
+		rewardType:        rewardType,
 		reward:            reward,
 		payloadComponents: payloadComponents,
 	}
@@ -29,9 +34,9 @@ func New(
 
 const DATE_FORMAT = "2006/01/02"
 
-func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.RewardResp, error) {
+func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardResp, error) {
 
-	rewardResp := &eventM.RewardResp{
+	rewardResp := &rewardM.RewardResp{
 
 		Order:    im.reward.Order,
 		Title:    im.reward.Title,
@@ -48,7 +53,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.RewardRes
 		return rewardResp, nil
 	}
 
-	payloadResps := []*eventM.PayloadResp{}
+	payloadResps := []*payloadM.PayloadResp{}
 
 	for _, p := range im.payloadComponents {
 		payloadResp, err := (*p).Satisfy(ctx, e)
@@ -60,19 +65,38 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.RewardRes
 	}
 
 	rewardResp.PayloadResps = payloadResps
-	cashReturn, err := im.calculateCashReturn(ctx, im.reward.PayloadOperator, payloadResps)
-	if err != nil {
-		return nil, err
-	}
 
-	rewardResp.FeedReturn = &feedbackM.FeedReturn{
-		CashReturn: cashReturn,
+	switch im.rewardType {
+	case rewardM.InCash:
+		cashReturn, err := im.calculateCashReturn(ctx, im.reward.PayloadOperator, payloadResps)
+		if err != nil {
+			return nil, err
+		}
+
+		rewardResp.FeedReturn = &feedbackM.FeedReturn{
+			CashReturn: cashReturn,
+		}
+		break
+	case rewardM.OutCash:
+		cashReturn, err := im.calculateCashReturn(ctx, im.reward.PayloadOperator, payloadResps)
+		if err != nil {
+			return nil, err
+		}
+
+		rewardResp.FeedReturn = &feedbackM.FeedReturn{
+			CashReturn: cashReturn,
+		}
+		break
+	case rewardM.Point:
+		break
+	default:
+
 	}
 
 	return rewardResp, nil
 }
 
-func (im *impl) calculateCashReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadResps []*eventM.PayloadResp) (*feedbackM.CashReturn, error) {
+func (im *impl) calculateCashReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadResps []*payloadM.PayloadResp) (*feedbackM.CashReturn, error) {
 
 	cashReturn := &feedbackM.CashReturn{}
 
@@ -116,7 +140,7 @@ func (im *impl) calculateCashReturn(ctx context.Context, operator rewardM.Payloa
 		break
 	case rewardM.XORHighPayloadOperator:
 		var maxBonus float64 = 0.0
-		finalPayload := &eventM.PayloadResp{}
+		finalPayload := &payloadM.PayloadResp{}
 		for _, f := range payloadResps {
 			if f.Pass {
 				if maxBonus < f.Feedback.Cashback.Bonus {

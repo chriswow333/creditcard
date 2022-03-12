@@ -52,7 +52,7 @@ func (h *rewardHandler) create(ctx *gin.Context) {
 
 func (h *rewardHandler) get(ctx *gin.Context) {
 	ID := ctx.Param("ID")
-	reward, err := h.rewardSrc.GetByID(ctx, ID)
+	reward, err := h.rewardSrc.GetRespByID(ctx, ID)
 	if err != nil {
 		logrus.Error(err)
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -64,7 +64,7 @@ func (h *rewardHandler) get(ctx *gin.Context) {
 func (h *rewardHandler) getByCardID(ctx *gin.Context) {
 
 	cardID := ctx.Param("cardID")
-	rewards, err := h.rewardSrc.GetByCardID(ctx, cardID)
+	rewards, err := h.rewardSrc.GetRespByCardID(ctx, cardID)
 
 	if err != nil {
 		logrus.Error(err)

@@ -30,13 +30,28 @@ func NewCardHandler(
 	}
 
 	apis.Handle(rg, http.MethodGet, "", ch.getAll)
-	apis.Handle(rg, http.MethodPost, "", ch.create)
+	apis.Handle(rg, http.MethodPost, "", ch.createCard)
+	apis.Handle(rg, http.MethodPost, "/cardReward", ch.createCardReward)
+
 	apis.Handle(rg, http.MethodPost, "/:ID", ch.update)
 	apis.Handle(rg, http.MethodGet, "/:ID", ch.get)
 	apis.Handle(rg, http.MethodGet, "/bankID/:bankID", ch.getByBankID)
+
 }
 
-func (h *cardHandler) create(ctx *gin.Context) {
+func (h *cardHandler) createCardReward(ctx *gin.Context) {
+	var carRewardModel cardM.CardReward
+	ctx.BindJSON(&carRewardModel)
+	err := h.cardSrc.CreateCardReward(ctx, &carRewardModel)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, "")
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": "ok"})
+}
+
+func (h *cardHandler) createCard(ctx *gin.Context) {
 	var cardModel cardM.Card
 	ctx.BindJSON(&cardModel)
 
@@ -67,7 +82,7 @@ func (h *cardHandler) update(ctx *gin.Context) {
 func (h *cardHandler) get(ctx *gin.Context) {
 
 	ID := ctx.Param("ID")
-	card, err := h.cardSrc.GetByID(ctx, ID)
+	card, err := h.cardSrc.GetRespByID(ctx, ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 		return
@@ -88,7 +103,7 @@ func (h *cardHandler) getAll(ctx *gin.Context) {
 func (h *cardHandler) getByBankID(ctx *gin.Context) {
 
 	bankID := ctx.Param("bankID")
-	cards, err := h.cardSrc.GetByBankID(ctx, bankID)
+	cards, err := h.cardSrc.GetRespByBankID(ctx, bankID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 		return

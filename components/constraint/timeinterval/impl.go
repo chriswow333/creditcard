@@ -27,10 +27,10 @@ func New(
 	return impl
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintResp, error) {
 
 	// TODO Get Range from time
-	constraint := &eventM.ConstraintResp{
+	constraint := &constraintM.ConstraintResp{
 		ConstraintType: constraintM.TimeIntervalType,
 	}
 

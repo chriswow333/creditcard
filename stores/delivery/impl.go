@@ -23,7 +23,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_DELIVERY_STAT = "INSERT INTO delivery " +
-	"(\"id\", \"name\", \"desc\", link_url) VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, delivery *delivertM.Delivery) error {
 	tx, err := im.psql.Begin()
@@ -39,8 +39,7 @@ func (im *impl) Create(ctx context.Context, delivery *delivertM.Delivery) error 
 	updater := []interface{}{
 		delivery.ID,
 		delivery.Name,
-		delivery.Desc,
-		delivery.LinkURL,
+		delivery.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_DELIVERY_STAT, updater...); err != nil {
@@ -57,8 +56,8 @@ func (im *impl) Create(ctx context.Context, delivery *delivertM.Delivery) error 
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE delivery SET " +
-	" \"name\" = $1, \"desc\" = $2, link_url = $3 " +
-	" where \"id\" = $4"
+	" \"name\" = $1, \"image_path\" = $2 " +
+	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, delivery *delivery.Delivery) error {
 	tx, err := im.psql.Begin()
@@ -73,8 +72,7 @@ func (im *impl) UpdateByID(ctx context.Context, delivery *delivery.Delivery) err
 
 	updater := []interface{}{
 		delivery.Name,
-		delivery.Desc,
-		delivery.LinkURL,
+		delivery.ImagePath,
 		delivery.ID,
 	}
 
@@ -89,7 +87,7 @@ func (im *impl) UpdateByID(ctx context.Context, delivery *delivery.Delivery) err
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", link_url " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
 	" FROM delivery "
 
 func (im *impl) GetAll(ctx context.Context) ([]*delivertM.Delivery, error) {
@@ -108,8 +106,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*delivertM.Delivery, error) {
 		selector := []interface{}{
 			&delivery.ID,
 			&delivery.Name,
-			&delivery.Desc,
-			&delivery.LinkURL,
+			&delivery.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

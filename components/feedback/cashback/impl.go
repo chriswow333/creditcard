@@ -60,7 +60,7 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 		cashReturn.IsCashbackGet = false
 	} else {
 		cashReturn.IsCashbackGet = true
-		cashReturn.CashbackBonus = im.Cashback.Bonus
+		cashReturn.CashbackBonus = (im.Cashback.Bonus) * 100
 	}
 
 	cashReturn.ActualUseCash = actualUseCash

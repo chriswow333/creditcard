@@ -48,3 +48,13 @@ type Constraint struct {
 	Onlinegames  []*onlinegame.Onlinegame   `json:"onlinegames"`
 	Streamings   []*streaming.Streaming     `json:"streamings"`
 }
+
+type ConstraintResp struct {
+	Pass bool `json:"pass"`
+
+	Matches []string `json:"matches"` // 符合限制的id, ex. supermarket
+	Misses  []string `json:"misses"`  // 符合限制的id, ex. supermarket
+
+	ConstraintType ConstraintType    `json:"constraintType"`
+	Constraints    []*ConstraintResp `json:"constraints,omitempty"`
+}

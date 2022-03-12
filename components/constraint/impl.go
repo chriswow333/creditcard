@@ -2,6 +2,7 @@ package constraint
 
 import (
 	"context"
+	"fmt"
 
 	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
@@ -17,6 +18,11 @@ func New(
 	constraintComps []*Component,
 	constraint *constraintM.Constraint,
 ) Component {
+
+	for _, c := range constraintComps {
+
+		fmt.Println("===== ", (*c))
+	}
 	impl := &impl{
 		constraints:        constraintComps,
 		constraintOperator: constraint.ConstraintOperator,
@@ -25,15 +31,19 @@ func New(
 	return impl
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*eventM.ConstraintResp, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintResp, error) {
 
-	constraint := &eventM.ConstraintResp{
+	constraint := &constraintM.ConstraintResp{
 		ConstraintType: im.constraintType,
 	}
 
-	constraintResps := []*eventM.ConstraintResp{}
+	fmt.Println("bug")
+	fmt.Println(im.constraintType)
+
+	constraintResps := []*constraintM.ConstraintResp{}
 
 	for _, co := range im.constraints {
+		fmt.Println("--- ", (*co))
 		constraintResp, err := (*co).Judge(ctx, e)
 		if err != nil {
 			return nil, err

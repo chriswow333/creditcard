@@ -23,7 +23,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_ECOMMERCE_STAT = "INSERT INTO ecommerce " +
-	"(\"id\", \"name\", \"desc\", link_url) VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) error {
 	tx, err := im.psql.Begin()
@@ -39,8 +39,7 @@ func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) err
 	updater := []interface{}{
 		ecommerce.ID,
 		ecommerce.Name,
-		ecommerce.Desc,
-		ecommerce.LinkURL,
+		ecommerce.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_ECOMMERCE_STAT, updater...); err != nil {
@@ -57,8 +56,8 @@ func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) err
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE ecommerce SET " +
-	" \"name\" = $1, \"desc\" = $2, link_url = $3 " +
-	" where \"id\" = $4"
+	" \"name\" = $1, image_path = $2 " +
+	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, ecommerce *ecommerce.Ecommerce) error {
 	tx, err := im.psql.Begin()
@@ -73,8 +72,7 @@ func (im *impl) UpdateByID(ctx context.Context, ecommerce *ecommerce.Ecommerce) 
 
 	updater := []interface{}{
 		ecommerce.Name,
-		ecommerce.Desc,
-		ecommerce.LinkURL,
+		ecommerce.ImagePath,
 		ecommerce.ID,
 	}
 
@@ -89,7 +87,7 @@ func (im *impl) UpdateByID(ctx context.Context, ecommerce *ecommerce.Ecommerce) 
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", link_url " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
 	" FROM ecommerce "
 
 func (im *impl) GetAll(ctx context.Context) ([]*ecommerceM.Ecommerce, error) {
@@ -108,8 +106,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*ecommerceM.Ecommerce, error) {
 		selector := []interface{}{
 			&ecommerce.ID,
 			&ecommerce.Name,
-			&ecommerce.Desc,
-			&ecommerce.LinkURL,
+			&ecommerce.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

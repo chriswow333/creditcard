@@ -22,7 +22,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO supermarket " +
-	"(\"id\", \"name\", \"desc\", link_url) VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, supermarket *supermarketM.Supermarket) error {
 	tx, err := im.psql.Begin()
@@ -38,8 +38,7 @@ func (im *impl) Create(ctx context.Context, supermarket *supermarketM.Supermarke
 	updater := []interface{}{
 		supermarket.ID,
 		supermarket.Name,
-		supermarket.Desc,
-		supermarket.LinkURL,
+		supermarket.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -56,8 +55,8 @@ func (im *impl) Create(ctx context.Context, supermarket *supermarketM.Supermarke
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE supermarket SET " +
-	" \"name\" = $1, \"desc\" = $2, link_url = $3 " +
-	" where \"id\" = $4"
+	" \"name\" = $1, \"image_path\" = $2 " +
+	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, supermarket *supermarketM.Supermarket) error {
 	tx, err := im.psql.Begin()
@@ -72,8 +71,7 @@ func (im *impl) UpdateByID(ctx context.Context, supermarket *supermarketM.Superm
 
 	updater := []interface{}{
 		supermarket.Name,
-		supermarket.Desc,
-		supermarket.LinkURL,
+		supermarket.ImagePath,
 		supermarket.ID,
 	}
 
@@ -88,7 +86,7 @@ func (im *impl) UpdateByID(ctx context.Context, supermarket *supermarketM.Superm
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"desc\", link_url " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
 	" FROM supermarket "
 
 func (im *impl) GetAll(ctx context.Context) ([]*supermarketM.Supermarket, error) {
@@ -107,8 +105,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*supermarketM.Supermarket, error)
 		selector := []interface{}{
 			&supermarket.ID,
 			&supermarket.Name,
-			&supermarket.Desc,
-			&supermarket.LinkURL,
+			&supermarket.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

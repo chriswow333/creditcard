@@ -2,10 +2,9 @@ package event
 
 import (
 	"example.com/creditcard/models/action"
-	"example.com/creditcard/models/constraint"
+	"example.com/creditcard/models/card"
 	"example.com/creditcard/models/customization"
 	"example.com/creditcard/models/ecommerce"
-	"example.com/creditcard/models/feedback"
 	"example.com/creditcard/models/mobilepay"
 	"example.com/creditcard/models/onlinegame"
 	"example.com/creditcard/models/reward"
@@ -46,64 +45,6 @@ type Event struct {
 }
 
 type Response struct {
-	EventID string      `json:"eventID"`
-	Cards   []*CardResp `json:"cards"`
-}
-
-type CardResp struct {
-	ID     string `json:"id,omitempty"`
-	BankID string `json:"bankID,omitempty"`
-
-	Name string `json:"name,omitempty"`
-
-	StartDate  string `json:"startDate,omitempty"`
-	EndDate    string `json:"endDate,omitempty"`
-	UpdateDate string `json:"updateDate,omitempty"`
-
-	ImagePath string `json:"imagePath"`
-	LinkURL   string `json:"linkURL,omitempty"`
-
-	InCashRewardResp *InCashRewardResp `json:"inCashRewardResp"`
-}
-
-type InCashRewardResp struct {
-	FeedReturn *feedback.FeedReturn `json:"feedReturn"`
-
-	RewardResps []*RewardResp `json:"rewardResps"`
-}
-
-type RewardResp struct {
-	ID string `json:"id"`
-
-	Order int32 `json:"order"`
-
-	Title    string `json:"title"`
-	SubTitle string `json:"subTitle"`
-
-	StartDate  string `json:"startDate"`
-	EndDate    string `json:"endDate"`
-	UpdateDate string `json:"updateDate"`
-
-	FeedReturn      *feedback.FeedReturn   `json:"feedReturn"`
-	PayloadOperator reward.PayloadOperator `json:"payloadOperator"`
-	PayloadResps    []*PayloadResp         `json:"payloadResps"`
-}
-
-type PayloadResp struct {
-	Pass bool `json:"pass"`
-
-	Feedback   *feedback.Feedback   `json:"feedback"`
-	FeedReturn *feedback.FeedReturn `json:"feedReturn"`
-
-	ConstraintResp *ConstraintResp `json:"constraintResp"`
-}
-
-type ConstraintResp struct {
-	Pass bool `json:"pass"`
-
-	Matches []string `json:"matches"` // 符合限制的id, ex. supermarket
-	Misses  []string `json:"misses"`  // 符合限制的id, ex. supermarket
-
-	ConstraintType constraint.ConstraintType `json:"constraintType"`
-	Constraints    []*ConstraintResp         `json:"constraints,omitempty"`
+	EventID string           `json:"eventID"`
+	Cards   []*card.CardResp `json:"cards"`
 }
