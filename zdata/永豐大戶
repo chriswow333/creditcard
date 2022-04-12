@@ -13,243 +13,153 @@
 }
 
 
-// post reward
-{
-    "name":"一般消費基本回饋",
-    "cardID":"d46e37bf-ba84-4136-7ce7-1976365e1ef9",
-    "desc":"",
-    "startDate":1640995200,
-    "endDate":1656633599,
-    "updateDate":1624412547,
-    "operator":0
-}
 
 
-// constraint
+
+
+
 {
-    "name": "回饋無上限",
-    "desc": "",
-    "costType":0,
-    "cost":{
-        "costType":0,
-        "dollar":{
-            "dollarType":0,
-            "dollarLimit":{
-            "point":0.01,
-            "min":0,
-            "max":99999999
-            }
-        }
-    },
-    "operator": 1,
-    "constraintType": 1,
-    "customizations":[
+    "cardID":"cfae77f6-4eff-4112-5053-b129889e3ebb",
+    "cardRewardOperator":1,
+    "rewardType":1,
+    "constraintPassLogic":"(44a35e99-a653-4ac4-9522-96970723bfd9^2fd85d97-0992-495e-9330-7b2e341a31fc)",
+    "rewards":[
         {
-            "id":"8f931a21-901e-45a4-b805-3a88215eac06"
-        }
-    ]
-}
-
-
-
-// 特選加碼懂匯:上限100元/每期帳單
-// post reward
-{
-    "name":"特選加碼-行動支付",
-    "cardID":"d46e37bf-ba84-4136-7ce7-1976365e1ef9",
-    "desc":"限Apple Pay、LINE Pay、Google Pay、Samsung Pay、Garmin Pay、Fitbit Pay之一般消費。",
-    "startDate":1640995200,
-    "endDate":1656633599,
-    "updateDate":1624412547,
-    "operator":0
-}
-
-
-// constraint
-{
-    "name": "特選加碼",
-    "desc": "特選加碼(懂匯:上限100元/每期帳單)",
-    "cost":{
-        "costType":0,
-        "dollar":{
-            "dollarType":0,
-            "dollarLimit":{
-                "point":0.02,
-                "min":2000,
-                "max":10000
-            }
-        }
-    },
-    "operator": 0,
-    "constraintType": 0,
-    "constraintPayloads": [
-        {
-            "name": "",
-            "operator": 0,
-            "desc": "",
-            "constraintType": 0,
-            "constraintPayloads":[
-                {
-                    "name": "懂匯",
-                    "operator": 0,
-                    "desc": "懂匯",
-                    "constraintType": 1,
-                    "customizations":[
-                        {
-                            "id":"d8e5c0a6-5f97-4a72-ab16-2d4b65fff6fe"
-                        },
-                        {
-                            "id":"6f0aa914-bf49-4482-bd1b-a12f152b9194"
+            "order":0,
+            "title":"一般消費",
+            "subTitle":"基本回饋",
+            "startDate":1625097600,
+            "endDate":1648684800,
+            "payloadOperator":1,
+            "payloads":[
+               {
+                    "descs":[
+                        "國內1%"
+                    ],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":1,
+                            "bonus":0.01,
+                            "min":0,
+                            "max":9999999
                         }
-                    ]
-                },
-                {
-                    "name": "行動支付",
-                    "operator": 1,
-                    "desc": "",
-                    "constraintType": 3,
-                    "mobilepays":[
-                        {"id":"2dcfdc0b-99d2-4057-a50d-2bef6abf3eda"},
-                        {"id":"06f5b67c-3e24-4860-9f54-7e99c581c3df"},
-                        {"id":"3f0c16d6-e5a5-44f7-a76a-5ca7c9755e55"},
-                        {"id":"9cff36d8-186e-47c0-984e-782b3632e673"},
-                        {"id":"442cfc9c-726e-4b14-b171-27ab4c640df7"},
-                        {"id":"6d29312a-207f-4f92-ae43-c4d273e5807d"}
-                    ]
+                    },
+                    "constraint":{
+                        "constraintOperatorType":2,
+                        "constraintType":2,
+                        "customizations":[
+                            "e9fa0e76-44e5-4ca6-8b73-25269dc4f3b7"
+                        ]
+                    }
                 }
             ]
-                
-        }
-    ]
-}
-
-
-
-// 特選加碼超匯:上限300元/每期帳單
-// post reward
-{
-    "name":"特選加碼-超匯:上限300元/每期帳單",
-    "cardID":"d46e37bf-ba84-4136-7ce7-1976365e1ef9",
-    "desc":"限Apple Pay、LINE Pay、Google Pay、Samsung Pay、Garmin Pay、Fitbit Pay之一般消費。",
-    "startDate":1640995200,
-    "endDate":1656633599,
-    "updateDate":1624412547,
-    "operator":0
-}
-
-
-
-// constraint
-{
-    "name": "特選加碼",
-    "desc": "特選加碼(超匯:上限300元/每期帳單)",
-    "cost":{
-        "costType":0,
-        "dollar":{
-            "dollarType":0,
-            "dollarLimit":{
-                "point":0.02,
-                "min":2000,
-                "max":15000
-            }
-        }
-    },
-    "operator": 0,
-    "constraintType": 0,
-    "constraintPayloads": [
+        },
         {
-            "name": "",
-            "operator": 0,
-            "desc": "",
-            "constraintType": 0,
-            "constraintPayloads":[
-                {
-                    "name": "超匯",
-                    "operator": 0,
-                    "desc": "超匯",
-                    "constraintType": 1,
-                    "customizations":[
-                        {
-                            "id":"d8e5c0a6-5f97-4a72-ab16-2d4b65fff6fe"
-                        },
-                        {
-                            "id":"66386ef1-f119-4efe-b941-da1b8e787fcb"
+            "order":1,
+            "title":"特選加碼+2%(懂匯)",
+            "subTitle":"行動支付",
+            "startDate":1625097600,
+            "endDate":1648684800,
+            "payloadOperator":2,
+            "payloads":[
+               {
+                    "descs":[
+                        "懂匯:上限100元/每期帳單",
+                        "◆特選加碼回饋限一般消費且不含保費(註)代繳金額、幣安(Binance)加密貨幣交易平台之交易、e-Toro境外投資交易平台之交易，依前期信用卡帳單已入帳且符合之消費金額計算，若因特店未請款導致消費未計算，恕與本行無涉。※(註)保費係以消費商店所屬收單機構登記之行業代號為判斷依據，倘因於收單機構登記之行業代號與實際營業項目不符時，仍以收單機構登記之行業代號為準。"
+                    ],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":0,
+                            "bonus":0.02,
+                            "min":2000,
+                            "max":5000
                         }
-                    ]
-                },
-                {
-                    "name": "行動支付",
-                    "operator": 1,
-                    "desc": "",
-                    "constraintType": 3,
-                    "mobilepays":[
-                        {"id":"2dcfdc0b-99d2-4057-a50d-2bef6abf3eda"},
-                        {"id":"06f5b67c-3e24-4860-9f54-7e99c581c3df"},
-                        {"id":"3f0c16d6-e5a5-44f7-a76a-5ca7c9755e55"},
-                        {"id":"9cff36d8-186e-47c0-984e-782b3632e673"},
-                        {"id":"442cfc9c-726e-4b14-b171-27ab4c640df7"},
-                        {"id":"6d29312a-207f-4f92-ae43-c4d273e5807d"}
-                    ]
+                    },
+                    "constraint":{
+                        "constraintOperatorType":1,
+                        "constraintType":1,
+                        "innerConstraints":[
+                            {
+                                        
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "customizations":[
+                                    "0ec57f04-68b1-43f6-aa3e-72f6fa563272",
+                                    "44a35e99-a653-4ac4-9522-96970723bfd9",
+                                    "bd8a2131-a5b5-47e4-a162-2ce07cded8b6"
+                                ]
+                            },
+                            {
+                                
+                                "constraintOperatorType":2,
+                                "constraintType":4,
+                                "mobilepays":[ 
+                                    "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+                                    "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
+                                    "334c5079-8436-44dd-bc31-bf1a7769c604",
+                                    "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                    "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                    "77073cfc-db16-4d30-b9ec-7a79012855ca"
+                                ]
+                                  
+                            }
+                        ]
+                    }
                 }
-            ]
                 
-        }
-    ]
-}
+            ]
+        },
 
-
-// 豐城海外村:上限300元/每期帳單
-// post reward
-{
-    "name":"豐城海外村-懂/超匯",
-    "cardID":"d46e37bf-ba84-4136-7ce7-1976365e1ef9",
-    "desc":"",
-    "startDate":1640995200,
-    "endDate":1656633599,
-    "updateDate":1624412547,
-    "operator":0
-}
-
-// constraint
-{
-    "name": "豐城海外村",
-    "desc": "豐城海外村",
-    "cost":{
-        "costType":0,
-        "dollar":{
-            "dollarType":0,
-            "dollarLimit":{
-                "point":0.03,
-                "min":2000,
-                "max":6666
-            }
-        }
-    },
-    "operator": 0,
-    "constraintType": 0,
-    "constraintPayloads": [
         {
-            "name": "",
-            "operator": 0,
-            "desc": "",
-            "constraintType": 0,
-            "constraintPayloads":[
-                {
-                    "name": "豐城海外村",
-                    "operator": 0,
-                    "desc": "豐城海外村",
-                    "constraintType": 1,
-                    "customizations":[
-                        {
-                            "id":"d8e5c0a6-5f97-4a72-ab16-2d4b65fff6fe"
-                        },
-                        {
-                            "id":"66386ef1-f119-4efe-b941-da1b8e787fcb"
-                        },
-                        {
-                            "id":"dd7b8e9c-778e-4468-ab72-8b3affea07c9"
+            "order":2,
+            "title":"特選加碼+2%(超匯)",
+            "subTitle":"行動支付",
+            "startDate":1625097600,
+            "endDate":1648684800,
+            "payloadOperator":2,
+            "payloads":[
+               {
+                    "descs":[
+                        "超匯:上限300元/每期帳單",
+                        "◆特選加碼回饋限一般消費且不含保費(註)代繳金額、幣安(Binance)加密貨幣交易平台之交易、e-Toro境外投資交易平台之交易，依前期信用卡帳單已入帳且符合之消費金額計算，若因特店未請款導致消費未計算，恕與本行無涉。※(註)保費係以消費商店所屬收單機構登記之行業代號為判斷依據，倘因於收單機構登記之行業代號與實際營業項目不符時，仍以收單機構登記之行業代號為準。"
+                    ],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":0,
+                            "bonus":0.02,
+                            "min":2000,
+                            "max":15000
                         }
-                    ]
+                    },
+                    "constraint":{
+                        "constraintOperatorType":1,
+                        "constraintType":1,
+                        "innerConstraints":[
+                            {
+                                        
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "customizations":[
+                                    "0ec57f04-68b1-43f6-aa3e-72f6fa563272",
+                                    "2fd85d97-0992-495e-9330-7b2e341a31fc",
+                                    "bd8a2131-a5b5-47e4-a162-2ce07cded8b6"
+                                ]
+                            },
+                            {
+                                
+                                "constraintOperatorType":2,
+                                "constraintType":4,
+                                "mobilepays":[ 
+                                    "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+                                    "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
+                                    "334c5079-8436-44dd-bc31-bf1a7769c604",
+                                    "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                    "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                    "77073cfc-db16-4d30-b9ec-7a79012855ca"
+                                ]
+                            }
+                        ]
+                    }
                 }
             ]
         }

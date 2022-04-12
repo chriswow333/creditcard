@@ -3,16 +3,10 @@ package main
 import (
 	"example.com/creditcard/apis/bank"
 	"example.com/creditcard/apis/card"
-	"example.com/creditcard/apis/delivery"
-	"example.com/creditcard/apis/ecommerce"
 	"example.com/creditcard/apis/evaluator"
 	"example.com/creditcard/apis/image"
-	"example.com/creditcard/apis/mobilepay"
-	"example.com/creditcard/apis/onlinegame"
 	"example.com/creditcard/apis/payload"
 	"example.com/creditcard/apis/reward"
-	"example.com/creditcard/apis/streaming"
-	"example.com/creditcard/apis/supermarket"
 	"example.com/creditcard/base/psql"
 	_ "example.com/creditcard/base/psql"
 	"go.uber.org/dig"
@@ -25,15 +19,9 @@ import (
 
 	bankService "example.com/creditcard/service/bank"
 	cardService "example.com/creditcard/service/card"
-	customizationService "example.com/creditcard/service/customization"
-	deliveryService "example.com/creditcard/service/delivery"
-	ecommerceService "example.com/creditcard/service/ecommerce"
-	mobilepayService "example.com/creditcard/service/mobilepay"
-	onlinegameService "example.com/creditcard/service/onlinegame"
+	constraintService "example.com/creditcard/service/constraint"
 	payloadService "example.com/creditcard/service/payload"
 	rewardService "example.com/creditcard/service/reward"
-	streamingService "example.com/creditcard/service/streaming"
-	supermarketService "example.com/creditcard/service/supermarket"
 
 	bankStore "example.com/creditcard/stores/bank"
 	cardStore "example.com/creditcard/stores/card"
@@ -62,14 +50,8 @@ func BuildContainer() *dig.Container {
 	container.Provide(bankService.New)
 	container.Provide(cardService.New)
 	container.Provide(rewardService.New)
-	container.Provide(ecommerceService.New)
-	container.Provide(mobilepayService.New)
-	container.Provide(deliveryService.New)
-	container.Provide(onlinegameService.New)
-	container.Provide(streamingService.New)
-	container.Provide(supermarketService.New)
 	container.Provide(payloadService.New)
-	container.Provide(customizationService.New)
+	container.Provide(constraintService.New)
 
 	// store
 	container.Provide(bankStore.New)
@@ -100,13 +82,8 @@ func NewServer(
 	bankSrc bankService.Service,
 	cardSrc cardService.Service,
 	rewardSrc rewardService.Service,
-	ecommerceSrc ecommerceService.Service,
-	mobilepaySrc mobilepayService.Service,
-	deliverySrc deliveryService.Service,
-	onlinegameSrc onlinegameService.Service,
-	streamingSrc streamingService.Service,
-	supermarketSrc supermarketService.Service,
 	payloadSrc payloadService.Service,
+	constraintService constraintService.Service,
 
 	evaluatorMod evaluatorModule.Module,
 
@@ -126,12 +103,6 @@ func NewServer(
 	bank.NewBankHandle(v1.Group("/bank"), bankSrc)
 	card.NewCardHandler(v1.Group("/card"), cardSrc)
 	reward.NewrewardHandler(v1.Group("/reward"), rewardSrc)
-	ecommerce.NewEcommerceHandler(v1.Group("/ecommerce"), ecommerceSrc)
-	mobilepay.NewMobilepayHandler(v1.Group("/mobilepay"), mobilepaySrc)
-	delivery.NewDeliveryHandler(v1.Group("/delivery"), deliverySrc)
-	onlinegame.NewOnlinegameandler(v1.Group("/onlinegame"), onlinegameSrc)
-	streaming.NewStreamingHandler(v1.Group("/streaming"), streamingSrc)
-	supermarket.NewSupermarketHandler(v1.Group("/supermarket"), supermarketSrc)
 	payload.NewrewardHandler(v1.Group("/payload"), payloadSrc)
 
 	evaluator.NewEvaluatorHandler(v1.Group("/evaluator"), evaluatorMod)

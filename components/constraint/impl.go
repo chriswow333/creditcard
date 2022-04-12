@@ -2,77 +2,64 @@ package constraint
 
 import (
 	"context"
-	"fmt"
 
 	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
 )
 
 type impl struct {
-	constraints        []*Component
-	constraintOperator constraintM.OperatorType
-	constraintType     constraintM.ConstraintType
+	constraintComps []*Component
+	constraintResp  *constraintM.ConstraintResp
 }
 
 func New(
 	constraintComps []*Component,
-	constraint *constraintM.Constraint,
+	constraintResp *constraintM.ConstraintResp,
 ) Component {
 
-	for _, c := range constraintComps {
-
-		fmt.Println("===== ", (*c))
-	}
 	impl := &impl{
-		constraints:        constraintComps,
-		constraintOperator: constraint.ConstraintOperator,
-		constraintType:     constraint.ConstraintType,
+		constraintComps: constraintComps,
+		constraintResp:  constraintResp,
 	}
 	return impl
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintResp, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintEventResp, error) {
 
-	constraint := &constraintM.ConstraintResp{
-		ConstraintType: im.constraintType,
-	}
+	constraintEventResp := &constraintM.ConstraintEventResp{}
 
-	fmt.Println("bug")
-	fmt.Println(im.constraintType)
+	constraintEventResps := []*constraintM.ConstraintEventResp{}
 
-	constraintResps := []*constraintM.ConstraintResp{}
-
-	for _, co := range im.constraints {
-		fmt.Println("--- ", (*co))
-		constraintResp, err := (*co).Judge(ctx, e)
+	for _, co := range im.constraintComps {
+		constraintEventResp, err := (*co).Judge(ctx, e)
 		if err != nil {
 			return nil, err
 		}
-		constraintResps = append(constraintResps, constraintResp)
+		constraintEventResps = append(constraintEventResps, constraintEventResp)
 	}
 
-	switch im.constraintOperator {
-	case constraintM.OrOperator:
-		for _, resp := range constraintResps {
+	switch im.constraintResp.ConstraintOperatorType {
+	case constraintM.OR:
+		for _, resp := range constraintEventResps {
 			if resp.Pass {
-				constraint.Pass = true
+				constraintEventResp.Pass = true
 				break
 			} else {
-				constraint.Pass = false
+				constraintEventResp.Pass = false
 			}
 		}
-	case constraintM.AndOperator:
-		for _, resp := range constraintResps {
+	case constraintM.AND:
+		for _, resp := range constraintEventResps {
 			if resp.Pass {
-				constraint.Pass = true
+				constraintEventResp.Pass = true
 			} else {
-				constraint.Pass = false
+				constraintEventResp.Pass = false
 				break
 			}
 		}
 	}
 
-	constraint.Constraints = constraintResps
+	constraintEventResp.ConstraintEventResps = constraintEventResps
 
-	return constraint, nil
+	return constraintEventResp, nil
 }

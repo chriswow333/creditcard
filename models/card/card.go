@@ -1,7 +1,6 @@
 package card
 
 import (
-	"fmt"
 	"time"
 
 	"example.com/creditcard/models/feedback"
@@ -9,61 +8,48 @@ import (
 	rewardM "example.com/creditcard/models/reward"
 )
 
-type RewardOperator int32
-
-const (
-	AddRewardOperator RewardOperator = iota + 1
-	XORHighRewardOperator
-)
-
 type Card struct {
 	ID     string `json:"id"`
 	BankID string `json:"bankID"`
-	Name   string `json:"name"`
+	Name   string `json:"name,omitempty"`
 
-	StartDate  int64 `json:"startDate"`
-	EndDate    int64 `json:"endDate"`
-	UpdateDate int64 `json:"updateDate"`
+	StartDate  int64 `json:"startDate,omitempty"`
+	EndDate    int64 `json:"endDate,omitempty"`
+	UpdateDate int64 `json:"updateDate,omitempty"`
 
-	ImagePath string `json:"imagePath"`
-	LinkURL   string `json:"linkURL"`
+	ImagePath string `json:"imagePath,omitempty"`
+	LinkURL   string `json:"linkURL,omitempty"`
 
-	CardRewards []*CardReward `json:"cardReward"`
+	CardRewards []*CardReward `json:"cardRewards,omitempty"`
 }
+
+type CardRewardOperator int32
+
+const (
+	ADD CardRewardOperator = iota + 1
+	MAXONE
+)
 
 type CardReward struct {
-	ID     string `json:"id"`
-	CardID string `json:"cardID"`
+	ID             string `json:"id"`
+	CardID         string `json:"cardID"`
+	CardRewardDesc string `json:"cardRewardDesc"`
 
-	RewardOperator RewardOperator    `json:"rewardOperator"`
-	RewardType     reward.RewardType `json:"rewardType"`
-	Rewards        []*rewardM.Reward `json:"rewards"`
+	CardRewardOperator CardRewardOperator `json:"cardRewardOperator,omitempty"` // (R0+(R1&(R2|R3)))
+	RewardType         reward.RewardType  `json:"rewardType,omitempty"`
+
+	ConstraintPassLogic string `json:"constraintPassLogic"`
+
+	Rewards []*rewardM.Reward `json:"rewards,omitempty"`
 }
 
-type CardResp struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type CardRewardEventJudgeType int32
 
-	BankID   string `json:"bankID"`
-	BankName string `json:"bankName"`
-
-	StartDate  string `json:"startDate"`
-	EndDate    string `json:"endDate"`
-	UpdateDate string `json:"updateDate"`
-
-	ImagePath string `json:"imagePath"`
-	LinkURL   string `json:"linkURL"`
-
-	CardRewardResps []*CardRewardResp `json:"cardRewardResps"`
-}
-
-type CardRewardResp struct {
-	RewardOperator RewardOperator    `json:"rewardOperator"`
-	RewardType     reward.RewardType `json:"rewardType"`
-
-	InCashRewardResp  *reward.InCashRewardResp  `json:"inCashRewardResp"`
-	OutCashRewardResp *reward.OutCashRewardResp `json:"outCashRewardResp"`
-}
+const (
+	ALL CardRewardEventJudgeType = iota + 1
+	SOME
+	NONE
+)
 
 const DATE_FORMAT = "2006/01/02"
 
@@ -85,34 +71,33 @@ func TransferCardResp(card *Card) *CardResp {
 	for _, c := range card.CardRewards {
 
 		switch c.RewardType {
-		case reward.InCash:
+		case reward.CASH_TWD:
 
-			inCashRewardResps := []*reward.RewardResp{}
+			rewardResps := []*reward.RewardResp{}
 			// rewards
 			for _, r := range c.Rewards {
 				rewardResp := rewardM.TransferRewardResp(c.RewardType, r)
-				inCashRewardResps = append(inCashRewardResps, rewardResp)
+				rewardResps = append(rewardResps, rewardResp)
 			}
 
-			// cashback
-			inCashCashbackResp := getOptimalCashbackResp(c.RewardOperator, inCashRewardResps)
+			// TODO
+			// cashback := getOptimalCashback(c.CardRewardOperator, rewardResps)
 
 			cardRewardResp := &CardRewardResp{
-				InCashRewardResp: &rewardM.InCashRewardResp{
-					RewardResps: inCashRewardResps,
-					FeedbackResp: &feedback.FeedbackResp{
-						CashbackResp: inCashCashbackResp,
-					},
+				ID:                 c.ID,
+				CardID:             c.CardID,
+				CardRewardDesc:     c.CardRewardDesc,
+				CardRewardOperator: c.CardRewardOperator,
+				RewardType:         c.RewardType,
+				RewardResps:        rewardResps,
+				Feedback: &feedback.Feedback{
+					Cashback: nil,
 				},
-				RewardOperator: c.RewardOperator,
-				RewardType:     c.RewardType,
 			}
 
 			cardRewardResps = append(cardRewardResps, cardRewardResp)
 
-		case reward.OutCash:
-
-		case reward.Point:
+		case reward.POINT:
 
 		}
 
@@ -121,48 +106,4 @@ func TransferCardResp(card *Card) *CardResp {
 	cardResp.CardRewardResps = cardRewardResps
 
 	return cardResp
-}
-
-func getOptimalCashbackResp(rewardOperator RewardOperator, rewardResps []*reward.RewardResp) *feedback.CashbackResp {
-
-	cashbackResp := &feedback.CashbackResp{}
-	var min int64 = 0
-	var max int64 = 99999999
-	var bonus float64 = 0.0
-	var cashbackType feedback.CashbackType
-
-	fmt.Println("check  ", rewardOperator)
-
-	for _, r := range rewardResps {
-
-		cashbackType = r.FeedbackResp.CashbackResp.CashbackType
-
-		switch rewardOperator {
-		case XORHighRewardOperator:
-			if bonus < r.FeedbackResp.CashbackResp.Bonus {
-				min = r.FeedbackResp.CashbackResp.Min
-				max = r.FeedbackResp.CashbackResp.Max
-				bonus = r.FeedbackResp.CashbackResp.Bonus
-			}
-
-		case AddRewardOperator:
-
-			bonus += r.FeedbackResp.CashbackResp.Bonus
-			if min < r.FeedbackResp.CashbackResp.Min {
-				min = r.FeedbackResp.CashbackResp.Min
-			}
-
-			if max > r.FeedbackResp.CashbackResp.Max {
-				max = r.FeedbackResp.CashbackResp.Max
-			}
-
-		}
-	}
-
-	cashbackResp.CashbackType = cashbackType
-	cashbackResp.Min = min
-	cashbackResp.Max = max
-	cashbackResp.Bonus = bonus
-
-	return cashbackResp
 }

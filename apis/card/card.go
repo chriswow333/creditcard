@@ -36,6 +36,7 @@ func NewCardHandler(
 	apis.Handle(rg, http.MethodPost, "/:ID", ch.update)
 	apis.Handle(rg, http.MethodGet, "/:ID", ch.get)
 	apis.Handle(rg, http.MethodGet, "/bankID/:bankID", ch.getByBankID)
+	apis.Handle(rg, http.MethodPost, "/evaluateConstraintLogic/:ID", ch.evaluateConstraintLogic)
 
 }
 
@@ -109,4 +110,25 @@ func (h *cardHandler) getByBankID(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, cards)
+}
+
+type ConstraintIDsPayload struct {
+	ConstraintIDs []string `json:"constraintIDs"`
+}
+
+func (h *cardHandler) evaluateConstraintLogic(ctx *gin.Context) {
+
+	id := ctx.Param("ID")
+	var constraintIDsPayload ConstraintIDsPayload
+
+	err := ctx.BindJSON(&constraintIDsPayload)
+
+	pass, err := h.cardSrc.EvaluateConstraintLogic(ctx, id, constraintIDsPayload.ConstraintIDs)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": pass})
+
 }

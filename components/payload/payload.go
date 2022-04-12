@@ -9,5 +9,5 @@ import (
 )
 
 type Component interface {
-	Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.PayloadResp, error)
+	Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.PayloadEventResp, error)
 }

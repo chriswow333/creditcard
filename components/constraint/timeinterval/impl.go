@@ -12,37 +12,34 @@ import (
 )
 
 type impl struct {
-	timeIntervals      []*timeintervalM.TimeInterval
-	constraintOperator constraintM.OperatorType
+	constraintResp *constraintM.ConstraintResp
 }
 
 func New(
-	constraint *constraintM.Constraint,
+	constraintResp *constraintM.ConstraintResp,
 ) constraint.Component {
+
 	impl := &impl{
-		timeIntervals:      constraint.TimeIntervals,
-		constraintOperator: constraint.ConstraintOperator,
+		constraintResp: constraintResp,
 	}
 
 	return impl
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintResp, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintEventResp, error) {
 
 	// TODO Get Range from time
-	constraint := &constraintM.ConstraintResp{
-		ConstraintType: constraintM.TimeIntervalType,
-	}
+
+	constraintEventResp := &constraintM.ConstraintEventResp{}
 
 	matches := []string{}
 	misses := []string{}
 
-	for _, t := range im.timeIntervals {
+	for _, t := range im.constraintResp.TimeIntervals {
 		switch t.TimeType {
 		case timeintervalM.WeekDay:
-			weekDay := time.Unix(e.EffictiveTime, 0).Weekday()
+			weekDay := time.Unix(e.EffectiveTime, 0).Weekday()
 			if t.WeekDayFrom <= int32(weekDay) && int32(weekDay) <= t.WeekDayTo {
-
 				matches = append(matches, t.ID)
 			} else {
 				misses = append(misses, t.ID)
@@ -50,22 +47,22 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.Constr
 		}
 	}
 
-	constraint.Matches = matches
-	constraint.Misses = misses
-	switch im.constraintOperator {
-	case constraintM.OrOperator:
+	constraintEventResp.Matches = matches
+	constraintEventResp.Misses = misses
+	switch im.constraintResp.ConstraintOperatorType {
+	case constraintM.OR:
 		if len(matches) > 0 {
-			constraint.Pass = true
+			constraintEventResp.Pass = true
 		} else {
-			constraint.Pass = false
+			constraintEventResp.Pass = false
 		}
-	case constraintM.AndOperator:
+	case constraintM.AND:
 		if len(misses) > 0 {
-			constraint.Pass = false
+			constraintEventResp.Pass = false
 		} else {
-			constraint.Pass = true
+			constraintEventResp.Pass = true
 		}
 	}
 
-	return constraint, nil
+	return constraintEventResp, nil
 }

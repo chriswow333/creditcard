@@ -10,4 +10,5 @@ type Store interface {
 	Create(ctx context.Context, delivery *deliveryM.Delivery) error
 	UpdateByID(ctx context.Context, delivery *deliveryM.Delivery) error
 	GetAll(ctx context.Context) ([]*deliveryM.Delivery, error)
+	GetByID(ctx context.Context, ID string) (*deliveryM.Delivery, error)
 }

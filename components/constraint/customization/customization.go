@@ -3,71 +3,76 @@ package customization
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"example.com/creditcard/components/constraint"
 	constraintM "example.com/creditcard/models/constraint"
-	customizationM "example.com/creditcard/models/customization"
 	eventM "example.com/creditcard/models/event"
 )
 
 type impl struct {
-	customizations     []*customizationM.Customization
-	constraintOperator constraintM.OperatorType
+	constraintResp *constraintM.ConstraintResp
 }
 
 func New(
-	constraint *constraintM.Constraint,
+	constraintResp *constraintM.ConstraintResp,
 ) constraint.Component {
+
 	return &impl{
-		customizations:     constraint.Customizations,
-		constraintOperator: constraint.ConstraintOperator,
+		constraintResp: constraintResp,
 	}
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintResp, error) {
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintEventResp, error) {
 
-	constraint := &constraintM.ConstraintResp{
-		ConstraintType: constraintM.CustomizationType,
-	}
+	constraintEventResp := &constraintM.ConstraintEventResp{}
 
 	matches := []string{}
 	misses := []string{}
 
-	customizationMap := make(map[string]*customizationM.Customization)
+	customizationMap := make(map[string]bool)
 
-	for _, cust := range e.Customizations {
-		customizationMap[cust.ID] = cust
+	for _, c := range e.Customizations {
+		customizationMap[c] = true
 	}
+	fmt.Println(customizationMap)
 
-	for _, cust := range im.customizations {
-		if _, ok := customizationMap[cust.ID]; ok {
-			matches = append(matches, cust.ID)
-		} else if cust.DefaultPass {
-			// alway given true
-			fmt.Println(cust.ID)
-			matches = append(matches, cust.ID)
+	for _, c := range im.constraintResp.Customizations {
+		if _, ok := customizationMap[c.ID]; ok {
+			matches = append(matches, c.ID)
+		} else if c.DefaultPass {
+			matches = append(matches, c.ID)
 		} else {
-			misses = append(misses, cust.ID)
+			misses = append(misses, c.ID)
 		}
 	}
 
-	constraint.Matches = matches
-	constraint.Misses = misses
+	fmt.Println("matches :")
+	fmt.Println(matches)
 
-	switch im.constraintOperator {
-	case constraintM.OrOperator:
+	fmt.Println("misses: ")
+	fmt.Println(misses)
+
+	constraintEventResp.Matches = matches
+	constraintEventResp.Misses = misses
+
+	switch im.constraintResp.ConstraintOperatorType {
+	case constraintM.OR:
 		if len(matches) > 0 {
-			constraint.Pass = true
+			constraintEventResp.Pass = true
 		} else {
-			constraint.Pass = false
+			constraintEventResp.Pass = false
 		}
-	case constraintM.AndOperator:
+	case constraintM.AND:
 		if len(misses) > 0 {
-			constraint.Pass = false
+			constraintEventResp.Pass = false
 		} else {
-			constraint.Pass = true
+			constraintEventResp.Pass = true
 		}
 	}
-
-	return constraint, nil
+	fmt.Println("-------")
+	fmt.Println(len(matches))
+	fmt.Println(im.constraintResp.Customizations)
+	fmt.Println("customization pass : " + strconv.FormatBool(constraintEventResp.Pass))
+	return constraintEventResp, nil
 }

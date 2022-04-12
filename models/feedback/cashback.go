@@ -3,19 +3,12 @@ package feedback
 type CashbackType int32
 
 const (
-	NTD CashbackType = iota
+	NTD CashbackType = iota + 1
 )
 
 type Cashback struct {
-	CashbackType CashbackType `json:"cashbackType"`
-	Bonus        float64      `json:"bonus"`
-	Min          int64        `json:"min"`
-	Max          int64        `json:"max"`
-}
-
-type CashbackResp struct {
-	CashbackType CashbackType `json:"cashbackType"`
-	Bonus        float64      `json:"bonus"`
+	CashbackType CashbackType `json:"cashbackType,omitempty"`
+	Bonus        float64      `json:"bonus,omitempty"`
 	Min          int64        `json:"min"`
 	Max          int64        `json:"max"`
 }
@@ -29,16 +22,4 @@ type CashReturn struct {
 
 	CurrentCash int64   `json:"current"`
 	TotalCash   float64 `json:"total"`
-}
-
-func TransferCashbackResp(cashback *Cashback) *CashbackResp {
-
-	cashbackResp := &CashbackResp{
-		CashbackType: cashback.CashbackType,
-		Bonus:        cashback.Bonus * 100,
-		Max:          cashback.Max,
-		Min:          cashback.Min,
-	}
-
-	return cashbackResp
 }

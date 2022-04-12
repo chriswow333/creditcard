@@ -8,5 +8,5 @@ import (
 )
 
 type Component interface {
-	Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintResp, error)
+	Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintEventResp, error)
 }

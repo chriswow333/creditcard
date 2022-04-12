@@ -17,4 +17,5 @@ type Service interface {
 	GetRespByBankID(ctx context.Context, bankID string) ([]*cardM.CardResp, error)
 
 	CreateCardReward(ctx context.Context, cardReward *cardM.CardReward) error
+	EvaluateConstraintLogic(ctx context.Context, cardID string, constraintIDs []string) (bool, error)
 }

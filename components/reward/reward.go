@@ -9,5 +9,5 @@ import (
 )
 
 type Component interface {
-	Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardResp, error)
+	Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEventResp, error)
 }

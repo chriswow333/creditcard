@@ -8,5 +8,5 @@ import (
 )
 
 type Builder interface {
-	BuildCardComponent(ctx context.Context, setting *cardM.Card) (*cardComp.Component, error)
+	BuildCardComponent(ctx context.Context, setting *cardM.CardResp) (cardComp.Component, error)
 }

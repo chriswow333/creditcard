@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"example.com/creditcard/models/delivery"
-	delivertM "example.com/creditcard/models/delivery"
+	deliveryM "example.com/creditcard/models/delivery"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -25,7 +25,7 @@ func New(psql *pgx.ConnPool) Store {
 const INSERT_DELIVERY_STAT = "INSERT INTO delivery " +
 	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
 
-func (im *impl) Create(ctx context.Context, delivery *delivertM.Delivery) error {
+func (im *impl) Create(ctx context.Context, delivery *deliveryM.Delivery) error {
 	tx, err := im.psql.Begin()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -90,8 +90,8 @@ func (im *impl) UpdateByID(ctx context.Context, delivery *delivery.Delivery) err
 const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
 	" FROM delivery "
 
-func (im *impl) GetAll(ctx context.Context) ([]*delivertM.Delivery, error) {
-	deliverys := []*delivertM.Delivery{}
+func (im *impl) GetAll(ctx context.Context) ([]*deliveryM.Delivery, error) {
+	deliverys := []*deliveryM.Delivery{}
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -102,7 +102,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*delivertM.Delivery, error) {
 
 	for rows.Next() {
 
-		delivery := &delivertM.Delivery{}
+		delivery := &deliveryM.Delivery{}
 		selector := []interface{}{
 			&delivery.ID,
 			&delivery.Name,
@@ -120,4 +120,25 @@ func (im *impl) GetAll(ctx context.Context) ([]*delivertM.Delivery, error) {
 	}
 
 	return deliverys, nil
+}
+
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+	" FROM delivery WHERE \"id\" = $1"
+
+func (im *impl) GetByID(ctx context.Context, ID string) (*deliveryM.Delivery, error) {
+
+	delivery := &deliveryM.Delivery{}
+
+	selector := []interface{}{
+		&delivery.ID,
+		&delivery.Name,
+		&delivery.ImagePath,
+	}
+
+	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return delivery, nil
 }

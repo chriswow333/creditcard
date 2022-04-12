@@ -14,52 +14,68 @@ import (
 )
 
 type impl struct {
+	paylaodResp         *payloadM.PayloadResp
 	constraintComponent *constraint.Component
 	feedbackComponent   *feedbackComp.Component
 }
 
 func New(
+	paylaodResp *payloadM.PayloadResp,
 	constraintComponent *constraint.Component,
 	feedbackComponent *feedbackComp.Component,
 ) Component {
 
 	return &impl{
+		paylaodResp:         paylaodResp,
 		constraintComponent: constraintComponent,
 		feedbackComponent:   feedbackComponent,
 	}
 }
 
-func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.PayloadResp, error) {
+func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.PayloadEventResp, error) {
 
-	payloadResp := &payloadM.PayloadResp{}
+	payloadEventResp := &payloadM.PayloadEventResp{
+		ID: im.paylaodResp.ID,
+	}
 
-	constraintResp, err := (*im.constraintComponent).Judge(ctx, e)
+	constraintEventResp, err := (*im.constraintComponent).Judge(ctx, e)
 	if err != nil {
 		return nil, err
 	}
 
-	payloadResp.ConstraintResp = constraintResp
-	payloadResp.Pass = constraintResp.Pass
+	payloadEventResp.ConstraintEventResp = constraintEventResp
 
 	var feedReturn *feedbackM.FeedReturn
 
-	if constraintResp.Pass {
+	if constraintEventResp.Pass {
 		feedReturn, err = im.processFeedReturn(ctx, e, true)
 		if err != nil {
 			return nil, err
 		}
+
+		payloadEventResp.FeedReturn = feedReturn
+
+		switch feedReturn.FeedReturnStatus {
+		case feedbackM.ALL:
+			payloadEventResp.PayloadEventJudgeType = payloadM.ALL
+		case feedbackM.SOME:
+			payloadEventResp.PayloadEventJudgeType = payloadM.SOME
+		case feedbackM.NONE:
+			payloadEventResp.PayloadEventJudgeType = payloadM.NONE
+		}
+
 	} else {
 		feedReturn, err = im.processFeedReturn(ctx, e, false)
+		if err != nil {
+			return nil, err
+		}
+
+		payloadEventResp.FeedReturn = feedReturn
+
+		payloadEventResp.PayloadEventJudgeType = payloadM.NONE
 	}
 
-	if err != nil {
-		return nil, err
-	}
-
-	payloadResp.FeedReturn = feedReturn
-	payloadResp.Feedback = (*im.feedbackComponent).GetFeedback(ctx)
-
-	return payloadResp, nil
+	return payloadEventResp, nil
 }
 
 func (im *impl) processFeedReturn(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.FeedReturn, error) {

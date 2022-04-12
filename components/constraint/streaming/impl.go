@@ -6,40 +6,33 @@ import (
 	"example.com/creditcard/components/constraint"
 	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
-	streamingM "example.com/creditcard/models/streaming"
 )
 
 type impl struct {
-	streamings         []*streamingM.Streaming
-	constraintOperator constraintM.OperatorType
-	constraintType     constraintM.ConstraintType
-	name               string
+	constraintResp *constraintM.ConstraintResp
 }
 
 func New(
-	constraint *constraintM.Constraint,
+	constraintResp *constraintM.ConstraintResp,
 ) constraint.Component {
 	return &impl{
-		streamings:         constraint.Streamings,
-		constraintOperator: constraint.ConstraintOperator,
-		constraintType:     constraint.ConstraintType,
+		constraintResp: constraintResp,
 	}
 }
 
-func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintResp, error) {
-	constraint := &constraintM.ConstraintResp{
-		ConstraintType: im.constraintType,
-	}
+func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintEventResp, error) {
+
+	constraintEventResp := &constraintM.ConstraintEventResp{}
 
 	matches := []string{}
 	misses := []string{}
-	streamingMap := make(map[string]*streamingM.Streaming)
+	streamingMap := make(map[string]bool)
 
 	for _, st := range e.Streamings {
-		streamingMap[st.ID] = st
+		streamingMap[st] = true
 	}
 
-	for _, st := range im.streamings {
+	for _, st := range im.constraintResp.Streamings {
 		if _, ok := streamingMap[st.ID]; ok {
 			matches = append(matches, st.ID)
 		} else {
@@ -47,24 +40,24 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.Constr
 		}
 	}
 
-	constraint.Matches = matches
-	constraint.Misses = misses
+	constraintEventResp.Matches = matches
+	constraintEventResp.Misses = misses
 
-	switch im.constraintOperator {
-	case constraintM.OrOperator:
+	switch im.constraintResp.ConstraintOperatorType {
+	case constraintM.OR:
 		if len(matches) > 0 {
-			constraint.Pass = true
+			constraintEventResp.Pass = true
 		} else {
-			constraint.Pass = false
+			constraintEventResp.Pass = false
 		}
-	case constraintM.AndOperator:
+	case constraintM.AND:
 		if len(misses) > 0 {
-			constraint.Pass = false
+			constraintEventResp.Pass = false
 		} else {
-			constraint.Pass = true
+			constraintEventResp.Pass = true
 		}
 	}
 
-	return constraint, nil
+	return constraintEventResp, nil
 
 }

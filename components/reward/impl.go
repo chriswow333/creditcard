@@ -5,6 +5,7 @@ import (
 	"time"
 
 	payloadComp "example.com/creditcard/components/payload"
+	"github.com/sirupsen/logrus"
 
 	eventM "example.com/creditcard/models/event"
 	feedbackM "example.com/creditcard/models/feedback"
@@ -15,93 +16,105 @@ import (
 
 type impl struct {
 	rewardType        rewardM.RewardType
-	reward            *rewardM.Reward
+	rewardResp        *rewardM.RewardResp
 	payloadComponents []*payloadComp.Component
 }
 
 func New(
 	rewardType rewardM.RewardType,
-	reward *rewardM.Reward,
+	rewardResp *rewardM.RewardResp,
 	payloadComponents []*payloadComp.Component,
 ) Component {
 
 	return &impl{
 		rewardType:        rewardType,
-		reward:            reward,
+		rewardResp:        rewardResp,
 		payloadComponents: payloadComponents,
 	}
 }
 
 const DATE_FORMAT = "2006/01/02"
 
-func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardResp, error) {
+func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEventResp, error) {
 
-	rewardResp := &rewardM.RewardResp{
+	rewardEventResp := &rewardM.RewardEventResp{
 
-		Order:    im.reward.Order,
-		Title:    im.reward.Title,
-		SubTitle: im.reward.SubTitle,
+		ID: im.rewardResp.ID,
 
-		StartDate:  time.Unix(im.reward.StartDate, 0).Format(DATE_FORMAT),
-		EndDate:    time.Unix(im.reward.EndDate, 0).Format(DATE_FORMAT),
-		UpdateDate: time.Unix(im.reward.UpdateDate, 0).Format(DATE_FORMAT),
+		Order: im.rewardResp.Order,
 
-		PayloadOperator: im.reward.PayloadOperator,
+		PayloadOperator: im.rewardResp.PayloadOperator,
 	}
 
-	if !(im.reward.StartDate <= e.EffictiveTime && e.EffictiveTime <= im.reward.EndDate) {
-		return rewardResp, nil
+	startDate, err := time.Parse(DATE_FORMAT, im.rewardResp.StartDate)
+	if err != nil {
+		logrus.Error("Error parseInt startDate")
+		return nil, err
 	}
 
-	payloadResps := []*payloadM.PayloadResp{}
+	endDate, err := time.Parse(DATE_FORMAT, im.rewardResp.EndDate)
+	if err != nil {
+		logrus.Error("Error parseInt endDate")
+		return nil, err
+	}
+
+	if !(startDate.Unix() <= e.EffectiveTime && e.EffectiveTime <= endDate.Unix()) {
+		logrus.Error("Outdated")
+
+		rewardEventResp.RewardEventJudgeType = rewardM.NONE
+		// TODO FeedReturn initialized
+		return rewardEventResp, nil
+	}
+
+	payloadEventResps := []*payloadM.PayloadEventResp{}
 
 	for _, p := range im.payloadComponents {
-		payloadResp, err := (*p).Satisfy(ctx, e)
+		payloadEventResp, err := (*p).Satisfy(ctx, e)
 		if err != nil {
 			return nil, err
 		}
 
-		payloadResps = append(payloadResps, payloadResp)
+		payloadEventResps = append(payloadEventResps, payloadEventResp)
 	}
 
-	rewardResp.PayloadResps = payloadResps
+	rewardEventResp.PayloadEventResps = payloadEventResps
 
 	switch im.rewardType {
-	case rewardM.InCash:
-		cashReturn, err := im.calculateCashReturn(ctx, im.reward.PayloadOperator, payloadResps)
+	case rewardM.CASH_TWD:
+		cashReturn, err := im.calculateCashReturn(ctx, im.rewardResp.PayloadOperator, payloadEventResps)
+
 		if err != nil {
 			return nil, err
 		}
 
-		rewardResp.FeedReturn = &feedbackM.FeedReturn{
-			CashReturn: cashReturn,
-		}
-		break
-	case rewardM.OutCash:
-		cashReturn, err := im.calculateCashReturn(ctx, im.reward.PayloadOperator, payloadResps)
-		if err != nil {
-			return nil, err
+		if cashReturn.ActualUseCash == cashReturn.CurrentCash {
+			rewardEventResp.RewardEventJudgeType = rewardM.ALL
+		} else if cashReturn.ActualUseCash == 0 {
+			rewardEventResp.RewardEventJudgeType = rewardM.NONE
+		} else {
+			rewardEventResp.RewardEventJudgeType = rewardM.SOME
 		}
 
-		rewardResp.FeedReturn = &feedbackM.FeedReturn{
+		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
 			CashReturn: cashReturn,
 		}
 		break
-	case rewardM.Point:
+
+	case rewardM.POINT:
 		break
 	default:
 
 	}
 
-	return rewardResp, nil
+	return rewardEventResp, nil
 }
 
-func (im *impl) calculateCashReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadResps []*payloadM.PayloadResp) (*feedbackM.CashReturn, error) {
+func (im *impl) calculateCashReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadEventResps []*payloadM.PayloadEventResp) (*feedbackM.CashReturn, error) {
 
 	cashReturn := &feedbackM.CashReturn{}
 
 	switch operator {
-	case rewardM.AddPayloadOperator:
+	case rewardM.ADD:
 
 		var totalCash float64 = 0.0
 		var currentCash int64 = 0
@@ -112,22 +125,23 @@ func (im *impl) calculateCashReturn(ctx context.Context, operator rewardM.Payloa
 		var actualUseCash int64 = 0
 		var actualCashReturn float64 = 0.0
 
-		for _, f := range payloadResps {
+		for _, p := range payloadEventResps {
 
-			totalCash = f.FeedReturn.CashReturn.TotalCash
-			currentCash = f.FeedReturn.CashReturn.CurrentCash
+			totalCash = p.FeedReturn.CashReturn.TotalCash
+			currentCash = p.FeedReturn.CashReturn.CurrentCash
 
-			if f.Pass {
+			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
 				isCashbackGet = true
 
-				if actualUseCash < f.FeedReturn.CashReturn.ActualUseCash {
+				if actualUseCash < p.FeedReturn.CashReturn.ActualUseCash {
 					// get max actual use cash
-					actualUseCash = f.FeedReturn.CashReturn.ActualUseCash
+					actualUseCash = p.FeedReturn.CashReturn.ActualUseCash
 				}
 
-				actualCashReturn += f.FeedReturn.CashReturn.ActualCashReturn
-				cashbackBonus += f.FeedReturn.CashReturn.CashbackBonus
+				actualCashReturn += p.FeedReturn.CashReturn.ActualCashReturn
+				cashbackBonus += p.FeedReturn.CashReturn.CashbackBonus
 			}
+
 		}
 
 		cashReturn.IsCashbackGet = isCashbackGet
@@ -138,23 +152,34 @@ func (im *impl) calculateCashReturn(ctx context.Context, operator rewardM.Payloa
 		cashReturn.CashbackBonus = cashbackBonus
 
 		break
-	case rewardM.XORHighPayloadOperator:
+	case rewardM.MAXONE:
+
 		var maxBonus float64 = 0.0
-		finalPayload := &payloadM.PayloadResp{}
-		for _, f := range payloadResps {
-			if f.Pass {
-				if maxBonus < f.Feedback.Cashback.Bonus {
-					finalPayload = f
-					maxBonus = f.Feedback.Cashback.Bonus
+
+		var atLeastOnePass = false
+
+		finalPayload := &payloadM.PayloadEventResp{}
+
+		for _, p := range payloadEventResps {
+
+			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
+				if maxBonus < p.FeedReturn.CashReturn.CashbackBonus {
+					finalPayload = p
+					maxBonus = p.FeedReturn.CashReturn.CashbackBonus
 				}
+				atLeastOnePass = true
 			}
 		}
-		cashReturn.IsCashbackGet = finalPayload.FeedReturn.CashReturn.IsCashbackGet
-		cashReturn.ActualCashReturn = finalPayload.FeedReturn.CashReturn.ActualCashReturn
-		cashReturn.ActualUseCash = finalPayload.FeedReturn.CashReturn.ActualUseCash
-		cashReturn.CurrentCash = finalPayload.FeedReturn.CashReturn.CurrentCash
-		cashReturn.TotalCash = finalPayload.FeedReturn.CashReturn.TotalCash
-		cashReturn.CashbackBonus = maxBonus
+
+		if atLeastOnePass {
+			cashReturn.IsCashbackGet = finalPayload.FeedReturn.CashReturn.IsCashbackGet
+			cashReturn.ActualCashReturn = finalPayload.FeedReturn.CashReturn.ActualCashReturn
+			cashReturn.ActualUseCash = finalPayload.FeedReturn.CashReturn.ActualUseCash
+			cashReturn.CurrentCash = finalPayload.FeedReturn.CashReturn.CurrentCash
+			cashReturn.TotalCash = finalPayload.FeedReturn.CashReturn.TotalCash
+			cashReturn.CashbackBonus = maxBonus
+		}
+
 		break
 	default:
 

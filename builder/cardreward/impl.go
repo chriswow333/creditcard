@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
 
 	cardComp "example.com/creditcard/components/card"
@@ -20,6 +21,7 @@ import (
 	cashbackComp "example.com/creditcard/components/feedback/cashback"
 	payloadComp "example.com/creditcard/components/payload"
 	rewardComp "example.com/creditcard/components/reward"
+	"example.com/creditcard/service/constraint"
 
 	cardM "example.com/creditcard/models/card"
 	constraintM "example.com/creditcard/models/constraint"
@@ -27,50 +29,51 @@ import (
 	"example.com/creditcard/models/event"
 	feedbackM "example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
-
-	customizationService "example.com/creditcard/service/customization"
 )
 
 type impl struct {
 	*dig.In
 
-	customizationService customizationService.Service
+	constraintService constraint.Service
 }
 
 func New(
-	customizationService customizationService.Service,
+	constraintService constraint.Service,
 ) Builder {
 	return &impl{
-		customizationService: customizationService,
+		constraintService: constraintService,
 	}
 
 }
 
-func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*cardComp.Component, error) {
+func (im *impl) BuildCardComponent(ctx context.Context, cardResp *cardM.CardResp) (cardComp.Component, error) {
 
 	rewardMapper := make(map[rewardM.RewardType][]*rewardComp.Component)
-	payloadOperatorMapper := make(map[rewardM.RewardType]cardM.RewardOperator)
+	cardRewardOperatorMapper := make(map[rewardM.RewardType]cardM.CardRewardOperator)
 
-	for _, cr := range setting.CardRewards {
+	for _, cr := range cardResp.CardRewardResps {
 
 		rewardType := cr.RewardType
-		payloadOperatorMapper[rewardType] = cr.RewardOperator
+		cardRewardOperatorMapper[rewardType] = cr.CardRewardOperator
 
-		for _, r := range cr.Rewards {
+		for _, r := range cr.RewardResps {
+
 			payloadComponents := []*payloadComp.Component{}
 
-			for _, p := range r.Payloads {
-				constraintComponent, err := im.getConstraintComponent(ctx, p.Constraint)
+			for _, p := range r.PayloadResps {
+				constraintComponent, err := im.getConstraintComponent(ctx, p.ConstraintResp)
 				if err != nil {
+					logrus.New().Error(err)
 					return nil, err
 				}
 
 				feedbackComponent, err := im.getFeedbackComponent(ctx, cr.RewardType, p.Feedback)
 				if err != nil {
+					logrus.New().Error(err)
 					return nil, err
 				}
 
-				payloadComponent := payloadComp.New(constraintComponent, feedbackComponent)
+				payloadComponent := payloadComp.New(p, constraintComponent, feedbackComponent)
 				payloadComponents = append(payloadComponents, &payloadComponent)
 			}
 
@@ -84,82 +87,69 @@ func (im *impl) BuildCardComponent(ctx context.Context, setting *cardM.Card) (*c
 				rewardMapper[cr.RewardType] = rewardComponents
 			}
 
-			fmt.Println("lennnnnnn")
-			fmt.Println(cr.RewardType)
-			fmt.Println(len(rewardMapper[cr.RewardType]))
 		}
 	}
 
-	cardComponent := cardComp.New(setting, rewardMapper, payloadOperatorMapper)
+	cardComponent := cardComp.New(cardResp, rewardMapper, cardRewardOperatorMapper)
 
-	return &cardComponent, nil
+	return cardComponent, nil
 }
 
-func (im *impl) getConstraintComponent(ctx context.Context, constraint *constraintM.Constraint) (*constraintComp.Component, error) {
+func (im *impl) getConstraintComponent(ctx context.Context, constraintResp *constraintM.ConstraintResp) (*constraintComp.Component, error) {
 
 	constraintComponents := []*constraintComp.Component{}
 
-	constraintType := constraint.ConstraintType
+	constraintType := constraintResp.ConstraintType
 
 	var constraintComponent constraintComp.Component
 
-	fmt.Println("in to get constraint component")
 	switch constraintType {
 	case constraintM.InnerConstraintType:
-		fmt.Println("InnerConstraintType")
-		for _, c := range constraint.InnerConstraints {
+		for _, c := range constraintResp.InnerConstraints {
 			constraintComponent, err := im.getConstraintComponent(ctx, c)
 			if err != nil {
 				return nil, err
 			}
-			fmt.Println("InnerConstraintType ", &constraintComponent)
 			constraintComponents = append(constraintComponents, constraintComponent)
 		}
-		constraintComponent = constraintComp.New(constraintComponents, constraint)
+		constraintComponent = constraintComp.New(constraintComponents, constraintResp)
 
 	case constraintM.CustomizationType:
-		fmt.Println("CustomizationType")
 		customizations := []*customizationM.Customization{}
 
-		for _, c := range constraint.Customizations {
-			customization, err := im.customizationService.GetByID(ctx, c.ID)
+		for _, c := range constraintResp.Customizations {
+			customization, err := im.constraintService.GetCustomizationByID(ctx, c.ID)
 			if err != nil {
 				return nil, err
 			}
-			fmt.Println("customization ", &constraintComponent)
 			customizations = append(customizations, customization)
 		}
 
-		constraint.Customizations = customizations
+		constraintResp.Customizations = customizations
 
-		constraintComponent = customizationComp.New(constraint)
+		constraintComponent = customizationComp.New(constraintResp)
 
 	case constraintM.TimeIntervalType:
-		fmt.Println("TimeIntervalType")
-		constraintComponent = timeinterval.New(constraint)
+		constraintComponent = timeinterval.New(constraintResp)
 
 	case constraintM.MobilepayType:
-		fmt.Println("MobilepayType")
-		constraintComponent = mobilepay.New(constraint)
+		constraintComponent = mobilepay.New(constraintResp)
 
 	case constraintM.EcommerceType:
-		fmt.Println("ecommerce")
 
-		constraintComponent = ecommerce.New(constraint)
+		constraintComponent = ecommerce.New(constraintResp)
 		fmt.Println(&constraintComponent)
 
 	case constraintM.SupermarketType:
-		constraintComponent = supermarket.New(constraint)
+		constraintComponent = supermarket.New(constraintResp)
 
 	case constraintM.OnlinegameType:
-		fmt.Println("OnlinegameType")
-		constraintComponent = onlinegame.New(constraint)
+		constraintComponent = onlinegame.New(constraintResp)
 		fmt.Println(&constraintComponent)
 		fmt.Println(constraintComponent.Judge(ctx, &event.Event{}))
 
 	case constraintM.StreamingType:
-		fmt.Println("StreamingType")
-		constraintComponent = streaming.New(constraint)
+		constraintComponent = streaming.New(constraintResp)
 		fmt.Println(&constraintComponent)
 		fmt.Println(constraintComponent.Judge(ctx, &event.Event{}))
 
@@ -178,13 +168,10 @@ func (im *impl) getConstraintComponent(ctx context.Context, constraint *constrai
 func (im *impl) getFeedbackComponent(ctx context.Context, rewardType rewardM.RewardType, feedback *feedbackM.Feedback) (*feedbackComp.Component, error) {
 
 	switch rewardType {
-	case rewardM.InCash:
+	case rewardM.CASH_TWD:
 		cashbackComponent := cashbackComp.New(feedback.Cashback)
 		return &cashbackComponent, nil
-	case rewardM.OutCash:
-		cashbackComponent := cashbackComp.New(feedback.Cashback)
-		return &cashbackComponent, nil
-	case rewardM.Point:
+	case rewardM.POINT:
 		return nil, nil
 	default:
 		return nil, nil

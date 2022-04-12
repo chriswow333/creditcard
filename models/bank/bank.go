@@ -17,17 +17,6 @@ type Bank struct {
 	Cards []*cardM.Card `json:"cards"`
 }
 
-type BankResp struct {
-	ID         string `json:"id"`
-	Name       string `json:"name"`
-	UpdateDate string `json:"updateDate"`
-	ImagePath  string `json:"imagePath"`
-	LinkURL    string `json:"linkURL"`
-
-	// BankAcconts []*bankaccount.BankAccount `json:"bankAccounts"`
-	CardResps []*cardM.CardResp `json:"cardResps"`
-}
-
 const DATE_FORMAT = "2006/01/02"
 
 func TransferBankResp(bank *Bank) *BankResp {

@@ -1,6 +1,7 @@
 package reward
 
 import (
+	"fmt"
 	"time"
 
 	"example.com/creditcard/models/feedback"
@@ -10,34 +11,31 @@ import (
 type RewardType int32
 
 const (
-	InCash RewardType = iota
-	OutCash
-	Point
+	CASH_TWD RewardType = iota + 1
+	POINT
 )
 
 type PayloadOperator int32
 
 const (
-	AddPayloadOperator PayloadOperator = iota + 1
-	XORHighPayloadOperator
+	ADD PayloadOperator = iota + 1
+	MAXONE
 )
 
 type Reward struct {
 	ID           string `json:"id"`
 	CardRewardID string `json:"cardID"`
+	Order        int32  `json:"order"`
 
-	Order int32 `json:"order"`
+	Title    string `json:"title,omitempty"`
+	SubTitle string `json:"subTitle,omitempty"`
 
-	Title    string `json:"title"`
-	SubTitle string `json:"subTitle"`
+	StartDate  int64 `json:"startDate,omitempty"`
+	EndDate    int64 `json:"endDate,omitempty"`
+	UpdateDate int64 `json:"updateDate,omitempty"`
 
-	StartDate  int64 `json:"startDate"`
-	EndDate    int64 `json:"endDate"`
-	UpdateDate int64 `json:"updateDate"`
-	// RewardType RewardType `json:"rewardType"`
-
-	PayloadOperator PayloadOperator    `json:"payloadOperator"`
-	Payloads        []*payload.Payload `json:"payloads"`
+	PayloadOperator PayloadOperator    `json:"payloadOperator,omitempty"`
+	Payloads        []*payload.Payload `json:"payloads,omitempty"`
 }
 
 type RewardResp struct {
@@ -45,112 +43,126 @@ type RewardResp struct {
 	CardRewardID string `json:"cardID"`
 	Order        int32  `json:"order"`
 
-	Title    string `json:"title"`
-	SubTitle string `json:"subTitle"`
+	Title    string `json:"title,omitempty"`
+	SubTitle string `json:"subTitle,omitempty"`
 
-	StartDate  string `json:"startDate"`
-	EndDate    string `json:"endDate"`
-	UpdateDate string `json:"updateDate"`
+	StartDate  string `json:"startDate,omitempty"`
+	EndDate    string `json:"endDate,omitempty"`
+	UpdateDate string `json:"updateDate,omitempty"`
 
-	// RewardType RewardType `json:"rewardType"`
+	PayloadOperator PayloadOperator `json:"payloadOperator,omitempty"`
 
-	PayloadOperator PayloadOperator        `json:"payloadOperator"`
-	PayloadResps    []*payload.PayloadResp `json:"payloadResps"`
-	FeedReturn      *feedback.FeedReturn   `json:"feedReturn"`
+	PayloadResps []*payload.PayloadResp `json:"payloadResps,omitempty"`
+	Feedback     *feedback.Feedback     `json:"feedback,omitempty"`
+}
 
-	FeedbackResp *feedback.FeedbackResp `json:"feedbackResp"`
+type RewardEventJudgeType int32
+
+const (
+	ALL RewardEventJudgeType = iota + 1
+	SOME
+	NONE
+)
+
+type RewardEventResp struct {
+	ID           string `json:"id"`
+	CardRewardID string `json:"cardRewardID"`
+
+	Order int32 `json:"order"`
+
+	RewardEventJudgeType RewardEventJudgeType `json:"rewardEventJudgeType,omitempty"`
+
+	PayloadOperator PayloadOperator `json:"payloadOperator,omitempty"`
+
+	FeedReturn *feedback.FeedReturn `json:"feedReturn,omitempty"`
+
+	PayloadEventResps []*payload.PayloadEventResp `json:"payloadEventResps,omitempty"`
 }
 
 const DATE_FORMAT = "2006/01/02"
 
 func TransferRewardResp(rewardType RewardType, reward *Reward) *RewardResp {
-	rewardResp := &RewardResp{}
 
-	rewardResp.ID = reward.ID
-	rewardResp.CardRewardID = reward.CardRewardID
-	rewardResp.Order = reward.Order
-	rewardResp.Title = reward.Title
-	rewardResp.SubTitle = reward.SubTitle
-	rewardResp.StartDate = time.Unix(reward.StartDate, 0).Format(DATE_FORMAT)
-	rewardResp.EndDate = time.Unix(reward.EndDate, 0).Format(DATE_FORMAT)
-	rewardResp.UpdateDate = time.Unix(reward.UpdateDate, 0).Format(DATE_FORMAT)
-	rewardResp.PayloadOperator = reward.PayloadOperator
+	rewardResp := &RewardResp{
+		ID:              reward.ID,
+		CardRewardID:    reward.CardRewardID,
+		Order:           reward.Order,
+		Title:           reward.Title,
+		SubTitle:        reward.SubTitle,
+		StartDate:       time.Unix(reward.StartDate, 0).Format(DATE_FORMAT),
+		EndDate:         time.Unix(reward.EndDate, 0).Format(DATE_FORMAT),
+		UpdateDate:      time.Unix(reward.UpdateDate, 0).Format(DATE_FORMAT),
+		PayloadOperator: reward.PayloadOperator,
+	}
 
 	payloadResps := []*payload.PayloadResp{}
+
 	for _, p := range reward.Payloads {
+		// constraintResp, err := constraintM.TransferConstraintResp(ctx, p.Constraint, constraintSvc)
+		// if err != nil {
+		// 	logrus.Error("constraintM.TransferConstraintResp")
+		// 	return nil, err
+		// }
 		payloadResp := payload.TransferPayloadResp(p)
 		payloadResps = append(payloadResps, payloadResp)
 	}
+
 	rewardResp.PayloadResps = payloadResps
 
 	switch rewardType {
-	case InCash:
-		cashbackResp := getOptimalCashbackResp(reward.PayloadOperator, payloadResps)
-		rewardResp.FeedbackResp = &feedback.FeedbackResp{
-			CashbackResp: cashbackResp,
+	case CASH_TWD:
+		cashback := getOptimalCashback(reward.PayloadOperator, payloadResps)
+		rewardResp.Feedback = &feedback.Feedback{
+			Cashback: cashback,
 		}
-	case OutCash:
-		cashbackResp := getOptimalCashbackResp(reward.PayloadOperator, payloadResps)
-		rewardResp.FeedbackResp = &feedback.FeedbackResp{
-			CashbackResp: cashbackResp,
-		}
-	case Point:
+	case POINT:
 	}
 
 	return rewardResp
 }
 
-func getOptimalCashbackResp(payloadOperator PayloadOperator, payloadResps []*payload.PayloadResp) *feedback.CashbackResp {
-	cashbackResp := &feedback.CashbackResp{}
+func getOptimalCashback(payloadOperator PayloadOperator, payloadResps []*payload.PayloadResp) *feedback.Cashback {
+	cashback := &feedback.Cashback{}
 	var min int64 = 0
-	var max int64 = 99999999
+	var max int64 = 9999999
 	var bonus float64 = 0.0
 	var cashbackType feedback.CashbackType
 
+	fmt.Println("payload operator ", payloadOperator)
+
 	for _, p := range payloadResps {
-		cashbackType = p.FeedbackResp.CashbackResp.CashbackType
+		cashbackType = p.Feedback.Cashback.CashbackType
+		fmt.Println(cashbackType)
+
 		switch payloadOperator {
-		case XORHighPayloadOperator:
-			if p.FeedbackResp.CashbackResp.Bonus < bonus {
-				min = p.FeedbackResp.CashbackResp.Min
-				max = p.FeedbackResp.CashbackResp.Max
-				bonus = p.FeedbackResp.CashbackResp.Bonus
+
+		case ADD:
+			bonus += p.Feedback.Cashback.Bonus
+			if min < p.Feedback.Cashback.Min {
+				min = p.Feedback.Cashback.Min
 			}
 
-		case AddPayloadOperator:
-
-			bonus += p.FeedbackResp.CashbackResp.Bonus
-			if min < p.FeedbackResp.CashbackResp.Min {
-				min = p.FeedbackResp.CashbackResp.Min
+			if max > p.Feedback.Cashback.Max {
+				max = p.Feedback.Cashback.Max
 			}
-
-			if max > p.FeedbackResp.CashbackResp.Max {
-				max = p.FeedbackResp.CashbackResp.Max
+			continue
+		case MAXONE:
+			if p.Feedback.Cashback.Bonus > bonus {
+				min = p.Feedback.Cashback.Min
+				max = p.Feedback.Cashback.Max
+				bonus = p.Feedback.Cashback.Bonus
 			}
+			fmt.Println(bonus)
+		default:
 
 		}
+
 	}
 
-	cashbackResp.CashbackType = cashbackType
-	cashbackResp.Min = min
-	cashbackResp.Max = max
-	cashbackResp.Bonus = bonus
+	cashback.CashbackType = cashbackType
+	cashback.Min = min
+	cashback.Max = max
+	cashback.Bonus = bonus
 
-	return cashbackResp
-}
-
-type OutCashRewardResp struct {
-	FeedReturn *feedback.FeedReturn `json:"feedReturn"`
-
-	FeedbackResp *feedback.FeedbackResp `json:"feedbackResp"`
-
-	RewardResps []*RewardResp `json:"rewardResps"`
-}
-
-type InCashRewardResp struct {
-	FeedReturn *feedback.FeedReturn `json:"feedReturn"`
-
-	FeedbackResp *feedback.FeedbackResp `json:"feedbackResp"`
-
-	RewardResps []*RewardResp `json:"rewardResps"`
+	return cashback
 }

@@ -10,4 +10,5 @@ type Store interface {
 	Create(ctx context.Context, streaming *streamingM.Streaming) error
 	UpdateByID(ctx context.Context, streaming *streamingM.Streaming) error
 	GetAll(ctx context.Context) ([]*streamingM.Streaming, error)
+	GetByID(ctx context.Context, ID string) (*streamingM.Streaming, error)
 }

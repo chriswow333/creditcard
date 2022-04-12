@@ -10,4 +10,5 @@ type Store interface {
 	Create(ctx context.Context, supermarket *supermarketM.Supermarket) error
 	UpdateByID(ctx context.Context, supermarket *supermarketM.Supermarket) error
 	GetAll(ctx context.Context) ([]*supermarketM.Supermarket, error)
+	GetByID(ctx context.Context, ID string) (*supermarketM.Supermarket, error)
 }

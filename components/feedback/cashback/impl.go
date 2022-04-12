@@ -47,7 +47,7 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 	// 先定義一下
 	var actualUseCash int64 = 0
 	var actualCashReturn float64 = 0.0
-	var feedReturnStatus feedbackM.FeedReturnStatus = feedbackM.None
+	var feedReturnStatus feedbackM.FeedReturnStatus = feedbackM.NONE
 
 	if pass {
 		// 取得可使用的回饋花費金額
@@ -56,7 +56,7 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 	}
 
 	feedReturn.FeedReturnStatus = feedReturnStatus
-	if feedReturnStatus == feedbackM.None {
+	if feedReturnStatus == feedbackM.NONE {
 		cashReturn.IsCashbackGet = false
 	} else {
 		cashReturn.IsCashbackGet = true
@@ -76,10 +76,10 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 func (im *impl) takeCashReturn(ctx context.Context, cash int64) (int64, float64, feedbackM.FeedReturnStatus) {
 
 	if im.Cashback.Min <= cash && cash <= im.Cashback.Max {
-		return cash, im.Cashback.Bonus * float64(cash), feedbackM.Full
+		return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL
 	} else if cash < im.Cashback.Min {
-		return 0, 0, feedbackM.None
+		return 0, 0, feedbackM.NONE
 	} else {
-		return im.Cashback.Max, im.Cashback.Bonus * float64(im.Cashback.Max), feedbackM.PartOf
+		return im.Cashback.Max, im.Cashback.Bonus * float64(im.Cashback.Max), feedbackM.SOME
 	}
 }

@@ -121,3 +121,23 @@ func (im *impl) GetAll(ctx context.Context) ([]*mobilepayM.Mobilepay, error) {
 
 	return mobilepays, nil
 }
+
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+	" FROM mobilepay WHERE \"id\" = $1"
+
+func (im *impl) GetByID(ctx context.Context, ID string) (*mobilepayM.Mobilepay, error) {
+	mobilepay := &mobilepay.Mobilepay{}
+
+	selector := []interface{}{
+		&mobilepay.ID,
+		&mobilepay.Name,
+		&mobilepay.ImagePath,
+	}
+
+	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return mobilepay, nil
+}

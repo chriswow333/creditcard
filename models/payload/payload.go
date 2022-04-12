@@ -6,34 +6,27 @@ import (
 )
 
 type Payload struct {
+	ID    string   `json:"id"`
 	Descs []string `json:"descs"`
 
-	Feedback   *feedback.Feedback     `json:"feedback"`
-	Constraint *constraint.Constraint `json:"constraint"`
+	Feedback   *feedback.Feedback     `json:"feedback,omitempty"`
+	Constraint *constraint.Constraint `json:"constraint,omitempty"`
 }
 
-type PayloadResp struct {
-	Descs []string `json:"descs"`
+type PayloadEventJudgeType int32
 
-	Pass bool `json:"pass"`
-
-	Feedback *feedback.Feedback `json:"feedback"`
-
-	FeedbackResp *feedback.FeedbackResp `json:"feedbackResp"`
-	FeedReturn   *feedback.FeedReturn   `json:"feedReturn"`
-
-	ConstraintResp *constraint.ConstraintResp `json:"constraintResp"`
-
-	Constraint *constraint.Constraint `json:"constraint"`
-}
+const (
+	ALL PayloadEventJudgeType = iota + 1
+	SOME
+	NONE
+)
 
 func TransferPayloadResp(payload *Payload) *PayloadResp {
 
-	payloadResp := &PayloadResp{
-		Descs:        payload.Descs,
-		FeedbackResp: feedback.TransferFeedbackResp(payload.Feedback),
-		Constraint:   payload.Constraint,
+	return &PayloadResp{
+		ID:       payload.ID,
+		Descs:    payload.Descs,
+		Feedback: payload.Feedback,
+		// ConstraintResp: constraintResp,
 	}
-
-	return payloadResp
 }

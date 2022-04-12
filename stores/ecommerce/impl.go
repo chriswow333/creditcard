@@ -121,3 +121,24 @@ func (im *impl) GetAll(ctx context.Context) ([]*ecommerceM.Ecommerce, error) {
 
 	return ecommerces, nil
 }
+
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+	" FROM ecommerce WHERE \"id\" = $1"
+
+func (im *impl) GetByID(ctx context.Context, ID string) (*ecommerce.Ecommerce, error) {
+
+	ecommerce := &ecommerce.Ecommerce{}
+
+	selector := []interface{}{
+		&ecommerce.ID,
+		&ecommerce.Name,
+		&ecommerce.ImagePath,
+	}
+
+	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return ecommerce, nil
+}

@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"context"
+	"errors"
 
 	uuid "github.com/nu7hatch/gouuid"
 	"github.com/sirupsen/logrus"
@@ -29,7 +30,7 @@ type impl struct {
 
 type cardEvaluator struct {
 	ID           string
-	cardCompnent *cardComp.Component
+	cardCompnent cardComp.Component
 }
 
 func New(
@@ -71,7 +72,7 @@ func (im *impl) UpdateAllComponents(ctx context.Context) error {
 
 func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) error {
 
-	card, err := im.cardService.GetByID(ctx, cardID)
+	cardResp, err := im.cardService.GetRespByID(ctx, cardID)
 	if err != nil {
 		logrus.Error(err)
 		return err
@@ -85,7 +86,7 @@ func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) erro
 
 	// card.Rewards = rewards
 
-	cardCompnent, err := im.cardBuilder.BuildCardComponent(ctx, card)
+	cardCompnent, err := im.cardBuilder.BuildCardComponent(ctx, cardResp)
 	if err != nil {
 		logrus.Error(err)
 		return nil
@@ -94,6 +95,7 @@ func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) erro
 	im.cards[cardID] = &cardEvaluator{
 		cardCompnent: cardCompnent,
 	}
+
 	return nil
 }
 
@@ -115,26 +117,43 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 		EventID: e.ID,
 	}
 
-	cards := []*cardM.CardResp{}
+	cardEventResps := []*cardM.CardEventResp{}
 
-	for _, c := range im.cards {
-		card, err := im.evaluateCard(ctx, e, *c.cardCompnent)
-		if err != nil {
-			return nil, err
+	if len(e.CardIDs) == 0 {
+		for _, c := range im.cards {
+
+			cardEventResp, err := im.evaluateCard(ctx, e, c.cardCompnent)
+			if err != nil {
+				return nil, err
+			}
+			cardEventResps = append(cardEventResps, cardEventResp)
 		}
-		cards = append(cards, card)
+	} else {
+		for _, cardID := range e.CardIDs {
+
+			if c, ok := im.cards[cardID]; ok {
+				cardEventResp, err := im.evaluateCard(ctx, e, c.cardCompnent)
+				if err != nil {
+					return nil, err
+				}
+				cardEventResps = append(cardEventResps, cardEventResp)
+
+			} else {
+				return nil, errors.New("Not found card ID: " + cardID)
+			}
+		}
 	}
 
-	resp.Cards = cards
+	resp.CardEventResps = cardEventResps
 	return resp, nil
 }
 
-func (im *impl) evaluateCard(ctx context.Context, e *eventM.Event, cardComp cardComp.Component) (*cardM.CardResp, error) {
+func (im *impl) evaluateCard(ctx context.Context, e *eventM.Event, cardComp cardComp.Component) (*cardM.CardEventResp, error) {
 
-	card, err := cardComp.Satisfy(ctx, e)
+	cardEventResp, err := cardComp.Satisfy(ctx, e)
 
 	if err != nil {
 		return nil, err
 	}
-	return card, nil
+	return cardEventResp, nil
 }
