@@ -33,7 +33,7 @@ type CardRewardResp struct {
 	CardRewardOperator CardRewardOperator `json:"cardRewardOperator,omitempty"`
 	RewardType         reward.RewardType  `json:"rewardType,omitempty"`
 
-	ConstraintPassLogic string `json:"constraintPassLogic"`
+	ConstraintPassLogics []*ConstraintPassLogic `json:"constraintPassLogics"`
 
 	Feedback *feedback.Feedback `json:"feedback,omitempty"`
 

@@ -123,59 +123,47 @@ func (im *impl) GetRespByID(ctx context.Context, ID string) (*cardM.CardResp, er
 	cardResp.BankName = bankResp.Name
 
 	// transfer constraintResp
+
+	payloadRespMap := make(map[string]*payloadM.PayloadResp)
+	for _, c := range cardResp.CardRewardResps {
+		for _, r := range c.RewardResps {
+			for _, p := range r.PayloadResps {
+				payloadRespMap[p.ID] = p
+			}
+		}
+	}
+
 	for _, c := range card.CardRewards {
 		for _, r := range c.Rewards {
 			for _, p := range r.Payloads {
-				err := im.setConstraintRespToPayloadResp(ctx, c.ID, r.ID, p.ID, p, cardResp)
+
+				constraintResp, err := im.getConstraintResp(ctx, p.Constraint)
 				if err != nil {
 					logrus.Error("im.setConstraintRespToPayloadResp Error")
 					return nil, err
 				}
+
+				if payloadResp, ok := payloadRespMap[p.ID]; ok {
+					payloadResp.ConstraintResp = constraintResp
+				} else {
+					logrus.Error("im.setConstraintRespToPayloadResp not found payloadID Error")
+					return nil, err
+				}
+
 			}
 		}
 	}
 
 	return cardResp, nil
 }
+func (im *impl) getConstraintResp(ctx context.Context, constraint *constraintM.Constraint) (*constraintM.ConstraintResp, error) {
 
-func (im *impl) setConstraintRespToPayloadResp(ctx context.Context, cardRewardID string, rewardID string, payloadID string, p *payloadM.Payload, cardResp *cardM.CardResp) error {
-
-	constraintResp, err := constraintM.TransferConstraintResp(ctx, p.Constraint, im.constraintService)
+	constraintResp, err := constraintM.TransferConstraintResp(ctx, constraint, im.constraintService)
 	if err != nil {
-		logrus.Error("constraintM.TransferConstraintResp Error")
-		return err
+		logrus.Error(err)
+		return nil, err
 	}
-
-	match := false
-	for _, cr := range cardResp.CardRewardResps {
-		if cardRewardID == cr.ID {
-			for _, rr := range cr.RewardResps {
-
-				if rewardID == rr.ID {
-					for _, pr := range rr.PayloadResps {
-
-						if payloadID == pr.ID {
-							pr.ConstraintResp = constraintResp
-							match = true
-						} else if match {
-							break
-						}
-
-					}
-				} else if match {
-					break
-				}
-
-			}
-		} else if match {
-			break
-		}
-	}
-
-	if !match {
-		return errors.New("Cannot find constraintResp to set")
-	}
-	return nil
+	return constraintResp, nil
 }
 
 func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
@@ -295,29 +283,37 @@ func (im *impl) CreateCardReward(ctx context.Context, cardReward *cardM.CardRewa
 	return nil
 }
 
-func (im *impl) EvaluateConstraintLogic(ctx context.Context, cardRewardID string, constraintIDs []string) (bool, error) {
+func (im *impl) EvaluateConstraintLogic(ctx context.Context, cardRewardID string, constraintIDs []string) (bool, string, error) {
 
 	cardReward, err := im.cardRewardStore.GetByID(ctx, cardRewardID)
 	if err != nil {
-		return false, err
-	}
-
-	if cardReward.ConstraintPassLogic == "" {
-		return true, nil
+		return false, "internal error", err
 	}
 
 	constraintSet := make(map[string]bool)
 	for _, constraintID := range constraintIDs {
 		constraintSet[constraintID] = true
 	}
-	fmt.Println(constraintSet)
-	pass, _, err := checkConstraintLogic(cardReward.ConstraintPassLogic, constraintSet)
 
-	if err != nil {
-		return false, err
+	fmt.Println(constraintSet)
+
+	for _, logic := range cardReward.ConstraintPassLogics {
+
+		fmt.Println(logic.Logic)
+
+		pass, _, err := checkConstraintLogic(logic.Logic, constraintSet)
+		if err != nil {
+			return false, "internal error", err
+		}
+
+		fmt.Println(pass)
+
+		if !pass {
+			return false, logic.Message, nil
+		}
 	}
 
-	return pass, nil
+	return true, "", nil
 }
 
 /**
@@ -372,7 +368,6 @@ func checkConstraintLogic(constraintPassLogic string, constraintIDs map[string]b
 		}
 	}
 
-	fmt.Println(constraintPassLogic)
 	if _, ok := constraintIDs[constraintPassLogic]; ok {
 		return true, true, nil
 	} else {

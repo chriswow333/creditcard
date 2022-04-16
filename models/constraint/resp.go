@@ -15,6 +15,8 @@ type ConstraintResp struct {
 
 	ConstraintType ConstraintType `json:"constraintType,omitempty"`
 
+	ConstraintMappingType ConstraintMappingType `json:"constraintMappingType,omitempty"`
+
 	InnerConstraints []*ConstraintResp `json:"innerConstraintResps,omitempty"`
 
 	TimeIntervals  []*timeinterval.TimeInterval   `json:"timeIntervals,omitempty"`

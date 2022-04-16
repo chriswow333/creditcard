@@ -1,10 +1,11 @@
-package onlinegame
+package customization
 
 import (
 	"context"
 
 	"example.com/creditcard/components/constraint"
 	constraintM "example.com/creditcard/models/constraint"
+	"example.com/creditcard/models/customization"
 	eventM "example.com/creditcard/models/event"
 )
 
@@ -24,25 +25,36 @@ func New(
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintEventResp, error) {
 
 	constraintEventResp := &constraintM.ConstraintEventResp{
-		ConstraintType:         constraintM.OnlinegameType,
+		ConstraintType:         constraintM.CustomizationType,
 		ConstraintOperatorType: im.constraintResp.ConstraintOperatorType,
 		ConstraintMappingType:  im.constraintResp.ConstraintMappingType,
 	}
 
 	matches := []string{}
 	misses := []string{}
-	onlinegameMap := make(map[string]bool)
 
-	for _, on := range e.Onlinegames {
-		onlinegameMap[on] = true
+	customizationMap := make(map[string]bool)
+
+	for _, c := range e.Customizations {
+		customizationMap[c] = true
 	}
 
-	for _, on := range im.constraintResp.Onlinegames {
-		if _, ok := onlinegameMap[on.ID]; ok {
-			matches = append(matches, on.ID)
-		} else {
-			misses = append(misses, on.ID)
+	for _, c := range im.constraintResp.Customizations {
+		switch c.CustomizationType {
+		case customization.NONE:
+			if im.processNoneType(c, customizationMap) {
+				matches = append(matches, c.ID)
+			} else {
+				misses = append(misses, c.ID)
+			}
+		case customization.CASH:
+			if im.processCashType(c, e) {
+				matches = append(matches, c.ID)
+			} else {
+				misses = append(misses, c.ID)
+			}
 		}
+
 	}
 
 	constraintEventResp.Matches = matches
@@ -68,4 +80,31 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.Constr
 	}
 
 	return constraintEventResp, nil
+}
+
+func (im *impl) processNoneType(c *customization.Customization, customizationMap map[string]bool) bool {
+	if _, ok := customizationMap[c.ID]; ok {
+		return true
+	} else if c.DefaultPass {
+		return true
+	} else {
+		return false
+	}
+}
+
+func (im *impl) processCashType(c *customization.Customization, e *eventM.Event) bool {
+	cashLimit := c.CustomizationTypeModel.CashLimit
+	min := cashLimit.Min
+	max := cashLimit.Max
+
+	if min != 0 && int64(e.Cash) < min {
+		return false
+	}
+
+	if max != 0 && int64(e.Cash) > max {
+		return false
+	}
+
+	return true
+
 }

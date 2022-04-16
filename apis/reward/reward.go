@@ -30,9 +30,7 @@ func NewrewardHandler(
 	}
 
 	apis.Handle(rg, http.MethodPost, "", ph.create)
-	apis.Handle(rg, http.MethodGet, "/:ID", ph.get)
 	apis.Handle(rg, http.MethodPost, "/:ID", ph.updateByID)
-	apis.Handle(rg, http.MethodGet, "/cardID/:cardID", ph.getByCardID)
 }
 
 func (h *rewardHandler) create(ctx *gin.Context) {
@@ -48,30 +46,6 @@ func (h *rewardHandler) create(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"data": "ok"})
 
-}
-
-func (h *rewardHandler) get(ctx *gin.Context) {
-	ID := ctx.Param("ID")
-	reward, err := h.rewardSrc.GetRespByID(ctx, ID)
-	if err != nil {
-		logrus.Error(err)
-		ctx.JSON(http.StatusInternalServerError, err)
-		return
-	}
-	ctx.JSON(http.StatusOK, reward)
-}
-
-func (h *rewardHandler) getByCardID(ctx *gin.Context) {
-
-	cardID := ctx.Param("cardID")
-	rewards, err := h.rewardSrc.GetRespByCardID(ctx, cardID)
-
-	if err != nil {
-		logrus.Error(err)
-		ctx.JSON(http.StatusInternalServerError, err)
-		return
-	}
-	ctx.JSON(http.StatusOK, rewards)
 }
 
 func (h *rewardHandler) updateByID(ctx *gin.Context) {

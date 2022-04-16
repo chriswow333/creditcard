@@ -18,37 +18,51 @@
 
 
 
+
+
+
 {
     "cardID":"cfae77f6-4eff-4112-5053-b129889e3ebb",
+    "cardRewardDesc":"",
+    
     "cardRewardOperator":1,
     "rewardType":1,
-    "constraintPassLogic":"(44a35e99-a653-4ac4-9522-96970723bfd9^2fd85d97-0992-495e-9330-7b2e341a31fc)",
+    
+    "constraintPassLogics":[
+        {
+            "logic":"(f9c973b6-a08b-421c-a2b8-109a844e672d^6146825c-a47e-4f1c-8da7-e9684c61ac26)",
+            "message":"懂匯與超匯不得合併選擇"
+        }
+    ],
+
     "rewards":[
         {
             "order":0,
+
             "title":"一般消費",
             "subTitle":"基本回饋",
+            
             "startDate":1625097600,
             "endDate":1648684800,
+            
             "payloadOperator":1,
             "payloads":[
                {
-                    "descs":[
-                        "國內1%"
-                    ],
+                    "descs":[],
                     "feedback":{
                         "cashback":{
                             "cashbackType":1,
                             "bonus":0.01,
                             "min":0,
-                            "max":9999999
+                            "max":0
                         }
                     },
                     "constraint":{
                         "constraintOperatorType":2,
                         "constraintType":2,
+                        "constraintMappingType":1,
                         "customizations":[
-                            "e9fa0e76-44e5-4ca6-8b73-25269dc4f3b7"
+                            "c8970470-ba81-4b3b-b77c-c49c1b8964e9"
                         ]
                     }
                 }
@@ -60,39 +74,39 @@
             "subTitle":"行動支付",
             "startDate":1625097600,
             "endDate":1648684800,
-            "payloadOperator":2,
+            "payloadOperator":1,
             "payloads":[
                {
-                    "descs":[
-                        "懂匯:上限100元/每期帳單",
-                        "◆特選加碼回饋限一般消費且不含保費(註)代繳金額、幣安(Binance)加密貨幣交易平台之交易、e-Toro境外投資交易平台之交易，依前期信用卡帳單已入帳且符合之消費金額計算，若因特店未請款導致消費未計算，恕與本行無涉。※(註)保費係以消費商店所屬收單機構登記之行業代號為判斷依據，倘因於收單機構登記之行業代號與實際營業項目不符時，仍以收單機構登記之行業代號為準。"
-                    ],
+                    "descs":[],
                     "feedback":{
                         "cashback":{
                             "cashbackType":0,
                             "bonus":0.02,
-                            "min":2000,
+                            "min":0,
                             "max":5000
                         }
                     },
                     "constraint":{
                         "constraintOperatorType":1,
                         "constraintType":1,
+                        "constraintMappingType":1,
                         "innerConstraints":[
                             {
                                         
                                 "constraintOperatorType":1,
                                 "constraintType":2,
+                                "constraintMappingType":1,
                                 "customizations":[
-                                    "0ec57f04-68b1-43f6-aa3e-72f6fa563272",
-                                    "44a35e99-a653-4ac4-9522-96970723bfd9",
-                                    "bd8a2131-a5b5-47e4-a162-2ce07cded8b6"
+                                    "fef8892e-5f25-4b5a-a1a9-cfbb07724738",
+                                    "6146825c-a47e-4f1c-8da7-e9684c61ac26",
+                                    "e3bb967b-aec2-4dbd-81b2-a100371487e2"
                                 ]
                             },
                             {
                                 
                                 "constraintOperatorType":2,
                                 "constraintType":4,
+                                "constraintMappingType":1,
                                 "mobilepays":[ 
                                     "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
                                     "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
@@ -119,36 +133,36 @@
             "payloadOperator":2,
             "payloads":[
                {
-                    "descs":[
-                        "超匯:上限300元/每期帳單",
-                        "◆特選加碼回饋限一般消費且不含保費(註)代繳金額、幣安(Binance)加密貨幣交易平台之交易、e-Toro境外投資交易平台之交易，依前期信用卡帳單已入帳且符合之消費金額計算，若因特店未請款導致消費未計算，恕與本行無涉。※(註)保費係以消費商店所屬收單機構登記之行業代號為判斷依據，倘因於收單機構登記之行業代號與實際營業項目不符時，仍以收單機構登記之行業代號為準。"
-                    ],
+                    "descs":[],
                     "feedback":{
                         "cashback":{
                             "cashbackType":0,
                             "bonus":0.02,
-                            "min":2000,
+                            "min":0,
                             "max":15000
                         }
                     },
                     "constraint":{
                         "constraintOperatorType":1,
                         "constraintType":1,
+                        "constraintMappingType":1,
                         "innerConstraints":[
                             {
                                         
                                 "constraintOperatorType":1,
                                 "constraintType":2,
+                                "constraintMappingType":1,
                                 "customizations":[
-                                    "0ec57f04-68b1-43f6-aa3e-72f6fa563272",
-                                    "2fd85d97-0992-495e-9330-7b2e341a31fc",
-                                    "bd8a2131-a5b5-47e4-a162-2ce07cded8b6"
+                                    "fef8892e-5f25-4b5a-a1a9-cfbb07724738",
+                                    "f9c973b6-a08b-421c-a2b8-109a844e672d",
+                                    "e3bb967b-aec2-4dbd-81b2-a100371487e2"
                                 ]
                             },
                             {
                                 
                                 "constraintOperatorType":2,
                                 "constraintType":4,
+                                "constraintMappingType":1,
                                 "mobilepays":[ 
                                     "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
                                     "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
@@ -161,6 +175,53 @@
                         ]
                     }
                 }
+            ]
+        },
+        {
+            "order":3,
+            "title":"豐城海外村再加碼+3%",
+            "subTitle":"行動支付",
+            "startDate":1625097600,
+            "endDate":1648684800,
+            "payloadOperator":2,
+            "payloads":[
+               {
+                    "descs":[],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":0,
+                            "bonus":0.03,
+                            "min":0,
+                            "max":6666.66
+                        }
+                    },
+                    "constraint":{
+                        "constraintOperatorType":1,
+                        "constraintType":1,
+                        "constraintMappingType":1,
+                        "innerConstraints":[
+                            {
+                                        
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "fef8892e-5f25-4b5a-a1a9-cfbb07724738",
+                                    "f9c973b6-a08b-421c-a2b8-109a844e672d",
+                                    "e3bb967b-aec2-4dbd-81b2-a100371487e2"
+                                ]
+                            },
+                            {
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "fdf3ad43-67db-4a1b-8fdd-2fe8a5e6e415"
+                                ]
+                            }
+                        ]
+                    }
+               }
             ]
         }
     ]

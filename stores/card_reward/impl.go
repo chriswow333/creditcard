@@ -42,7 +42,7 @@ func (im *impl) Create(ctx context.Context, cardReward *cardM.CardReward) error 
 		cardReward.CardRewardDesc,
 		cardReward.CardRewardOperator,
 		cardReward.RewardType,
-		cardReward.ConstraintPassLogic,
+		cardReward.ConstraintPassLogics,
 	}
 	if _, err := tx.Exec(INSERT_CARD_REWARD_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -82,7 +82,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*cardM.CardRe
 			&cardReward.CardRewardDesc,
 			&cardReward.CardRewardOperator,
 			&cardReward.RewardType,
-			&cardReward.ConstraintPassLogic,
+			&cardReward.ConstraintPassLogics,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -111,7 +111,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.CardReward, erro
 		&cardReward.CardRewardDesc,
 		&cardReward.CardRewardOperator,
 		&cardReward.RewardType,
-		&cardReward.ConstraintPassLogic,
+		&cardReward.ConstraintPassLogics,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

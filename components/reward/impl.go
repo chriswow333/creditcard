@@ -39,7 +39,8 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 
 	rewardEventResp := &rewardM.RewardEventResp{
 
-		ID: im.rewardResp.ID,
+		ID:           im.rewardResp.ID,
+		CardRewardID: im.rewardResp.CardRewardID,
 
 		Order: im.rewardResp.Order,
 
@@ -86,6 +87,9 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 		if err != nil {
 			return nil, err
 		}
+
+		cashReturn.CurrentCash = int64(e.Cash)
+		cashReturn.TotalCash = e.Cash
 
 		if cashReturn.ActualUseCash == cashReturn.CurrentCash {
 			rewardEventResp.RewardEventJudgeType = rewardM.ALL

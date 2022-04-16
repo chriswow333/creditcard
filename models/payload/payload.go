@@ -27,6 +27,5 @@ func TransferPayloadResp(payload *Payload) *PayloadResp {
 		ID:       payload.ID,
 		Descs:    payload.Descs,
 		Feedback: payload.Feedback,
-		// ConstraintResp: constraintResp,
 	}
 }

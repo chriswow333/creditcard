@@ -2,7 +2,6 @@ package customization
 
 import (
 	"context"
-	"fmt"
 
 	customizationM "example.com/creditcard/models/customization"
 	"github.com/jackc/pgx"
@@ -22,7 +21,7 @@ func New(psql *pgx.ConnPool) Store {
 	}
 }
 
-const SELECT_BY_CARDID_STAT = "SELECT \"id\", \"name\", \"desc\", card_id, default_pass " +
+const SELECT_BY_CARDID_STAT = "SELECT \"id\", \"name\", \"desc\", card_id, customization_type, customization_type_model, default_pass " +
 	" FROM customization " +
 	" WHERE \"card_id\"=$1"
 
@@ -48,6 +47,8 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*customizatio
 			&customization.Name,
 			&customization.Desc,
 			&customization.CardID,
+			&customization.CustomizationType,
+			&customization.CustomizationTypeModel,
 			&customization.DefaultPass,
 		}
 
@@ -65,12 +66,11 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*customizatio
 
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"desc\", card_id, default_pass " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"desc\", card_id, customization_type, customization_type_model, default_pass " +
 	" FROM customization " +
 	" WHERE \"id\"=$1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*customizationM.Customization, error) {
-	fmt.Println(ID)
 	customization := &customizationM.Customization{}
 
 	selector := []interface{}{
@@ -78,6 +78,8 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*customizationM.Customi
 		&customization.Name,
 		&customization.Desc,
 		&customization.CardID,
+		&customization.CustomizationType,
+		&customization.CustomizationTypeModel,
 		&customization.DefaultPass,
 	}
 

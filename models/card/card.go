@@ -3,7 +3,6 @@ package card
 import (
 	"time"
 
-	"example.com/creditcard/models/feedback"
 	"example.com/creditcard/models/reward"
 	rewardM "example.com/creditcard/models/reward"
 )
@@ -38,9 +37,14 @@ type CardReward struct {
 	CardRewardOperator CardRewardOperator `json:"cardRewardOperator,omitempty"` // (R0+(R1&(R2|R3)))
 	RewardType         reward.RewardType  `json:"rewardType,omitempty"`
 
-	ConstraintPassLogic string `json:"constraintPassLogic"`
+	ConstraintPassLogics []*ConstraintPassLogic `json:"constraintPassLogics"`
 
 	Rewards []*rewardM.Reward `json:"rewards,omitempty"`
+}
+
+type ConstraintPassLogic struct {
+	Logic   string `json:"logic"`
+	Message string `json:"message"`
 }
 
 type CardRewardEventJudgeType int32
@@ -80,19 +84,14 @@ func TransferCardResp(card *Card) *CardResp {
 				rewardResps = append(rewardResps, rewardResp)
 			}
 
-			// TODO
-			// cashback := getOptimalCashback(c.CardRewardOperator, rewardResps)
-
 			cardRewardResp := &CardRewardResp{
-				ID:                 c.ID,
-				CardID:             c.CardID,
-				CardRewardDesc:     c.CardRewardDesc,
-				CardRewardOperator: c.CardRewardOperator,
-				RewardType:         c.RewardType,
-				RewardResps:        rewardResps,
-				Feedback: &feedback.Feedback{
-					Cashback: nil,
-				},
+				ID:                   c.ID,
+				CardID:               c.CardID,
+				CardRewardDesc:       c.CardRewardDesc,
+				CardRewardOperator:   c.CardRewardOperator,
+				RewardType:           c.RewardType,
+				RewardResps:          rewardResps,
+				ConstraintPassLogics: c.ConstraintPassLogics,
 			}
 
 			cardRewardResps = append(cardRewardResps, cardRewardResp)

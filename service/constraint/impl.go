@@ -51,7 +51,7 @@ func New(
 	}
 }
 
-func (im *impl) GetCustmozationsByCardID(ctx context.Context, cardID string) ([]*customization.Customization, error) {
+func (im *impl) GetCustomizationsByCardID(ctx context.Context, cardID string) ([]*customization.Customization, error) {
 
 	customizations, err := im.customizationStore.GetByCardID(ctx, cardID)
 	if err != nil {

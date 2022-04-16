@@ -9,6 +9,5 @@ type BankResp struct {
 	ImagePath  string `json:"imagePath"`
 	LinkURL    string `json:"linkURL"`
 
-	// BankAcconts []*bankaccount.BankAccount `json:"bankAccounts"`
 	CardResps []*cardM.CardResp `json:"cardResps"`
 }

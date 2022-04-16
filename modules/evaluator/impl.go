@@ -78,14 +78,6 @@ func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) erro
 		return err
 	}
 
-	// rewards, err := im.rewardService.GetByCardID(ctx, cardID)
-	// if err != nil {
-	// 	logrus.Error(err)
-	// 	return err
-	// }
-
-	// card.Rewards = rewards
-
 	cardCompnent, err := im.cardBuilder.BuildCardComponent(ctx, cardResp)
 	if err != nil {
 		logrus.Error(err)

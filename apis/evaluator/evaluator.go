@@ -1,7 +1,6 @@
 package evaluator
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -37,8 +36,6 @@ func (h *evaluatorHandler) evaluate(ctx *gin.Context) {
 	var eventModel eventM.Event
 
 	ctx.Bind(&eventModel)
-
-	fmt.Println(eventModel.Cash)
 
 	resp, err := h.evaluatorModule.Evaluate(ctx, &eventModel)
 	if err != nil {

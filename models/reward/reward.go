@@ -1,7 +1,6 @@
 package reward
 
 import (
-	"fmt"
 	"time"
 
 	"example.com/creditcard/models/feedback"
@@ -40,7 +39,7 @@ type Reward struct {
 
 type RewardResp struct {
 	ID           string `json:"id"`
-	CardRewardID string `json:"cardID"`
+	CardRewardID string `json:"cardRewardID"`
 	Order        int32  `json:"order"`
 
 	Title    string `json:"title,omitempty"`
@@ -98,71 +97,11 @@ func TransferRewardResp(rewardType RewardType, reward *Reward) *RewardResp {
 	payloadResps := []*payload.PayloadResp{}
 
 	for _, p := range reward.Payloads {
-		// constraintResp, err := constraintM.TransferConstraintResp(ctx, p.Constraint, constraintSvc)
-		// if err != nil {
-		// 	logrus.Error("constraintM.TransferConstraintResp")
-		// 	return nil, err
-		// }
 		payloadResp := payload.TransferPayloadResp(p)
 		payloadResps = append(payloadResps, payloadResp)
 	}
 
 	rewardResp.PayloadResps = payloadResps
 
-	switch rewardType {
-	case CASH_TWD:
-		cashback := getOptimalCashback(reward.PayloadOperator, payloadResps)
-		rewardResp.Feedback = &feedback.Feedback{
-			Cashback: cashback,
-		}
-	case POINT:
-	}
-
 	return rewardResp
-}
-
-func getOptimalCashback(payloadOperator PayloadOperator, payloadResps []*payload.PayloadResp) *feedback.Cashback {
-	cashback := &feedback.Cashback{}
-	var min int64 = 0
-	var max int64 = 9999999
-	var bonus float64 = 0.0
-	var cashbackType feedback.CashbackType
-
-	fmt.Println("payload operator ", payloadOperator)
-
-	for _, p := range payloadResps {
-		cashbackType = p.Feedback.Cashback.CashbackType
-		fmt.Println(cashbackType)
-
-		switch payloadOperator {
-
-		case ADD:
-			bonus += p.Feedback.Cashback.Bonus
-			if min < p.Feedback.Cashback.Min {
-				min = p.Feedback.Cashback.Min
-			}
-
-			if max > p.Feedback.Cashback.Max {
-				max = p.Feedback.Cashback.Max
-			}
-			continue
-		case MAXONE:
-			if p.Feedback.Cashback.Bonus > bonus {
-				min = p.Feedback.Cashback.Min
-				max = p.Feedback.Cashback.Max
-				bonus = p.Feedback.Cashback.Bonus
-			}
-			fmt.Println(bonus)
-		default:
-
-		}
-
-	}
-
-	cashback.CashbackType = cashbackType
-	cashback.Min = min
-	cashback.Max = max
-	cashback.Bonus = bonus
-
-	return cashback
 }

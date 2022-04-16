@@ -24,7 +24,11 @@ func New(
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintEventResp, error) {
 
-	constraintEventResp := &constraintM.ConstraintEventResp{}
+	constraintEventResp := &constraintM.ConstraintEventResp{
+		ConstraintType:         constraintM.EcommerceType,
+		ConstraintOperatorType: im.constraintResp.ConstraintOperatorType,
+		ConstraintMappingType:  im.constraintResp.ConstraintMappingType,
+	}
 
 	matches := []string{}
 	misses := []string{}
@@ -59,6 +63,10 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.Constr
 		} else {
 			constraintEventResp.Pass = true
 		}
+	}
+
+	if im.constraintResp.ConstraintMappingType == constraintM.MISMATCH {
+		constraintEventResp.Pass = !constraintEventResp.Pass
 	}
 
 	return constraintEventResp, nil

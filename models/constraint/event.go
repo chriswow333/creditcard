@@ -5,6 +5,10 @@ type ConstraintEventResp struct {
 
 	ConstraintType ConstraintType `json:"constraintType,omitempty"`
 
+	ConstraintOperatorType ConstraintOperatorType `json:"constraintOperatorType,omitempty"`
+
+	ConstraintMappingType ConstraintMappingType `json:"constraintMappingType,omitempty"`
+
 	ConstraintEventResps []*ConstraintEventResp `json:"constraintEventResps,omitempty"`
 
 	Matches []string `json:"matches"`

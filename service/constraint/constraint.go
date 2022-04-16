@@ -14,7 +14,7 @@ import (
 )
 
 type Service interface {
-	GetCustmozationsByCardID(ctx context.Context, cardID string) ([]*customization.Customization, error)
+	GetCustomizationsByCardID(ctx context.Context, cardID string) ([]*customization.Customization, error)
 	GetCustomizationByID(ctx context.Context, ID string) (*customization.Customization, error)
 
 	GetAllEcommerces(ctx context.Context) ([]*ecommerce.Ecommerce, error)

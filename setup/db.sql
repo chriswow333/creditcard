@@ -34,7 +34,7 @@ create table card_reward (
 	"card_reward_desc" TEXT,
 	"card_reward_operator" INT,
 	"reward_type" INT,
-	"constraint_pass_logic" TEXT, 
+	"constraint_pass_logic" JSON, 
     FOREIGN KEY(card_id) REFERENCES card("id")
 );
 
@@ -63,17 +63,46 @@ create table customization (
 	"name" VARCHAR(100),
 	"desc" TEXT,
 	"card_id" VARCHAR(36),
+	"customization_type" INT,
+	"customization_type_model" JSON,
 	"default_pass" BOOLEAN, 
 	FOREIGN KEY(card_id) REFERENCES card("id")
 );
 
-INSERT INTO public.customization(id, "name", "desc", "card_id", "default_pass")values (uuid_generate_v4() , '任務一', '綁定電子或行動帳單且設定本行台外幣帳戶自動扣繳帳款\n※若您於本行數位帳戶開戶且同時申辦幣倍卡，則您已符合任務一', 'cfae77f6-4eff-4112-5053-b129889e3ebb', false);
-INSERT INTO public.customization(id, "name", "desc", "card_id", "default_pass")values (uuid_generate_v4() , '任務二(1)', '與本行往來符合以下任一且達等值台幣金額1元以上~\n①外幣存款月平均餘額或\n②台外幣帳戶間換匯單筆金額或\n③臨櫃投保外幣保單月扣繳單筆金額\n※1元~10萬元屬【懂匯】資格', 'cfae77f6-4eff-4112-5053-b129889e3ebb', false);
-INSERT INTO public.customization(id, "name", "desc", "card_id", "default_pass")values (uuid_generate_v4() , '任務二(2)', '與本行往來符合以下任一且達等值台幣金額1元以上~\n①外幣存款月平均餘額或\n②台外幣帳戶間換匯單筆金額或\n③臨櫃投保外幣保單月扣繳單筆金額\n※10萬元以上屬【超匯】資格', 'cfae77f6-4eff-4112-5053-b129889e3ebb', false);
-INSERT INTO public.customization(id, "name", "desc", "card_id", "default_pass")values (uuid_generate_v4() , '任務三', '當期帳單之幣倍卡新增一般消費滿2,000元(含)以上', '60e45bac-61f5-4c6e-4d88-1f09e04599af', true);
- INSERT INTO public.customization(id, "name", "desc", "card_id", "default_pass")values (uuid_generate_v4() , '豐城海外村', '註：豐城網頁版進入海外村內任一商店，輸入”身分證字號+生日”就能作為登入依據，或可從豐城APP版(下載汗水不白流APP)登入後點選[豐城]再連結海外村內任一商店，APP登入且點選[豐城]紀錄就能作為導購流程的依據。幣倍卡持卡人須有豐城登入紀錄且登入後24小時內，透過點擊連結至海外村內任一商家並成功以幣倍卡完成刷卡消費，即可納入計算。', 'cfae77f6-4eff-4112-5053-b129889e3ebb', false);
-INSERT INTO public.customization(id, "name", "desc", "card_id", "default_pass")values (uuid_generate_v4() , '基本回饋', '回饋無上限', 'cfae77f6-4eff-4112-5053-b129889e3ebb', true);
-INSERT INTO public.customization(id, "name", "desc", "card_id", "default_pass")values (uuid_generate_v4() , '國外消費', '限非台灣且非新台幣之一般消費(含實體商店及網路)或商店收單行為國外銀行之一般消費。', 'cfae77f6-4eff-4112-5053-b129889e3ebb', false);
+INSERT INTO public.customization(id, "name", "desc", "card_id", "customization_type", "customization_type_model", "default_pass")
+	values (uuid_generate_v4() , '任務一', '綁定電子或行動帳單且設定本行台外幣帳戶自動扣繳帳款\n※若您於本行數位帳戶開戶且同時申辦幣倍卡，則您已符合任務一', 
+		'cfae77f6-4eff-4112-5053-b129889e3ebb', 1, '{}', false);
+
+
+INSERT INTO public.customization(id, "name", "desc", "card_id", "customization_type", "customization_type_model", "default_pass")
+	values (uuid_generate_v4() , '任務二(懂匯)', 
+		'與本行往來符合以下任一且達等值台幣金額1元以上~\n①外幣存款月平均餘額或\n②台外幣帳戶間換匯單筆金額或\n③臨櫃投保外幣保單月扣繳單筆金額\n※1元~10萬元屬【懂匯】資格', 
+			'cfae77f6-4eff-4112-5053-b129889e3ebb', 1, '{}', false);
+
+INSERT INTO public.customization(id, "name", "desc", "card_id", "customization_type", "customization_type_model", "default_pass")
+	values (uuid_generate_v4() , '任務二(超匯)', 
+		'與本行往來符合以下任一且達等值台幣金額1元以上~\n①外幣存款月平均餘額或\n②台外幣帳戶間換匯單筆金額或\n③臨櫃投保外幣保單月扣繳單筆金額\n※10萬元以上屬【超匯】資格', 
+		'cfae77f6-4eff-4112-5053-b129889e3ebb', 1, '{}', false);
+
+INSERT INTO public.customization(id, "name", "desc", "card_id", "customization_type", "customization_type_model", "default_pass")
+	values (uuid_generate_v4() , '任務三', '當期帳單之幣倍卡新增一般消費滿2,000元(含)以上', 'cfae77f6-4eff-4112-5053-b129889e3ebb', 
+			2, '{"cashLimit":{"min":2000,"max":0}}', false);
+	
+INSERT INTO public.customization(id, "name", "desc", "card_id", "customization_type", "customization_type_model", "default_pass")
+	values (uuid_generate_v4() , '豐城海外村', 
+	'註：豐城網頁版進入海外村內任一商店，輸入”身分證字號+生日”就能作為登入依據，或可從豐城APP版(下載汗水不白流APP)登入後點選[豐城]再連結海外村內任一商店，APP登入且點選[豐城]紀錄就能作為導購流程的依據。幣倍卡持卡人須有豐城登入紀錄且登入後24小時內，透過點擊連結至海外村內任一商家並成功以幣倍卡完成刷卡消費，即可納入計算。', 
+		'cfae77f6-4eff-4112-5053-b129889e3ebb', 1, '{}', false);
+
+
+INSERT INTO public.customization(id, "name", "desc", "card_id", "customization_type", "customization_type_model", "default_pass")
+	values (uuid_generate_v4() , '基本回饋', '回饋無上限', 
+	'b5d3c718-3b30-478d-bd9c-03286552dc38',1, '{}', true);
+
+INSERT INTO public.customization(id, "name", "desc", "card_id", "customization_type", "customization_type_model", "default_pass")
+	values (uuid_generate_v4() , '國外消費', 
+	'限非台灣且非新台幣之一般消費(含實體商店及網路)或商店收單行為國外銀行之一般消費。', 'b5d3c718-3b30-478d-bd9c-03286552dc38', 1, '{}', false);
+
+
 
 -- INSERT INTO public.customization(id, "name", "card_id", "default_pass")values (uuid_generate_v4() , '基本0.2%', '60e45bac-61f5-4c6e-4d88-1f09e04599af', true);
 -- INSERT INTO public.customization(id, "name", "card_id", "default_pass")values (uuid_generate_v4() , '任務', '60e45bac-61f5-4c6e-4d88-1f09e04599af', false);

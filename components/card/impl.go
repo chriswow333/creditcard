@@ -3,7 +3,6 @@ package card
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"example.com/creditcard/components/reward"
 	cardM "example.com/creditcard/models/card"
@@ -180,7 +179,7 @@ func (im *impl) calculateCashFeedReturn(ctx context.Context, cardRewardOperator 
 		cashReturn.CashbackBonus = cashbackBonus
 		break
 	default:
-		fmt.Println("Error operator")
+		logrus.Error("Error operator")
 	}
 
 	return cashReturn, nil

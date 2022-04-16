@@ -5,6 +5,7 @@ import (
 
 	constraintM "example.com/creditcard/models/constraint"
 	eventM "example.com/creditcard/models/event"
+	"github.com/sirupsen/logrus"
 )
 
 type impl struct {
@@ -26,16 +27,21 @@ func New(
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.ConstraintEventResp, error) {
 
-	constraintEventResp := &constraintM.ConstraintEventResp{}
-
 	constraintEventResps := []*constraintM.ConstraintEventResp{}
 
 	for _, co := range im.constraintComps {
 		constraintEventResp, err := (*co).Judge(ctx, e)
 		if err != nil {
+			logrus.New().Error(err)
 			return nil, err
 		}
 		constraintEventResps = append(constraintEventResps, constraintEventResp)
+	}
+
+	constraintEventResp := &constraintM.ConstraintEventResp{
+		ConstraintType:         constraintM.InnerConstraintType,
+		ConstraintOperatorType: im.constraintResp.ConstraintOperatorType,
+		ConstraintMappingType:  im.constraintResp.ConstraintMappingType,
 	}
 
 	switch im.constraintResp.ConstraintOperatorType {
@@ -58,6 +64,9 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*constraintM.Constr
 			}
 		}
 	}
+
+	constraintEventResp.Matches = []string{}
+	constraintEventResp.Misses = []string{}
 
 	constraintEventResp.ConstraintEventResps = constraintEventResps
 

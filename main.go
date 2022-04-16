@@ -3,9 +3,9 @@ package main
 import (
 	"example.com/creditcard/apis/bank"
 	"example.com/creditcard/apis/card"
+	"example.com/creditcard/apis/constraint"
 	"example.com/creditcard/apis/evaluator"
 	"example.com/creditcard/apis/image"
-	"example.com/creditcard/apis/payload"
 	"example.com/creditcard/apis/reward"
 	"example.com/creditcard/base/psql"
 	_ "example.com/creditcard/base/psql"
@@ -20,7 +20,6 @@ import (
 	bankService "example.com/creditcard/service/bank"
 	cardService "example.com/creditcard/service/card"
 	constraintService "example.com/creditcard/service/constraint"
-	payloadService "example.com/creditcard/service/payload"
 	rewardService "example.com/creditcard/service/reward"
 
 	bankStore "example.com/creditcard/stores/bank"
@@ -50,7 +49,6 @@ func BuildContainer() *dig.Container {
 	container.Provide(bankService.New)
 	container.Provide(cardService.New)
 	container.Provide(rewardService.New)
-	container.Provide(payloadService.New)
 	container.Provide(constraintService.New)
 
 	// store
@@ -82,7 +80,6 @@ func NewServer(
 	bankSrc bankService.Service,
 	cardSrc cardService.Service,
 	rewardSrc rewardService.Service,
-	payloadSrc payloadService.Service,
 	constraintService constraintService.Service,
 
 	evaluatorMod evaluatorModule.Module,
@@ -103,7 +100,8 @@ func NewServer(
 	bank.NewBankHandle(v1.Group("/bank"), bankSrc)
 	card.NewCardHandler(v1.Group("/card"), cardSrc)
 	reward.NewrewardHandler(v1.Group("/reward"), rewardSrc)
-	payload.NewrewardHandler(v1.Group("/payload"), payloadSrc)
+
+	constraint.NewConstraintHandler(v1.Group("/constraint"), constraintService)
 
 	evaluator.NewEvaluatorHandler(v1.Group("/evaluator"), evaluatorMod)
 

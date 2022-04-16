@@ -35,14 +35,18 @@ func NewCardHandler(
 
 	apis.Handle(rg, http.MethodPost, "/:ID", ch.update)
 	apis.Handle(rg, http.MethodGet, "/:ID", ch.get)
+
 	apis.Handle(rg, http.MethodGet, "/bankID/:bankID", ch.getByBankID)
 	apis.Handle(rg, http.MethodPost, "/evaluateConstraintLogic/:ID", ch.evaluateConstraintLogic)
 
 }
 
 func (h *cardHandler) createCardReward(ctx *gin.Context) {
+
 	var carRewardModel cardM.CardReward
+
 	ctx.BindJSON(&carRewardModel)
+
 	err := h.cardSrc.CreateCardReward(ctx, &carRewardModel)
 
 	if err != nil {
@@ -123,12 +127,21 @@ func (h *cardHandler) evaluateConstraintLogic(ctx *gin.Context) {
 
 	err := ctx.BindJSON(&constraintIDsPayload)
 
-	pass, err := h.cardSrc.EvaluateConstraintLogic(ctx, id, constraintIDsPayload.ConstraintIDs)
+	pass, msg, err := h.cardSrc.EvaluateConstraintLogic(ctx, id, constraintIDsPayload.ConstraintIDs)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
+	constraintLogicResp := &ConstraintLogicResp{
+		Pass:    pass,
+		Meesage: msg,
+	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": pass})
+	ctx.JSON(http.StatusOK, gin.H{"data": constraintLogicResp})
 
+}
+
+type ConstraintLogicResp struct {
+	Pass    bool   `json:"pass"`
+	Meesage string `json:"message"`
 }

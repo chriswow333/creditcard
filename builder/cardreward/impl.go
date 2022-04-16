@@ -3,7 +3,6 @@ package cardreward
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -26,7 +25,6 @@ import (
 	cardM "example.com/creditcard/models/card"
 	constraintM "example.com/creditcard/models/constraint"
 	customizationM "example.com/creditcard/models/customization"
-	"example.com/creditcard/models/event"
 	feedbackM "example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
 )
@@ -49,11 +47,13 @@ func New(
 func (im *impl) BuildCardComponent(ctx context.Context, cardResp *cardM.CardResp) (cardComp.Component, error) {
 
 	rewardMapper := make(map[rewardM.RewardType][]*rewardComp.Component)
+
 	cardRewardOperatorMapper := make(map[rewardM.RewardType]cardM.CardRewardOperator)
 
 	for _, cr := range cardResp.CardRewardResps {
 
 		rewardType := cr.RewardType
+
 		cardRewardOperatorMapper[rewardType] = cr.CardRewardOperator
 
 		for _, r := range cr.RewardResps {
@@ -79,8 +79,8 @@ func (im *impl) BuildCardComponent(ctx context.Context, cardResp *cardM.CardResp
 
 			rewardComponent := rewardComp.New(cr.RewardType, r, payloadComponents)
 
-			if _, ok := rewardMapper[cr.RewardType]; ok {
-				rewardMapper[cr.RewardType] = append(rewardMapper[cr.RewardType], &rewardComponent)
+			if rewardCmp, ok := rewardMapper[cr.RewardType]; ok {
+				rewardMapper[cr.RewardType] = append(rewardCmp, &rewardComponent)
 			} else {
 				rewardComponents := []*rewardComp.Component{}
 				rewardComponents = append(rewardComponents, &rewardComponent)
@@ -97,14 +97,15 @@ func (im *impl) BuildCardComponent(ctx context.Context, cardResp *cardM.CardResp
 
 func (im *impl) getConstraintComponent(ctx context.Context, constraintResp *constraintM.ConstraintResp) (*constraintComp.Component, error) {
 
-	constraintComponents := []*constraintComp.Component{}
-
 	constraintType := constraintResp.ConstraintType
 
 	var constraintComponent constraintComp.Component
 
 	switch constraintType {
 	case constraintM.InnerConstraintType:
+
+		constraintComponents := []*constraintComp.Component{}
+
 		for _, c := range constraintResp.InnerConstraints {
 			constraintComponent, err := im.getConstraintComponent(ctx, c)
 			if err != nil {
@@ -112,9 +113,11 @@ func (im *impl) getConstraintComponent(ctx context.Context, constraintResp *cons
 			}
 			constraintComponents = append(constraintComponents, constraintComponent)
 		}
+
 		constraintComponent = constraintComp.New(constraintComponents, constraintResp)
 
 	case constraintM.CustomizationType:
+
 		customizations := []*customizationM.Customization{}
 
 		for _, c := range constraintResp.Customizations {
@@ -138,29 +141,20 @@ func (im *impl) getConstraintComponent(ctx context.Context, constraintResp *cons
 	case constraintM.EcommerceType:
 
 		constraintComponent = ecommerce.New(constraintResp)
-		fmt.Println(&constraintComponent)
 
 	case constraintM.SupermarketType:
 		constraintComponent = supermarket.New(constraintResp)
 
 	case constraintM.OnlinegameType:
 		constraintComponent = onlinegame.New(constraintResp)
-		fmt.Println(&constraintComponent)
-		fmt.Println(constraintComponent.Judge(ctx, &event.Event{}))
 
 	case constraintM.StreamingType:
 		constraintComponent = streaming.New(constraintResp)
-		fmt.Println(&constraintComponent)
-		fmt.Println(constraintComponent.Judge(ctx, &event.Event{}))
 
 	default:
 		return nil, errors.New("failed in mapping contraint type")
 
 	}
-
-	// constraintComponents = append(constraintComponents, &constraintComponent)
-
-	// parentConstraintCompoent := constraintComp.New(constraintComponents, constraint)
 
 	return &constraintComponent, nil
 }

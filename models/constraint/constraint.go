@@ -23,6 +23,13 @@ const (
 	OR
 )
 
+type ConstraintMappingType int32
+
+const (
+	MATCH ConstraintMappingType = iota + 1
+	MISMATCH
+)
+
 type ConstraintType int32
 
 const (
@@ -40,6 +47,8 @@ type Constraint struct {
 	ConstraintOperatorType ConstraintOperatorType `json:"constraintOperatorType,omitempty"`
 
 	ConstraintType ConstraintType `json:"constraintType,omitempty"`
+
+	ConstraintMappingType ConstraintMappingType `json:"constraintMappingType,omitempty"`
 
 	InnerConstraints []*Constraint `json:"innerConstraints,omitempty"`
 
@@ -59,6 +68,8 @@ func TransferConstraintResp(ctx context.Context, constraint *Constraint, constra
 
 	constraintResp := &ConstraintResp{
 		ConstraintOperatorType: constraint.ConstraintOperatorType,
+		ConstraintType:         constraint.ConstraintType,
+		ConstraintMappingType:  constraint.ConstraintMappingType,
 	}
 
 	switch constraint.ConstraintType {
@@ -74,7 +85,6 @@ func TransferConstraintResp(ctx context.Context, constraint *Constraint, constra
 			innerConstraints = append(innerConstraints, innerConstraint)
 		}
 
-		constraintResp.ConstraintType = InnerConstraintType
 		constraintResp.InnerConstraints = innerConstraints
 
 		break
@@ -88,7 +98,6 @@ func TransferConstraintResp(ctx context.Context, constraint *Constraint, constra
 			}
 			customizations = append(customizations, customization)
 		}
-		constraintResp.ConstraintType = CustomizationType
 		constraintResp.Customizations = customizations
 
 		break
@@ -103,7 +112,6 @@ func TransferConstraintResp(ctx context.Context, constraint *Constraint, constra
 			}
 			timeIntervals = append(timeIntervals, timeInterval)
 		}
-		constraintResp.ConstraintType = TimeIntervalType
 		constraintResp.TimeIntervals = timeIntervals
 		break
 	case MobilepayType:
@@ -118,7 +126,6 @@ func TransferConstraintResp(ctx context.Context, constraint *Constraint, constra
 
 			mobilepays = append(mobilepays, mobilepay)
 		}
-		constraintResp.ConstraintType = MobilepayType
 		constraintResp.Mobilepays = mobilepays
 		break
 	case EcommerceType:
@@ -132,7 +139,6 @@ func TransferConstraintResp(ctx context.Context, constraint *Constraint, constra
 			}
 			ecommerces = append(ecommerces, ecommerce)
 		}
-		constraintResp.ConstraintType = EcommerceType
 		constraintResp.Ecommerces = ecommerces
 		break
 	case SupermarketType:
@@ -147,7 +153,6 @@ func TransferConstraintResp(ctx context.Context, constraint *Constraint, constra
 			}
 			supermarkets = append(supermarkets, supermarket)
 		}
-		constraintResp.ConstraintType = SupermarketType
 		constraintResp.Supermarkets = supermarkets
 		break
 	case OnlinegameType:
@@ -162,7 +167,6 @@ func TransferConstraintResp(ctx context.Context, constraint *Constraint, constra
 			onlinegames = append(onlinegames, onlinegame)
 		}
 
-		constraintResp.ConstraintType = OnlinegameType
 		constraintResp.Onlinegames = onlinegames
 		break
 	case StreamingType:
@@ -175,7 +179,6 @@ func TransferConstraintResp(ctx context.Context, constraint *Constraint, constra
 			}
 			streamings = append(streamings, streaming)
 		}
-		constraintResp.ConstraintType = StreamingType
 		constraintResp.Streamings = streamings
 		break
 	default:
