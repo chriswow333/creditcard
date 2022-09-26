@@ -3,12 +3,12 @@ package mobilepay
 import (
 	"context"
 
-	mobilepayM "example.com/creditcard/models/mobilepay"
+	"example.com/creditcard/models/channel"
 )
 
 type Store interface {
-	Create(ctx context.Context, mobilepay *mobilepayM.Mobilepay) error
-	UpdateByID(ctx context.Context, mobilepay *mobilepayM.Mobilepay) error
-	GetAll(ctx context.Context) ([]*mobilepayM.Mobilepay, error)
-	GetByID(ctx context.Context, ID string) (*mobilepayM.Mobilepay, error)
+	Create(ctx context.Context, mobilepay *channel.Mobilepay) error
+	UpdateByID(ctx context.Context, mobilepay *channel.Mobilepay) error
+	GetAll(ctx context.Context) ([]*channel.Mobilepay, error)
+	GetByID(ctx context.Context, ID string) (*channel.Mobilepay, error)
 }

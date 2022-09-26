@@ -3,12 +3,12 @@ package delivery
 import (
 	"context"
 
-	deliveryM "example.com/creditcard/models/delivery"
+	"example.com/creditcard/models/channel"
 )
 
 type Store interface {
-	Create(ctx context.Context, delivery *deliveryM.Delivery) error
-	UpdateByID(ctx context.Context, delivery *deliveryM.Delivery) error
-	GetAll(ctx context.Context) ([]*deliveryM.Delivery, error)
-	GetByID(ctx context.Context, ID string) (*deliveryM.Delivery, error)
+	Create(ctx context.Context, delivery *channel.Delivery) error
+	UpdateByID(ctx context.Context, delivery *channel.Delivery) error
+	GetAll(ctx context.Context) ([]*channel.Delivery, error)
+	GetByID(ctx context.Context, ID string) (*channel.Delivery, error)
 }

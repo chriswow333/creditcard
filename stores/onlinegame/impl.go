@@ -3,7 +3,7 @@ package onlinegame
 import (
 	"context"
 
-	onlinegameM "example.com/creditcard/models/onlinegame"
+	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -22,9 +22,9 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO onlinegame " +
-	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
+	"(\"id\", \"name\") VALUES ($1, $2)"
 
-func (im *impl) Create(ctx context.Context, onlinegame *onlinegameM.Onlinegame) error {
+func (im *impl) Create(ctx context.Context, onlinegame *channel.Onlinegame) error {
 	tx, err := im.psql.Begin()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -38,7 +38,6 @@ func (im *impl) Create(ctx context.Context, onlinegame *onlinegameM.Onlinegame) 
 	updater := []interface{}{
 		onlinegame.ID,
 		onlinegame.Name,
-		onlinegame.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,10 +54,10 @@ func (im *impl) Create(ctx context.Context, onlinegame *onlinegameM.Onlinegame) 
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE onlinegame SET " +
-	" \"name\" = $1, \"image_path\" = $2 " +
-	" where \"id\" = $3"
+	" \"name\" = $1 " +
+	" where \"id\" = $2"
 
-func (im *impl) UpdateByID(ctx context.Context, onlinegame *onlinegameM.Onlinegame) error {
+func (im *impl) UpdateByID(ctx context.Context, onlinegame *channel.Onlinegame) error {
 	tx, err := im.psql.Begin()
 
 	if err != nil {
@@ -71,7 +70,6 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *onlinegameM.Onlinega
 
 	updater := []interface{}{
 		onlinegame.Name,
-		onlinegame.ImagePath,
 		onlinegame.ID,
 	}
 
@@ -86,11 +84,11 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *onlinegameM.Onlinega
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
 	" FROM onlinegame "
 
-func (im *impl) GetAll(ctx context.Context) ([]*onlinegameM.Onlinegame, error) {
-	onlinegames := []*onlinegameM.Onlinegame{}
+func (im *impl) GetAll(ctx context.Context) ([]*channel.Onlinegame, error) {
+	onlinegames := []*channel.Onlinegame{}
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -101,11 +99,10 @@ func (im *impl) GetAll(ctx context.Context) ([]*onlinegameM.Onlinegame, error) {
 
 	for rows.Next() {
 
-		onlinegame := &onlinegameM.Onlinegame{}
+		onlinegame := &channel.Onlinegame{}
 		selector := []interface{}{
 			&onlinegame.ID,
 			&onlinegame.Name,
-			&onlinegame.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -121,16 +118,15 @@ func (im *impl) GetAll(ctx context.Context) ([]*onlinegameM.Onlinegame, error) {
 	return onlinegames, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
 	" FROM onlinegame WHERE \"id\" = $1"
 
-func (im *impl) GetByID(ctx context.Context, ID string) (*onlinegameM.Onlinegame, error) {
-	onlinegame := &onlinegameM.Onlinegame{}
+func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Onlinegame, error) {
+	onlinegame := &channel.Onlinegame{}
 
 	selector := []interface{}{
 		&onlinegame.ID,
 		&onlinegame.Name,
-		&onlinegame.ImagePath,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

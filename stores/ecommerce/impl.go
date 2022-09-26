@@ -3,8 +3,7 @@ package ecommerce
 import (
 	"context"
 
-	"example.com/creditcard/models/ecommerce"
-	ecommerceM "example.com/creditcard/models/ecommerce"
+	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -23,9 +22,9 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_ECOMMERCE_STAT = "INSERT INTO ecommerce " +
-	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
+	"(\"id\", \"name\") VALUES ($1, $2)"
 
-func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) error {
+func (im *impl) Create(ctx context.Context, ecommerce *channel.Ecommerce) error {
 	tx, err := im.psql.Begin()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -39,7 +38,6 @@ func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) err
 	updater := []interface{}{
 		ecommerce.ID,
 		ecommerce.Name,
-		ecommerce.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_ECOMMERCE_STAT, updater...); err != nil {
@@ -56,10 +54,10 @@ func (im *impl) Create(ctx context.Context, ecommerce *ecommerceM.Ecommerce) err
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE ecommerce SET " +
-	" \"name\" = $1, image_path = $2 " +
-	" where \"id\" = $3"
+	" \"name\" = $1 " +
+	" where \"id\" = $2"
 
-func (im *impl) UpdateByID(ctx context.Context, ecommerce *ecommerce.Ecommerce) error {
+func (im *impl) UpdateByID(ctx context.Context, ecommerce *channel.Ecommerce) error {
 	tx, err := im.psql.Begin()
 
 	if err != nil {
@@ -72,7 +70,6 @@ func (im *impl) UpdateByID(ctx context.Context, ecommerce *ecommerce.Ecommerce) 
 
 	updater := []interface{}{
 		ecommerce.Name,
-		ecommerce.ImagePath,
 		ecommerce.ID,
 	}
 
@@ -87,11 +84,11 @@ func (im *impl) UpdateByID(ctx context.Context, ecommerce *ecommerce.Ecommerce) 
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
 	" FROM ecommerce "
 
-func (im *impl) GetAll(ctx context.Context) ([]*ecommerceM.Ecommerce, error) {
-	ecommerces := []*ecommerceM.Ecommerce{}
+func (im *impl) GetAll(ctx context.Context) ([]*channel.Ecommerce, error) {
+	ecommerces := []*channel.Ecommerce{}
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -102,11 +99,10 @@ func (im *impl) GetAll(ctx context.Context) ([]*ecommerceM.Ecommerce, error) {
 
 	for rows.Next() {
 
-		ecommerce := &ecommerceM.Ecommerce{}
+		ecommerce := &channel.Ecommerce{}
 		selector := []interface{}{
 			&ecommerce.ID,
 			&ecommerce.Name,
-			&ecommerce.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -122,17 +118,16 @@ func (im *impl) GetAll(ctx context.Context) ([]*ecommerceM.Ecommerce, error) {
 	return ecommerces, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
 	" FROM ecommerce WHERE \"id\" = $1"
 
-func (im *impl) GetByID(ctx context.Context, ID string) (*ecommerce.Ecommerce, error) {
+func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Ecommerce, error) {
 
-	ecommerce := &ecommerce.Ecommerce{}
+	ecommerce := &channel.Ecommerce{}
 
 	selector := []interface{}{
 		&ecommerce.ID,
 		&ecommerce.Name,
-		&ecommerce.ImagePath,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

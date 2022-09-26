@@ -33,8 +33,6 @@ func New(
 
 func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 
-	reward.UpdateDate = timeNow().Unix()
-
 	id, err := uuid.NewV4()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -48,6 +46,7 @@ func (im *impl) Create(ctx context.Context, reward *rewardM.Reward) error {
 		logrus.Error(err)
 		return err
 	}
+
 	return nil
 }
 

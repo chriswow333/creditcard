@@ -23,7 +23,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_CARD_STAT = "INSERT INTO card " +
-	" (\"id\", bank_id, \"name\", start_date, end_date, update_date, image_path, link_url) " +
+	" (\"id\", bank_id, \"name\", update_date, image_path, link_url, card_status, other_reward) " +
 	" VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
 
 func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
@@ -42,11 +42,11 @@ func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 		card.ID,
 		card.BankID,
 		card.Name,
-		card.StartDate,
-		card.EndDate,
 		card.UpdateDate,
 		card.ImagePath,
 		card.LinkURL,
+		card.CardStatus,
+		card.OtherRewards,
 	}
 
 	if _, err := tx.Exec(INSERT_CARD_STAT, updater...); err != nil {
@@ -63,9 +63,10 @@ func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE card SET " +
-	" bank_id = $1, \"name\" = $2, start_date = $3, end_date = $4, update_date = $5, " +
-	" image_path = $6, link_url = $7 " +
-	" where \"id\" = $9"
+	" bank_id = $1, \"name\" = $2, update_date = $3, " +
+	" image_path = $4, link_url = $5, card_status = $6 " +
+	" other_reward = $7 " +
+	" where \"id\" = $8"
 
 func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
 
@@ -82,11 +83,11 @@ func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
 	updater := []interface{}{
 		card.BankID,
 		card.Name,
-		card.StartDate,
-		card.EndDate,
 		card.UpdateDate,
 		card.ImagePath,
 		card.LinkURL,
+		card.CardStatus,
+		card.CardRewards,
 		card.ID,
 	}
 
@@ -100,28 +101,28 @@ func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
 	return nil
 }
 
-const SELECT_STAT = "SELECT \"id\", bank_id, \"name\", start_date, end_date, update_date, image_path, link_url " +
+const SELECT_STAT = "SELECT \"id\", bank_id, \"name\", update_date, " +
+	" image_path, link_url, card_status, other_reward " +
 	" FROM card " +
 	" WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
-
 	card := &cardM.Card{}
 
 	selector := []interface{}{
 		&card.ID,
 		&card.BankID,
 		&card.Name,
-		&card.StartDate,
-		&card.EndDate,
 		&card.UpdateDate,
 		&card.ImagePath,
 		&card.LinkURL,
+		&card.CardStatus,
+		&card.OtherRewards,
 	}
 
 	if err := im.psql.QueryRow(SELECT_STAT, ID).Scan(selector...); err != nil {
 		logrus.WithFields(logrus.Fields{
-			"": "",
+			"": err,
 		}).Error(err)
 		return nil, err
 
@@ -129,7 +130,8 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
 	return card, nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", bank_id, \"name\", start_date, end_date, update_date, image_path, link_url " +
+const SELECT_ALL_STAT = "SELECT \"id\", bank_id, \"name\", update_date, " +
+	" image_path, link_url, card_status, other_reward " +
 	" FROM card"
 
 func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
@@ -150,11 +152,11 @@ func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 			&card.ID,
 			&card.BankID,
 			&card.Name,
-			&card.StartDate,
-			&card.EndDate,
 			&card.UpdateDate,
 			&card.ImagePath,
 			&card.LinkURL,
+			&card.CardStatus,
+			&card.OtherRewards,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -170,7 +172,8 @@ func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 	return cards, nil
 }
 
-const SELECT_BY_BANKID_STAT = "SELECT \"id\", bank_id, \"name\", start_date, end_date, update_date, iamge_path, link_url " +
+const SELECT_BY_BANKID_STAT = "SELECT \"id\", bank_id, \"name\", update_date, " +
+	" iamge_path, link_url, card_status, other_reward " +
 	" FROM card " +
 	" WHERE \"bank_id\"=$1"
 
@@ -195,11 +198,11 @@ func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Card, 
 			&card.ID,
 			&card.BankID,
 			&card.Name,
-			&card.StartDate,
-			&card.EndDate,
 			&card.UpdateDate,
 			&card.ImagePath,
 			&card.LinkURL,
+			&card.CardStatus,
+			&card.OtherRewards,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

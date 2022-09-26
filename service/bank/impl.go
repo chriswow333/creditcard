@@ -72,18 +72,6 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 	return bank, nil
 }
 
-func (im *impl) GetRespByID(ctx context.Context, ID string) (*bankM.BankResp, error) {
-	bank, err := im.GetByID(ctx, ID)
-	if err != nil {
-		return nil, err
-	}
-
-	bankResp := bankM.TransferBankResp(bank)
-
-	return bankResp, nil
-
-}
-
 func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
 
 	banks, err := im.bankStore.GetAll(ctx)
@@ -94,22 +82,4 @@ func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
 		return nil, err
 	}
 	return banks, nil
-}
-
-func (im *impl) GetRespAll(ctx context.Context) ([]*bankM.BankResp, error) {
-
-	banks, err := im.GetAll(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	bankResps := []*bankM.BankResp{}
-
-	for _, b := range banks {
-		bankResp := bankM.TransferBankResp(b)
-		bankResps = append(bankResps, bankResp)
-	}
-
-	return bankResps, nil
-
 }

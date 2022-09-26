@@ -61,6 +61,11 @@ func (im *impl) UpdateAllComponents(ctx context.Context) error {
 	}
 
 	for _, card := range cards {
+
+		if card.CardStatus != 1 {
+			continue
+		}
+
 		if err := im.UpdateComponentByCardID(ctx, card.ID); err != nil {
 			logrus.Error(err)
 			return err
@@ -72,13 +77,14 @@ func (im *impl) UpdateAllComponents(ctx context.Context) error {
 
 func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) error {
 
-	cardResp, err := im.cardService.GetRespByID(ctx, cardID)
+	card, err := im.cardService.GetByID(ctx, cardID)
+
 	if err != nil {
 		logrus.Error(err)
 		return err
 	}
 
-	cardCompnent, err := im.cardBuilder.BuildCardComponent(ctx, cardResp)
+	cardCompnent, err := im.cardBuilder.BuildCardComponent(ctx, card)
 	if err != nil {
 		logrus.Error(err)
 		return nil
@@ -94,7 +100,9 @@ func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) erro
 func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response, error) {
 
 	if e.ID == "" {
+
 		id, err := uuid.NewV4()
+
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"msg": "",
@@ -102,6 +110,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 
 			return nil, err
 		}
+
 		e.ID = id.String()
 	}
 
@@ -112,22 +121,32 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 	cardEventResps := []*cardM.CardEventResp{}
 
 	if len(e.CardIDs) == 0 {
+
 		for _, c := range im.cards {
 
 			cardEventResp, err := im.evaluateCard(ctx, e, c.cardCompnent)
 			if err != nil {
 				return nil, err
 			}
-			cardEventResps = append(cardEventResps, cardEventResp)
+
+			if len(cardEventResp.CardRewardEventResps) != 0 {
+				cardEventResps = append(cardEventResps, cardEventResp)
+			}
+
 		}
+
 	} else {
+
 		for _, cardID := range e.CardIDs {
 
 			if c, ok := im.cards[cardID]; ok {
+
 				cardEventResp, err := im.evaluateCard(ctx, e, c.cardCompnent)
+
 				if err != nil {
 					return nil, err
 				}
+
 				cardEventResps = append(cardEventResps, cardEventResp)
 
 			} else {
@@ -137,6 +156,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 	}
 
 	resp.CardEventResps = cardEventResps
+
 	return resp, nil
 }
 

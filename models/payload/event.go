@@ -1,8 +1,16 @@
 package payload
 
 import (
-	"example.com/creditcard/models/constraint"
+	"example.com/creditcard/models/channel"
 	"example.com/creditcard/models/feedback"
+)
+
+type PayloadEventJudgeType int32
+
+const (
+	ALL PayloadEventJudgeType = iota + 1
+	SOME
+	NONE
 )
 
 type PayloadEventResp struct {
@@ -12,5 +20,5 @@ type PayloadEventResp struct {
 
 	FeedReturn *feedback.FeedReturn `json:"feedReturn,omitempty"`
 
-	ConstraintEventResp *constraint.ConstraintEventResp `json:"constraintEventResp,omitempty"`
+	ConstraintEventResp *channel.ChannelEventResp `json:"channelEventResp,omitempty"`
 }

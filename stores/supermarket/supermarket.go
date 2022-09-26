@@ -3,12 +3,12 @@ package supermarket
 import (
 	"context"
 
-	supermarketM "example.com/creditcard/models/supermarket"
+	"example.com/creditcard/models/channel"
 )
 
 type Store interface {
-	Create(ctx context.Context, supermarket *supermarketM.Supermarket) error
-	UpdateByID(ctx context.Context, supermarket *supermarketM.Supermarket) error
-	GetAll(ctx context.Context) ([]*supermarketM.Supermarket, error)
-	GetByID(ctx context.Context, ID string) (*supermarketM.Supermarket, error)
+	Create(ctx context.Context, supermarket *channel.Supermarket) error
+	UpdateByID(ctx context.Context, supermarket *channel.Supermarket) error
+	GetAll(ctx context.Context) ([]*channel.Supermarket, error)
+	GetByID(ctx context.Context, ID string) (*channel.Supermarket, error)
 }

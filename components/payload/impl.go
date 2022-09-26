@@ -2,8 +2,9 @@ package payload
 
 import (
 	"context"
+	"fmt"
 
-	"example.com/creditcard/components/constraint"
+	"example.com/creditcard/components/channel"
 
 	feedbackComp "example.com/creditcard/components/feedback"
 
@@ -14,31 +15,31 @@ import (
 )
 
 type impl struct {
-	paylaodResp         *payloadM.PayloadResp
-	constraintComponent *constraint.Component
-	feedbackComponent   *feedbackComp.Component
+	payload           *payloadM.Payload
+	channelComponent  *channel.Component
+	feedbackComponent *feedbackComp.Component
 }
 
 func New(
-	paylaodResp *payloadM.PayloadResp,
-	constraintComponent *constraint.Component,
+	payload *payloadM.Payload,
+	channelComponent *channel.Component,
 	feedbackComponent *feedbackComp.Component,
 ) Component {
 
 	return &impl{
-		paylaodResp:         paylaodResp,
-		constraintComponent: constraintComponent,
-		feedbackComponent:   feedbackComponent,
+		payload:           payload,
+		channelComponent:  channelComponent,
+		feedbackComponent: feedbackComponent,
 	}
 }
 
 func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.PayloadEventResp, error) {
 
 	payloadEventResp := &payloadM.PayloadEventResp{
-		ID: im.paylaodResp.ID,
+		ID: im.payload.ID,
 	}
 
-	constraintEventResp, err := (*im.constraintComponent).Judge(ctx, e)
+	constraintEventResp, err := (*im.channelComponent).Judge(ctx, e)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +82,10 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.Payload
 func (im *impl) processFeedReturn(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.FeedReturn, error) {
 
 	// 計算回饋額
+	fmt.Println(im.payload.ID)
+	fmt.Println((*im.feedbackComponent))
 	feedReturn, err := (*im.feedbackComponent).Calculate(ctx, e, pass)
+
 	if err != nil {
 		return nil, err
 	}

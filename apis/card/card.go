@@ -34,7 +34,10 @@ func NewCardHandler(
 	apis.Handle(rg, http.MethodPost, "/cardReward", ch.createCardReward)
 
 	apis.Handle(rg, http.MethodPost, "/:ID", ch.update)
+
 	apis.Handle(rg, http.MethodGet, "/:ID", ch.get)
+
+	apis.Handle(rg, http.MethodGet, "/resp/:ID", ch.getResp)
 
 	apis.Handle(rg, http.MethodGet, "/bankID/:bankID", ch.getByBankID)
 	apis.Handle(rg, http.MethodPost, "/evaluateConstraintLogic/:ID", ch.evaluateConstraintLogic)
@@ -87,12 +90,23 @@ func (h *cardHandler) update(ctx *gin.Context) {
 func (h *cardHandler) get(ctx *gin.Context) {
 
 	ID := ctx.Param("ID")
-	card, err := h.cardSrc.GetRespByID(ctx, ID)
+	card, err := h.cardSrc.GetByID(ctx, ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, card)
+}
+
+func (h *cardHandler) getResp(ctx *gin.Context) {
+
+	ID := ctx.Param("ID")
+	cardResp, err := h.cardSrc.GetRespByID(ctx, ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, cardResp)
 }
 
 func (h *cardHandler) getAll(ctx *gin.Context) {
@@ -108,7 +122,7 @@ func (h *cardHandler) getAll(ctx *gin.Context) {
 func (h *cardHandler) getByBankID(ctx *gin.Context) {
 
 	bankID := ctx.Param("bankID")
-	cards, err := h.cardSrc.GetRespByBankID(ctx, bankID)
+	cards, err := h.cardSrc.GetByBankID(ctx, bankID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 		return

@@ -51,7 +51,15 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 
 	if pass {
 		// 取得可使用的回饋花費金額
-		actualUseCash, actualCashReturn, feedReturnStatus = im.takeCashReturn(ctx, total)
+		switch im.Cashback.CashCalculateType {
+		case feedbackM.FIXED_CASH_RETURN:
+			actualUseCash, actualCashReturn, feedReturnStatus = im.takeFixedCashReturn(ctx, total)
+			break
+		case feedbackM.BONUS_MULTIPLY_CASH:
+			actualUseCash, actualCashReturn, feedReturnStatus = im.multiplyCashReturn(ctx, total)
+			break
+
+		}
 
 	}
 
@@ -66,15 +74,38 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 	cashReturn.ActualUseCash = actualUseCash
 	cashReturn.ActualCashReturn = actualCashReturn
 
-	// set cache
-	// im.Feedback.Total = float64(total)
-	// im.Feedback.Current = cash
-
 	return feedReturn, nil
 }
 
+func (im *impl) takeFixedCashReturn(ctx context.Context, cash int64) (int64, float64, feedbackM.FeedReturnStatus) {
+	if im.Cashback.Min == 0 && im.Cashback.Max == 0 {
+		return cash, im.Cashback.Fixed, feedbackM.ALL
+	} else if im.Cashback.Min == 0 && im.Cashback.Max != 0 {
+		if cash <= im.Cashback.Max {
+			return cash, im.Cashback.Fixed, feedbackM.ALL
+		} else {
+			return 0, 0, feedbackM.NONE
+		}
+	} else if im.Cashback.Min != 0 && im.Cashback.Max == 0 {
+		if im.Cashback.Min <= cash {
+			return cash, im.Cashback.Fixed, feedbackM.ALL
+		} else {
+			return 0, 0, feedbackM.NONE
+		}
+	} else {
+		if im.Cashback.Min <= cash && cash <= im.Cashback.Max {
+			return cash, im.Cashback.Fixed, feedbackM.ALL
+		} else if cash < im.Cashback.Min {
+			return 0, 0, feedbackM.NONE
+		} else {
+			return 0, 0, feedbackM.NONE
+		}
+
+	}
+}
+
 // 實際可以用多少錢拿回饋, 回饋多少, 回饋是否全拿
-func (im *impl) takeCashReturn(ctx context.Context, cash int64) (int64, float64, feedbackM.FeedReturnStatus) {
+func (im *impl) multiplyCashReturn(ctx context.Context, cash int64) (int64, float64, feedbackM.FeedReturnStatus) {
 
 	if im.Cashback.Min == 0 && im.Cashback.Max == 0 {
 		return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL

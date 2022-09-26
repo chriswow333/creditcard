@@ -3,10 +3,11 @@ package main
 import (
 	"example.com/creditcard/apis/bank"
 	"example.com/creditcard/apis/card"
-	"example.com/creditcard/apis/constraint"
+	"example.com/creditcard/apis/channel"
 	"example.com/creditcard/apis/evaluator"
 	"example.com/creditcard/apis/image"
 	"example.com/creditcard/apis/reward"
+	"example.com/creditcard/apis/reward_channel"
 	"example.com/creditcard/base/psql"
 	_ "example.com/creditcard/base/psql"
 	"go.uber.org/dig"
@@ -19,23 +20,31 @@ import (
 
 	bankService "example.com/creditcard/service/bank"
 	cardService "example.com/creditcard/service/card"
-	constraintService "example.com/creditcard/service/constraint"
+	channelService "example.com/creditcard/service/channel"
 	rewardService "example.com/creditcard/service/reward"
+	rewardChannelService "example.com/creditcard/service/reward_channel"
 
+	cardrewardBuilder "example.com/creditcard/builder/cardreward"
 	bankStore "example.com/creditcard/stores/bank"
 	cardStore "example.com/creditcard/stores/card"
 	cardRewardStore "example.com/creditcard/stores/card_reward"
-	customizationStore "example.com/creditcard/stores/customization"
+	conveniencestoreStore "example.com/creditcard/stores/conveniencestore"
 	deliveryStore "example.com/creditcard/stores/delivery"
 	ecommerceStore "example.com/creditcard/stores/ecommerce"
+	foodStore "example.com/creditcard/stores/food"
+	insuranceStore "example.com/creditcard/stores/insurance"
+	mallStore "example.com/creditcard/stores/mall"
 	mobilepayStore "example.com/creditcard/stores/mobilepay"
 	onlinegameStore "example.com/creditcard/stores/onlinegame"
 	payloadStore "example.com/creditcard/stores/payload"
 	rewardStore "example.com/creditcard/stores/reward"
+	rewardChannelStore "example.com/creditcard/stores/reward_channel"
+	sportStore "example.com/creditcard/stores/sport"
 	streamingStore "example.com/creditcard/stores/streaming"
 	supermarketStore "example.com/creditcard/stores/supermarket"
-
-	cardrewardBuilder "example.com/creditcard/builder/cardreward"
+	taskStore "example.com/creditcard/stores/task"
+	transportationStore "example.com/creditcard/stores/transportation"
+	travelStore "example.com/creditcard/stores/travel"
 
 	evaluatorModule "example.com/creditcard/modules/evaluator"
 )
@@ -49,7 +58,8 @@ func BuildContainer() *dig.Container {
 	container.Provide(bankService.New)
 	container.Provide(cardService.New)
 	container.Provide(rewardService.New)
-	container.Provide(constraintService.New)
+	container.Provide(channelService.New)
+	container.Provide(rewardChannelService.New)
 
 	// store
 	container.Provide(bankStore.New)
@@ -62,8 +72,16 @@ func BuildContainer() *dig.Container {
 	container.Provide(streamingStore.New)
 	container.Provide(supermarketStore.New)
 	container.Provide(payloadStore.New)
-	container.Provide(customizationStore.New)
+	container.Provide(taskStore.New)
 	container.Provide(cardRewardStore.New)
+	container.Provide(rewardChannelStore.New)
+	container.Provide(transportationStore.New)
+	container.Provide(foodStore.New)
+	container.Provide(travelStore.New)
+	container.Provide(insuranceStore.New)
+	container.Provide(conveniencestoreStore.New)
+	container.Provide(mallStore.New)
+	container.Provide(sportStore.New)
 
 	// builder
 	container.Provide(cardrewardBuilder.New)
@@ -80,7 +98,8 @@ func NewServer(
 	bankSrc bankService.Service,
 	cardSrc cardService.Service,
 	rewardSrc rewardService.Service,
-	constraintService constraintService.Service,
+	channelSrc channelService.Service,
+	rewardChannelSrc rewardChannelService.Service,
 
 	evaluatorMod evaluatorModule.Module,
 
@@ -100,8 +119,9 @@ func NewServer(
 	bank.NewBankHandle(v1.Group("/bank"), bankSrc)
 	card.NewCardHandler(v1.Group("/card"), cardSrc)
 	reward.NewrewardHandler(v1.Group("/reward"), rewardSrc)
+	reward_channel.NewRewardChannelHandler(v1.Group("/reward_channel"), rewardChannelSrc)
 
-	constraint.NewConstraintHandler(v1.Group("/constraint"), constraintService)
+	channel.NewChannelHandler(v1.Group("/channel"), channelSrc)
 
 	evaluator.NewEvaluatorHandler(v1.Group("/evaluator"), evaluatorMod)
 

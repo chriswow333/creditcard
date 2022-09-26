@@ -1,9 +1,6 @@
 package reward
 
 import (
-	"time"
-
-	"example.com/creditcard/models/feedback"
 	"example.com/creditcard/models/payload"
 )
 
@@ -11,7 +8,10 @@ type RewardType int32
 
 const (
 	CASH_TWD RewardType = iota + 1
-	POINT
+	LINE_POINT
+	KUO_BROTHERS_POINT // 生活市集幣
+	WOWPRIME_POINT     // 王品瘋點數
+	OPEN_POINT         // OPEN POINT
 )
 
 type PayloadOperator int32
@@ -23,85 +23,9 @@ const (
 
 type Reward struct {
 	ID           string `json:"id"`
-	CardRewardID string `json:"cardID"`
+	CardRewardID string `json:"cardRewardID"`
 	Order        int32  `json:"order"`
-
-	Title    string `json:"title,omitempty"`
-	SubTitle string `json:"subTitle,omitempty"`
-
-	StartDate  int64 `json:"startDate,omitempty"`
-	EndDate    int64 `json:"endDate,omitempty"`
-	UpdateDate int64 `json:"updateDate,omitempty"`
 
 	PayloadOperator PayloadOperator    `json:"payloadOperator,omitempty"`
 	Payloads        []*payload.Payload `json:"payloads,omitempty"`
-}
-
-type RewardResp struct {
-	ID           string `json:"id"`
-	CardRewardID string `json:"cardRewardID"`
-	Order        int32  `json:"order"`
-
-	Title    string `json:"title,omitempty"`
-	SubTitle string `json:"subTitle,omitempty"`
-
-	StartDate  string `json:"startDate,omitempty"`
-	EndDate    string `json:"endDate,omitempty"`
-	UpdateDate string `json:"updateDate,omitempty"`
-
-	PayloadOperator PayloadOperator `json:"payloadOperator,omitempty"`
-
-	PayloadResps []*payload.PayloadResp `json:"payloadResps,omitempty"`
-	Feedback     *feedback.Feedback     `json:"feedback,omitempty"`
-}
-
-type RewardEventJudgeType int32
-
-const (
-	ALL RewardEventJudgeType = iota + 1
-	SOME
-	NONE
-)
-
-type RewardEventResp struct {
-	ID           string `json:"id"`
-	CardRewardID string `json:"cardRewardID"`
-
-	Order int32 `json:"order"`
-
-	RewardEventJudgeType RewardEventJudgeType `json:"rewardEventJudgeType,omitempty"`
-
-	PayloadOperator PayloadOperator `json:"payloadOperator,omitempty"`
-
-	FeedReturn *feedback.FeedReturn `json:"feedReturn,omitempty"`
-
-	PayloadEventResps []*payload.PayloadEventResp `json:"payloadEventResps,omitempty"`
-}
-
-const DATE_FORMAT = "2006/01/02"
-
-func TransferRewardResp(rewardType RewardType, reward *Reward) *RewardResp {
-
-	rewardResp := &RewardResp{
-		ID:              reward.ID,
-		CardRewardID:    reward.CardRewardID,
-		Order:           reward.Order,
-		Title:           reward.Title,
-		SubTitle:        reward.SubTitle,
-		StartDate:       time.Unix(reward.StartDate, 0).Format(DATE_FORMAT),
-		EndDate:         time.Unix(reward.EndDate, 0).Format(DATE_FORMAT),
-		UpdateDate:      time.Unix(reward.UpdateDate, 0).Format(DATE_FORMAT),
-		PayloadOperator: reward.PayloadOperator,
-	}
-
-	payloadResps := []*payload.PayloadResp{}
-
-	for _, p := range reward.Payloads {
-		payloadResp := payload.TransferPayloadResp(p)
-		payloadResps = append(payloadResps, payloadResp)
-	}
-
-	rewardResp.PayloadResps = payloadResps
-
-	return rewardResp
 }

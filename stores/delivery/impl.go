@@ -3,8 +3,7 @@ package delivery
 import (
 	"context"
 
-	"example.com/creditcard/models/delivery"
-	deliveryM "example.com/creditcard/models/delivery"
+	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -23,9 +22,9 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_DELIVERY_STAT = "INSERT INTO delivery " +
-	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
+	"(\"id\", \"name\") VALUES ($1, $2)"
 
-func (im *impl) Create(ctx context.Context, delivery *deliveryM.Delivery) error {
+func (im *impl) Create(ctx context.Context, delivery *channel.Delivery) error {
 	tx, err := im.psql.Begin()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -39,7 +38,6 @@ func (im *impl) Create(ctx context.Context, delivery *deliveryM.Delivery) error 
 	updater := []interface{}{
 		delivery.ID,
 		delivery.Name,
-		delivery.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_DELIVERY_STAT, updater...); err != nil {
@@ -56,10 +54,10 @@ func (im *impl) Create(ctx context.Context, delivery *deliveryM.Delivery) error 
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE delivery SET " +
-	" \"name\" = $1, \"image_path\" = $2 " +
-	" where \"id\" = $3"
+	" \"name\" = $1 " +
+	" where \"id\" = $2"
 
-func (im *impl) UpdateByID(ctx context.Context, delivery *delivery.Delivery) error {
+func (im *impl) UpdateByID(ctx context.Context, delivery *channel.Delivery) error {
 	tx, err := im.psql.Begin()
 
 	if err != nil {
@@ -72,7 +70,6 @@ func (im *impl) UpdateByID(ctx context.Context, delivery *delivery.Delivery) err
 
 	updater := []interface{}{
 		delivery.Name,
-		delivery.ImagePath,
 		delivery.ID,
 	}
 
@@ -87,11 +84,11 @@ func (im *impl) UpdateByID(ctx context.Context, delivery *delivery.Delivery) err
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
 	" FROM delivery "
 
-func (im *impl) GetAll(ctx context.Context) ([]*deliveryM.Delivery, error) {
-	deliverys := []*deliveryM.Delivery{}
+func (im *impl) GetAll(ctx context.Context) ([]*channel.Delivery, error) {
+	deliverys := []*channel.Delivery{}
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -102,11 +99,10 @@ func (im *impl) GetAll(ctx context.Context) ([]*deliveryM.Delivery, error) {
 
 	for rows.Next() {
 
-		delivery := &deliveryM.Delivery{}
+		delivery := &channel.Delivery{}
 		selector := []interface{}{
 			&delivery.ID,
 			&delivery.Name,
-			&delivery.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -122,17 +118,16 @@ func (im *impl) GetAll(ctx context.Context) ([]*deliveryM.Delivery, error) {
 	return deliverys, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
 	" FROM delivery WHERE \"id\" = $1"
 
-func (im *impl) GetByID(ctx context.Context, ID string) (*deliveryM.Delivery, error) {
+func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Delivery, error) {
 
-	delivery := &deliveryM.Delivery{}
+	delivery := &channel.Delivery{}
 
 	selector := []interface{}{
 		&delivery.ID,
 		&delivery.Name,
-		&delivery.ImagePath,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

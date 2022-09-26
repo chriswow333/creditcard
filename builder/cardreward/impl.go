@@ -8,60 +8,76 @@ import (
 	"go.uber.org/dig"
 
 	cardComp "example.com/creditcard/components/card"
-	constraintComp "example.com/creditcard/components/constraint"
-	customizationComp "example.com/creditcard/components/constraint/customization"
-	"example.com/creditcard/components/constraint/ecommerce"
-	"example.com/creditcard/components/constraint/mobilepay"
-	"example.com/creditcard/components/constraint/onlinegame"
-	"example.com/creditcard/components/constraint/streaming"
-	"example.com/creditcard/components/constraint/supermarket"
-	"example.com/creditcard/components/constraint/timeinterval"
+	channelComp "example.com/creditcard/components/channel"
+
+	convenienceStoreComp "example.com/creditcard/components/channel/conveniencestore"
+	deliveryComp "example.com/creditcard/components/channel/delivery"
+	ecommerceComp "example.com/creditcard/components/channel/ecommerce"
+	foodComp "example.com/creditcard/components/channel/food"
+	insuranceComp "example.com/creditcard/components/channel/insurance"
+	mallComp "example.com/creditcard/components/channel/mall"
+	mobilepayComp "example.com/creditcard/components/channel/mobilepay"
+	onlinegameComp "example.com/creditcard/components/channel/onlinegame"
+	sportComp "example.com/creditcard/components/channel/sport"
+	streamingComp "example.com/creditcard/components/channel/streaming"
+	supermarketComp "example.com/creditcard/components/channel/supermarket"
+	taskComp "example.com/creditcard/components/channel/task"
+	transportationComp "example.com/creditcard/components/channel/transportation"
+	travelComp "example.com/creditcard/components/channel/travel"
+
 	feedbackComp "example.com/creditcard/components/feedback"
 	cashbackComp "example.com/creditcard/components/feedback/cashback"
+	pointbackComp "example.com/creditcard/components/feedback/pointback"
+
 	payloadComp "example.com/creditcard/components/payload"
+
 	rewardComp "example.com/creditcard/components/reward"
-	"example.com/creditcard/service/constraint"
+	"example.com/creditcard/service/bank"
+	"example.com/creditcard/service/channel"
 
 	cardM "example.com/creditcard/models/card"
-	constraintM "example.com/creditcard/models/constraint"
-	customizationM "example.com/creditcard/models/customization"
+	channelM "example.com/creditcard/models/channel"
 	feedbackM "example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
+	"example.com/creditcard/models/task"
 )
 
 type impl struct {
 	*dig.In
 
-	constraintService constraint.Service
+	channelService channel.Service
+	bankService    bank.Service
 }
 
 func New(
-	constraintService constraint.Service,
+	channelService channel.Service,
+	bankService bank.Service,
 ) Builder {
 	return &impl{
-		constraintService: constraintService,
+		channelService: channelService,
+		bankService:    bankService,
 	}
 
 }
 
-func (im *impl) BuildCardComponent(ctx context.Context, cardResp *cardM.CardResp) (cardComp.Component, error) {
+func (im *impl) BuildCardComponent(ctx context.Context, card *cardM.Card) (cardComp.Component, error) {
 
-	rewardMapper := make(map[rewardM.RewardType][]*rewardComp.Component)
+	rewardMapper := make(map[string][]*rewardComp.Component)
 
 	cardRewardOperatorMapper := make(map[rewardM.RewardType]cardM.CardRewardOperator)
 
-	for _, cr := range cardResp.CardRewardResps {
+	for _, cr := range card.CardRewards {
 
 		rewardType := cr.RewardType
 
 		cardRewardOperatorMapper[rewardType] = cr.CardRewardOperator
 
-		for _, r := range cr.RewardResps {
+		for _, r := range cr.Rewards {
 
 			payloadComponents := []*payloadComp.Component{}
 
-			for _, p := range r.PayloadResps {
-				constraintComponent, err := im.getConstraintComponent(ctx, p.ConstraintResp)
+			for _, p := range r.Payloads {
+				channelComponent, err := im.getChannelComponent(ctx, p.Channel)
 				if err != nil {
 					logrus.New().Error(err)
 					return nil, err
@@ -73,90 +89,123 @@ func (im *impl) BuildCardComponent(ctx context.Context, cardResp *cardM.CardResp
 					return nil, err
 				}
 
-				payloadComponent := payloadComp.New(p, constraintComponent, feedbackComponent)
+				payloadComponent := payloadComp.New(p, channelComponent, feedbackComponent)
 				payloadComponents = append(payloadComponents, &payloadComponent)
 			}
 
 			rewardComponent := rewardComp.New(cr.RewardType, r, payloadComponents)
 
-			if rewardCmp, ok := rewardMapper[cr.RewardType]; ok {
-				rewardMapper[cr.RewardType] = append(rewardCmp, &rewardComponent)
+			if rewardCmp, ok := rewardMapper[cr.ID]; ok {
+				rewardMapper[cr.ID] = append(rewardCmp, &rewardComponent)
 			} else {
 				rewardComponents := []*rewardComp.Component{}
 				rewardComponents = append(rewardComponents, &rewardComponent)
-				rewardMapper[cr.RewardType] = rewardComponents
+				rewardMapper[cr.ID] = rewardComponents
 			}
 
 		}
+
 	}
 
-	cardComponent := cardComp.New(cardResp, rewardMapper, cardRewardOperatorMapper)
+	cardComponent := cardComp.New(card, rewardMapper, cardRewardOperatorMapper, im.bankService)
 
 	return cardComponent, nil
 }
 
-func (im *impl) getConstraintComponent(ctx context.Context, constraintResp *constraintM.ConstraintResp) (*constraintComp.Component, error) {
+func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Channel) (*channelComp.Component, error) {
 
-	constraintType := constraintResp.ConstraintType
+	channelType := channel.ChannelType
 
-	var constraintComponent constraintComp.Component
+	var channelComponent channelComp.Component
 
-	switch constraintType {
-	case constraintM.InnerConstraintType:
+	switch channelType {
+	case channelM.InnerChannelType:
 
-		constraintComponents := []*constraintComp.Component{}
+		channelComponents := []*channelComp.Component{}
 
-		for _, c := range constraintResp.InnerConstraints {
-			constraintComponent, err := im.getConstraintComponent(ctx, c)
+		for _, c := range channel.InnerChannels {
+			channelComponent, err := im.getChannelComponent(ctx, c)
 			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"": err,
+					},
+				).Error(err)
 				return nil, err
 			}
-			constraintComponents = append(constraintComponents, constraintComponent)
+			channelComponents = append(channelComponents, channelComponent)
 		}
 
-		constraintComponent = constraintComp.New(constraintComponents, constraintResp)
+		channelComponent = channelComp.New(channelComponents, channel)
 
-	case constraintM.CustomizationType:
+		break
+	case channelM.TaskType:
 
-		customizations := []*customizationM.Customization{}
-
-		for _, c := range constraintResp.Customizations {
-			customization, err := im.constraintService.GetCustomizationByID(ctx, c.ID)
+		//
+		tasks := []*task.Task{}
+		for _, t := range channel.Tasks {
+			task, err := im.channelService.GetTaskByID(ctx, t)
 			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"": err,
+					},
+				).Error(err)
 				return nil, err
 			}
-			customizations = append(customizations, customization)
+
+			tasks = append(tasks, task)
 		}
 
-		constraintResp.Customizations = customizations
+		channelComponent = taskComp.New(channel, tasks)
 
-		constraintComponent = customizationComp.New(constraintResp)
-
-	case constraintM.TimeIntervalType:
-		constraintComponent = timeinterval.New(constraintResp)
-
-	case constraintM.MobilepayType:
-		constraintComponent = mobilepay.New(constraintResp)
-
-	case constraintM.EcommerceType:
-
-		constraintComponent = ecommerce.New(constraintResp)
-
-	case constraintM.SupermarketType:
-		constraintComponent = supermarket.New(constraintResp)
-
-	case constraintM.OnlinegameType:
-		constraintComponent = onlinegame.New(constraintResp)
-
-	case constraintM.StreamingType:
-		constraintComponent = streaming.New(constraintResp)
+		break
+	case channelM.MobilepayType:
+		channelComponent = mobilepayComp.New(channel)
+		break
+	case channelM.EcommerceType:
+		channelComponent = ecommerceComp.New(channel)
+		break
+	case channelM.SupermarketType:
+		channelComponent = supermarketComp.New(channel)
+		break
+	case channelM.OnlinegameType:
+		channelComponent = onlinegameComp.New(channel)
+		break
+	case channelM.StreamingType:
+		channelComponent = streamingComp.New(channel)
+		break
+	case channelM.FoodType:
+		channelComponent = foodComp.New(channel)
+		break
+	case channelM.TransportationType:
+		channelComponent = transportationComp.New(channel)
+		break
+	case channelM.DeliveryType:
+		channelComponent = deliveryComp.New(channel)
+		break
+	case channelM.TravelType:
+		channelComponent = travelComp.New(channel)
+		break
+	case channelM.InsuranceType:
+		channelComponent = insuranceComp.New(channel)
+		break
+	case channelM.MallType:
+		channelComponent = mallComp.New(channel)
+		break
+	case channelM.ConvenienceStoreType:
+		channelComponent = convenienceStoreComp.New(channel)
+		break
+	case channelM.SportType:
+		channelComponent = sportComp.New(channel)
+		break
 
 	default:
 		return nil, errors.New("failed in mapping contraint type")
 
 	}
 
-	return &constraintComponent, nil
+	return &channelComponent, nil
 }
 
 func (im *impl) getFeedbackComponent(ctx context.Context, rewardType rewardM.RewardType, feedback *feedbackM.Feedback) (*feedbackComp.Component, error) {
@@ -165,8 +214,18 @@ func (im *impl) getFeedbackComponent(ctx context.Context, rewardType rewardM.Rew
 	case rewardM.CASH_TWD:
 		cashbackComponent := cashbackComp.New(feedback.Cashback)
 		return &cashbackComponent, nil
-	case rewardM.POINT:
-		return nil, nil
+	case rewardM.LINE_POINT:
+		pointbackComponent := pointbackComp.New(feedback.Pointback)
+		return &pointbackComponent, nil
+	case rewardM.KUO_BROTHERS_POINT:
+		pointbackComponent := pointbackComp.New(feedback.Pointback)
+		return &pointbackComponent, nil
+	case rewardM.WOWPRIME_POINT:
+		pointbackComponent := pointbackComp.New(feedback.Pointback)
+		return &pointbackComponent, nil
+	case rewardM.OPEN_POINT:
+		pointbackComponent := pointbackComp.New(feedback.Pointback)
+		return &pointbackComponent, nil
 	default:
 		return nil, nil
 	}

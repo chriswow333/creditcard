@@ -3,7 +3,7 @@ package streaming
 import (
 	"context"
 
-	streamingM "example.com/creditcard/models/streaming"
+	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -22,9 +22,9 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO streaming " +
-	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
+	"(\"id\", \"name\") VALUES ($1, $2)"
 
-func (im *impl) Create(ctx context.Context, streaming *streamingM.Streaming) error {
+func (im *impl) Create(ctx context.Context, streaming *channel.Streaming) error {
 	tx, err := im.psql.Begin()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -38,7 +38,6 @@ func (im *impl) Create(ctx context.Context, streaming *streamingM.Streaming) err
 	updater := []interface{}{
 		streaming.ID,
 		streaming.Name,
-		streaming.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,10 +54,10 @@ func (im *impl) Create(ctx context.Context, streaming *streamingM.Streaming) err
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE streaming SET " +
-	" \"name\" = $1, \"image_path\" = $2 " +
-	" where \"id\" = $3"
+	" \"name\" = $1 " +
+	" where \"id\" = $2"
 
-func (im *impl) UpdateByID(ctx context.Context, streaming *streamingM.Streaming) error {
+func (im *impl) UpdateByID(ctx context.Context, streaming *channel.Streaming) error {
 	tx, err := im.psql.Begin()
 
 	if err != nil {
@@ -71,7 +70,6 @@ func (im *impl) UpdateByID(ctx context.Context, streaming *streamingM.Streaming)
 
 	updater := []interface{}{
 		streaming.Name,
-		streaming.ImagePath,
 		streaming.ID,
 	}
 
@@ -86,11 +84,11 @@ func (im *impl) UpdateByID(ctx context.Context, streaming *streamingM.Streaming)
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
 	" FROM streaming "
 
-func (im *impl) GetAll(ctx context.Context) ([]*streamingM.Streaming, error) {
-	streamings := []*streamingM.Streaming{}
+func (im *impl) GetAll(ctx context.Context) ([]*channel.Streaming, error) {
+	streamings := []*channel.Streaming{}
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -101,11 +99,10 @@ func (im *impl) GetAll(ctx context.Context) ([]*streamingM.Streaming, error) {
 
 	for rows.Next() {
 
-		streaming := &streamingM.Streaming{}
+		streaming := &channel.Streaming{}
 		selector := []interface{}{
 			&streaming.ID,
 			&streaming.Name,
-			&streaming.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -121,16 +118,15 @@ func (im *impl) GetAll(ctx context.Context) ([]*streamingM.Streaming, error) {
 	return streamings, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
 	" FROM streaming WHERE \"id\" = $1"
 
-func (im *impl) GetByID(ctx context.Context, ID string) (*streamingM.Streaming, error) {
-	streaming := &streamingM.Streaming{}
+func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Streaming, error) {
+	streaming := &channel.Streaming{}
 
 	selector := []interface{}{
 		&streaming.ID,
 		&streaming.Name,
-		&streaming.ImagePath,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

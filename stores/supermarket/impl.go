@@ -3,7 +3,7 @@ package supermarket
 import (
 	"context"
 
-	supermarketM "example.com/creditcard/models/supermarket"
+	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
@@ -22,9 +22,9 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO supermarket " +
-	"(\"id\", \"name\", \"image_path\") VALUES ($1, $2, $3)"
+	"(\"id\", \"name\") VALUES ($1, $2)"
 
-func (im *impl) Create(ctx context.Context, supermarket *supermarketM.Supermarket) error {
+func (im *impl) Create(ctx context.Context, supermarket *channel.Supermarket) error {
 	tx, err := im.psql.Begin()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -38,7 +38,6 @@ func (im *impl) Create(ctx context.Context, supermarket *supermarketM.Supermarke
 	updater := []interface{}{
 		supermarket.ID,
 		supermarket.Name,
-		supermarket.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,10 +54,10 @@ func (im *impl) Create(ctx context.Context, supermarket *supermarketM.Supermarke
 }
 
 const UPDATE_BY_ID_STAT = "UPDATE supermarket SET " +
-	" \"name\" = $1, \"image_path\" = $2 " +
-	" where \"id\" = $3"
+	" \"name\" = $1 " +
+	" where \"id\" = $2"
 
-func (im *impl) UpdateByID(ctx context.Context, supermarket *supermarketM.Supermarket) error {
+func (im *impl) UpdateByID(ctx context.Context, supermarket *channel.Supermarket) error {
 	tx, err := im.psql.Begin()
 
 	if err != nil {
@@ -71,7 +70,6 @@ func (im *impl) UpdateByID(ctx context.Context, supermarket *supermarketM.Superm
 
 	updater := []interface{}{
 		supermarket.Name,
-		supermarket.ImagePath,
 		supermarket.ID,
 	}
 
@@ -86,11 +84,11 @@ func (im *impl) UpdateByID(ctx context.Context, supermarket *supermarketM.Superm
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
 	" FROM supermarket "
 
-func (im *impl) GetAll(ctx context.Context) ([]*supermarketM.Supermarket, error) {
-	supermarkets := []*supermarketM.Supermarket{}
+func (im *impl) GetAll(ctx context.Context) ([]*channel.Supermarket, error) {
+	supermarkets := []*channel.Supermarket{}
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -101,11 +99,10 @@ func (im *impl) GetAll(ctx context.Context) ([]*supermarketM.Supermarket, error)
 
 	for rows.Next() {
 
-		supermarket := &supermarketM.Supermarket{}
+		supermarket := &channel.Supermarket{}
 		selector := []interface{}{
 			&supermarket.ID,
 			&supermarket.Name,
-			&supermarket.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -121,16 +118,15 @@ func (im *impl) GetAll(ctx context.Context) ([]*supermarketM.Supermarket, error)
 	return supermarkets, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
 	" FROM supermarket WHERE \"id\" = $1"
 
-func (im *impl) GetByID(ctx context.Context, ID string) (*supermarketM.Supermarket, error) {
-	supermarket := &supermarketM.Supermarket{}
+func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Supermarket, error) {
+	supermarket := &channel.Supermarket{}
 
 	selector := []interface{}{
 		&supermarket.ID,
 		&supermarket.Name,
-		&supermarket.ImagePath,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
