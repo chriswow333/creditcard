@@ -1,0 +1,181 @@
+
+
+
+{
+    "name":"基本0.3%",
+    "descs":[
+    ],
+    "cardID":"672a9223-6a5a-4335-682f-1ef7e14f3a6b",
+
+    "taskType":1,
+    "TaskTypeModel":{},
+    "defaultPass":true
+},
+// 4d3b14e7-591f-4d8b-7c47-1fd9f1a91132
+
+
+{
+    "name":"新戶加碼5%",
+    "descs":[
+    ],
+    "cardID":"672a9223-6a5a-4335-682f-1ef7e14f3a6b",
+
+    "taskType":1,
+    "TaskTypeModel":{},
+    "defaultPass":false
+},
+
+// f6380e39-39e8-4bff-4f71-9424b2fe9f71
+
+    {
+
+        "bankID":"6ad57003-8e97-4634-a171-fcc94a4e2b38",
+        "name":"OU點點卡",
+        
+        "imagePath":"card/sk_c20",
+        "cardStatus":0,
+        "linkURL":"https://www.skbank.com.tw/cc_introduction.html?cardId=C20",
+
+        "otherReward":[
+            {
+                "title":"",
+                "descs":[
+                    
+                ]
+            }
+        ]
+    },
+
+
+
+    {
+        "cardRewards":[
+            {
+                "cardID":"672a9223-6a5a-4335-682f-1ef7e14f3a6b",
+                "title":"新戶獨享五大網購、二大外送最高回饋10%！",
+                "descs":[
+                    "◆5大強打網購+2大外送平台◆",
+                    "基本回饋0.3%,回饋無上限",
+                    "新戶加碼5%於核卡後30日內,每戶回饋上限250元",
+                    "指定通路加碼4.7%,每戶回饋上限250元"
+                ],
+                "startDate":1650326400,
+                "endDate":1672531199,
+                "cardRewardOperator":1,
+                "rewardType":1,
+                "cardRewardBonus":{
+                    "totalBonus":10
+                },
+                "cardRewardLimitTypes":[],
+                "constraintPassLogics":[],
+                "rewards":[
+                    {
+                        "order":1,
+                        "payloadOperator":1,
+                        "payloads":[
+                            {
+                                "feedback":{
+                                    "cashback":{
+                                        "cashbackType":1,
+                                        "cashCalculateType":2,
+                                        "bonus":0.003,
+                                        "min":0,
+                                        "max":0
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":2,
+                                    "channelMappingType":1,
+                                    "tasks":[
+                                        "4d3b14e7-591f-4d8b-7c47-1fd9f1a91132"
+                                    ]
+                                }
+                            },
+                            {
+                                "feedback":{
+                                    "cashback":{
+                                        "cashbackType":1,
+                                        "cashCalculateType":2,
+                                        "bonus":0.05,
+                                        "min":0,
+                                        "max":5000
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":2,
+                                    "channelMappingType":1,
+                                    "tasks":[
+                                        "f6380e39-39e8-4bff-4f71-9424b2fe9f71"
+                                    ]
+                                }
+                            },
+                            {
+                                "feedback":{
+                                    "cashback":{
+                                        "cashbackType":1,
+                                        "cashCalculateType":2,
+                                        "bonus":0.047,
+                                        "min":0,
+                                        "max":5319.14
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":2,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":4,
+                                            "channelMappingType":1,
+                                            "ecommerces":[
+                                                "71cebd97-bdea-4bdb-921a-6ed48ef043f4",
+                                                "ad2e2c24-56b4-43bb-be64-1d7f8a432455",
+                                                "dc404a4d-a79e-4883-b84e-7009f4744260",
+                                                "6360eec3-9a3b-4499-aeb6-f19c10136624",
+                                                "eaa922c9-053d-4d56-a7e0-cdfe78b2a11f",
+                                                "6aa51e62-0d06-4b08-a4ec-fc7f77028b3f",
+                                                "9f7be288-2884-42ff-a68f-5609fba896b8",
+                                                "a0a2973a-37e8-48e1-af9c-64577a017411",
+                                                "edf8c28c-f254-4001-8b78-07b5f790669b",
+                                                "a1c32e39-a192-4ffd-86c8-41c7d560b57e",
+                                                "f3d17c14-1d76-4acc-a571-da3e4ab4d4f8",
+                                                "c7978b48-df1a-4512-96d3-ac9ed8543d89",
+                                                "7720f886-1920-4a13-b132-f393296b7eb7",
+                                                "76c838c8-9a89-4e0d-b461-f07912f05057",
+                                                "175ea548-3c82-4c98-8bf5-83970902098d",
+                                                "e8ac23f9-eb23-42e2-9c5d-789734da64a2",
+                                                "f2e4b992-f43f-405c-b6f4-16c979f1f362",
+                                                "ba85f632-d826-463c-a4c1-82e7131ae826",
+                                                "179ee110-06f7-48b6-abc7-2e2d41df222b"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":16,
+                                            "channelMappingType":1,
+                                            "appstores":[
+                                                "253d162f-c6e8-4a8d-a31e-ef1c77552b71",
+                                                "68672189-19c7-4be8-a764-e71a32e4542e"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":11,
+                                            "channelMappingType":1,
+                                            "deliveries":[
+                                                "86e3e8d1-c5e7-44ab-9e07-5f097a14905f",
+                                                "878fa435-93f6-4ee1-8e2d-0efcb91e7d6e"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }

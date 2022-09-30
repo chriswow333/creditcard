@@ -66,7 +66,7 @@
                 ],
                 "startDate":1656633600,
                 "endDate":1672531199,
-                "cardRewardOperator":2,
+                "cardRewardOperator":1,
                 "rewardType":1,
                 "cardRewardBonus":{
                     "totalBonus":13
@@ -144,7 +144,7 @@
                                             ]
                                         },
                                         {
-                                            "channelOperatorType":1,
+                                            "channelOperatorType":2,
                                             "channelType":3,
                                             "channelMappingType":1,
                                             "mobilepays":[
@@ -243,7 +243,7 @@
                                         "cashCalculateType":2,
                                         "bonus":0.1,
                                         "min":0,
-                                        "max":50
+                                        "max":500
                                     }
                                 },
                                 "channel":{
@@ -253,7 +253,7 @@
                                     "innerChannels":[
                                         {
                                             "channelOperatorType":1,
-                                            "channelType":2,
+                                            "channelType":3,
                                             "channelMappingType":1,
                                             "mobilepays":[
                                                 "81ceafb3-7e61-4a3f-81ad-d2f6ada8d1ff"

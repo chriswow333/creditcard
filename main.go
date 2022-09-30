@@ -25,6 +25,7 @@ import (
 	rewardChannelService "example.com/creditcard/service/reward_channel"
 
 	cardrewardBuilder "example.com/creditcard/builder/cardreward"
+	appStoreStore "example.com/creditcard/stores/appstore"
 	bankStore "example.com/creditcard/stores/bank"
 	cardStore "example.com/creditcard/stores/card"
 	cardRewardStore "example.com/creditcard/stores/card_reward"
@@ -82,6 +83,7 @@ func BuildContainer() *dig.Container {
 	container.Provide(conveniencestoreStore.New)
 	container.Provide(mallStore.New)
 	container.Provide(sportStore.New)
+	container.Provide(appStoreStore.New)
 
 	// builder
 	container.Provide(cardrewardBuilder.New)

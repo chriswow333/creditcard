@@ -10,6 +10,7 @@ import (
 	cardComp "example.com/creditcard/components/card"
 	channelComp "example.com/creditcard/components/channel"
 
+	appStoreComp "example.com/creditcard/components/channel/appstore"
 	convenienceStoreComp "example.com/creditcard/components/channel/conveniencestore"
 	deliveryComp "example.com/creditcard/components/channel/delivery"
 	ecommerceComp "example.com/creditcard/components/channel/ecommerce"
@@ -198,6 +199,9 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		break
 	case channelM.SportType:
 		channelComponent = sportComp.New(channel)
+		break
+	case channelM.AppStoreType:
+		channelComponent = appStoreComp.New(channel)
 		break
 
 	default:

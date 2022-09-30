@@ -27,15 +27,16 @@ const INSERT_CARD_REWARD_STAT = "INSERT INTO card_reward " +
 	" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)"
 
 func (im *impl) Create(ctx context.Context, cardReward *cardM.CardReward) error {
+
 	tx, err := im.psql.Begin()
+	defer tx.Rollback()
 
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
-			"": "",
+			"error": "create",
 		}).Error(err)
 		return err
 	}
-	defer tx.Rollback()
 
 	updater := []interface{}{
 		cardReward.ID,
@@ -53,7 +54,7 @@ func (im *impl) Create(ctx context.Context, cardReward *cardM.CardReward) error 
 	if _, err := tx.Exec(INSERT_CARD_REWARD_STAT, updater...); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"": "",
-		})
+		}).Error(err)
 		return err
 	}
 

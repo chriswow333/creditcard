@@ -35,7 +35,7 @@
                             "innerChannels":[
                                 {
                                     "channelOperatorType":2,
-                                    "channelType":2,
+                                    "channelType":3,
                                     "channelMappingType":1,
                                     "mobilepays":[
                                         "d642bc6d-c863-4746-8af8-91b7c60a07f7"

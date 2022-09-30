@@ -66,8 +66,11 @@ func NewChannelHandler(
 	apis.Handle(rg, http.MethodGet, "/sports", ch.getSports)
 	apis.Handle(rg, http.MethodGet, "/sport/:ID", ch.getSportByID)
 
-	apis.Handle(rg, http.MethodGet, "/convenienvestores", ch.getConvenienceStores)
-	apis.Handle(rg, http.MethodGet, "/convenienvestore/:ID", ch.getConvenienceStoreByID)
+	apis.Handle(rg, http.MethodGet, "/conveniencestores", ch.getConvenienceStores)
+	apis.Handle(rg, http.MethodGet, "/conveniencestore/:ID", ch.getConvenienceStoreByID)
+
+	apis.Handle(rg, http.MethodGet, "/appstores", ch.getAppstores)
+	apis.Handle(rg, http.MethodGet, "/appstore/:ID", ch.getAppstoreByID)
 }
 
 func (h *channelHandler) getTasksByCardID(ctx *gin.Context) {
@@ -442,6 +445,32 @@ func (h *channelHandler) getMallByID(ctx *gin.Context) {
 	ID := ctx.Param("ID")
 
 	resp, err := h.channelService.GetMall(ctx, ID)
+	if err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *channelHandler) getAppstores(ctx *gin.Context) {
+
+	resp, err := h.channelService.GetAllAppstores(ctx)
+	if err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *channelHandler) getAppstoreByID(ctx *gin.Context) {
+
+	ID := ctx.Param("ID")
+
+	resp, err := h.channelService.GetAppstore(ctx, ID)
 	if err != nil {
 		logrus.Error(err)
 		ctx.JSON(http.StatusInternalServerError, err)

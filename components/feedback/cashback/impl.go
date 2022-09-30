@@ -2,6 +2,9 @@ package cashback
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"strconv"
 
 	eventM "example.com/creditcard/models/event"
 
@@ -48,6 +51,7 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 	var actualUseCash int64 = 0
 	var actualCashReturn float64 = 0.0
 	var feedReturnStatus feedbackM.FeedReturnStatus = feedbackM.NONE
+	fmt.Println("pass " + strconv.FormatBool(pass))
 
 	if pass {
 		// 取得可使用的回饋花費金額
@@ -58,10 +62,14 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 		case feedbackM.BONUS_MULTIPLY_CASH:
 			actualUseCash, actualCashReturn, feedReturnStatus = im.multiplyCashReturn(ctx, total)
 			break
+		default:
+			return nil, errors.New("not found suitable im.Cashback.CashCalculateType")
 
 		}
 
 	}
+
+	fmt.Println(actualCashReturn)
 
 	feedReturn.FeedReturnStatus = feedReturnStatus
 	if feedReturnStatus == feedbackM.NONE {
@@ -98,7 +106,7 @@ func (im *impl) takeFixedCashReturn(ctx context.Context, cash int64) (int64, flo
 		} else if cash < im.Cashback.Min {
 			return 0, 0, feedbackM.NONE
 		} else {
-			return 0, 0, feedbackM.NONE
+			return int64(im.Cashback.Fixed), im.Cashback.Fixed, feedbackM.SOME
 		}
 
 	}
@@ -113,7 +121,7 @@ func (im *impl) multiplyCashReturn(ctx context.Context, cash int64) (int64, floa
 		if cash <= im.Cashback.Max {
 			return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL
 		} else {
-			return 0, 0, feedbackM.NONE
+			return cash, im.Cashback.Bonus * float64(im.Cashback.Max), feedbackM.SOME
 		}
 	} else if im.Cashback.Min != 0 && im.Cashback.Max == 0 {
 		if im.Cashback.Min <= cash {
@@ -127,7 +135,7 @@ func (im *impl) multiplyCashReturn(ctx context.Context, cash int64) (int64, floa
 		} else if cash < im.Cashback.Min {
 			return 0, 0, feedbackM.NONE
 		} else {
-			return im.Cashback.Max, im.Cashback.Bonus * float64(im.Cashback.Max), feedbackM.SOME
+			return int64(im.Cashback.Bonus), im.Cashback.Bonus * float64(cash), feedbackM.SOME
 		}
 	}
 

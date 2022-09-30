@@ -5,6 +5,7 @@ import (
 
 	"example.com/creditcard/models/channel"
 	"example.com/creditcard/models/task"
+	appStoreStore "example.com/creditcard/stores/appstore"
 	convenienceStoreStore "example.com/creditcard/stores/conveniencestore"
 	deliveryStore "example.com/creditcard/stores/delivery"
 	ecommerceStore "example.com/creditcard/stores/ecommerce"
@@ -42,6 +43,8 @@ type impl struct {
 	sportStore            sportStore.Store
 	convenienceStoreStore convenienceStoreStore.Store
 	mallStore             mallStore.Store
+
+	appStoreStore appStoreStore.Store
 }
 
 func New(
@@ -59,6 +62,7 @@ func New(
 	mallStore mallStore.Store,
 	sportStore sportStore.Store,
 	convenienceStoreStore convenienceStoreStore.Store,
+	appStoreStore appStoreStore.Store,
 
 ) Service {
 	return &impl{
@@ -76,6 +80,7 @@ func New(
 		mallStore:             mallStore,
 		sportStore:            sportStore,
 		convenienceStoreStore: convenienceStoreStore,
+		appStoreStore:         appStoreStore,
 	}
 }
 
@@ -385,4 +390,24 @@ func (im *impl) GetMall(ctx context.Context, ID string) (*channel.Mall, error) {
 	}
 
 	return mall, nil
+}
+
+func (im *impl) GetAllAppstores(ctx context.Context) ([]*channel.AppStore, error) {
+	appstoreStores, err := im.appStoreStore.GetAll(ctx)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return appstoreStores, nil
+}
+
+func (im *impl) GetAppstore(ctx context.Context, ID string) (*channel.AppStore, error) {
+	appStore, err := im.appStoreStore.GetByID(ctx, ID)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return appStore, nil
 }

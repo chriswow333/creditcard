@@ -1,4 +1,4 @@
-package delivery
+package appstore
 
 import (
 	"context"
@@ -25,7 +25,7 @@ func New(
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEventResp, error) {
 
 	channelEventResp := &channelM.ChannelEventResp{
-		ChannelType:         channelM.DeliveryType,
+		ChannelType:         channelM.AppStoreType,
 		ChannelOperatorType: im.channel.ChannelOperatorType,
 		ChannelMappingType:  im.channel.ChannelMappingType,
 	}
@@ -33,14 +33,14 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 	matches := []string{}
 	misses := []string{}
 
-	deliveryMap := make(map[string]bool)
+	appStoreMap := make(map[string]bool)
 
-	for _, ec := range e.Deliveries {
-		deliveryMap[ec] = true
+	for _, ec := range e.AppStores {
+		appStoreMap[ec] = true
 	}
 
-	for _, ec := range im.channel.Deliveries {
-		if _, ok := deliveryMap[ec]; ok {
+	for _, ec := range im.channel.AppStores {
+		if _, ok := appStoreMap[ec]; ok {
 			matches = append(matches, ec)
 		} else {
 			misses = append(misses, ec)

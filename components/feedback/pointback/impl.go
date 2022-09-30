@@ -96,7 +96,7 @@ func (im *impl) takeFixedPointReturn(ctx context.Context, cash int64) (int64, fl
 		if cash <= im.Pointback.Max {
 			return cash, im.Pointback.Fixed, feedbackM.ALL
 		} else {
-			return 0, 0, feedbackM.NONE
+			return 0, im.Pointback.Fixed, feedbackM.SOME
 		}
 
 	} else if im.Pointback.Min != 0 && im.Pointback.Max == 0 {
@@ -114,7 +114,7 @@ func (im *impl) takeFixedPointReturn(ctx context.Context, cash int64) (int64, fl
 		} else if cash < im.Pointback.Min {
 			return 0, 0, feedbackM.NONE
 		} else {
-			return 0, 0, feedbackM.NONE
+			return 0, im.Pointback.Fixed, feedbackM.SOME
 		}
 
 	}
@@ -132,7 +132,7 @@ func (im *impl) multiplyPointReturn(ctx context.Context, cash int64) (int64, flo
 		if cash <= im.Pointback.Max {
 			return cash, im.Pointback.Bonus * float64(cash), feedbackM.ALL
 		} else {
-			return 0, 0, feedbackM.NONE
+			return 0, im.Pointback.Bonus * float64(im.Pointback.Max), feedbackM.NONE
 		}
 
 	} else if im.Pointback.Min != 0 && im.Pointback.Max == 0 {

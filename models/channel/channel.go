@@ -33,6 +33,7 @@ const (
 	MallType
 	SportType
 	ConvenienceStoreType
+	AppStoreType
 )
 
 type Channel struct {
@@ -46,18 +47,18 @@ type Channel struct {
 
 	Tasks []string `json:"tasks,omitempty"`
 
-	Mobilepays      []string `json:"mobilepays,omitempty"`
-	Ecommerces      []string `json:"ecommerces,omitempty"`
-	Supermarkets    []string `json:"supermarkets,omitempty"`
-	Onlinegames     []string `json:"onlinegames,omitempty"`
-	Streamings      []string `json:"streamings,omitempty"`
-	Foods           []string `json:"foods,omitempty"`
-	Transportations []string `json:"transportations,omitempty"`
-	Deliveries      []string `json:"deliveries,omitempty"`
-	Travels         []string `json:"travels,omitempty"`
-	Insurances      []string `json:"insurances,omitempty"`
-
+	Mobilepays        []string `json:"mobilepays,omitempty"`
+	Ecommerces        []string `json:"ecommerces,omitempty"`
+	Supermarkets      []string `json:"supermarkets,omitempty"`
+	Onlinegames       []string `json:"onlinegames,omitempty"`
+	Streamings        []string `json:"streamings,omitempty"`
+	Foods             []string `json:"foods,omitempty"`
+	Transportations   []string `json:"transportations,omitempty"`
+	Deliveries        []string `json:"deliveries,omitempty"`
+	Travels           []string `json:"travels,omitempty"`
+	Insurances        []string `json:"insurances,omitempty"`
 	Malls             []string `json:"malls,omitempty"`
 	Conveniencestores []string `json:"conveniencestores,omitempty"`
 	Sports            []string `json:"sports,omitempty"`
+	AppStores         []string `json:"appstores,omitempty"`
 }

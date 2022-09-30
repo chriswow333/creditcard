@@ -25,4 +25,5 @@ type ChannelResp struct {
 	Malls             []*Mall             `json:"malls,omitempty"`
 	ConvenienceStores []*ConvenienceStore `json:"conveniencestores,omitempty"`
 	Sports            []*Sport            `json:"sports,omitempty"`
+	Appstores         []*AppStore         `json:"appstores,omitempty"`
 }

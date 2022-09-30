@@ -2,6 +2,8 @@ package customization
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"example.com/creditcard/components/channel"
@@ -53,9 +55,12 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 
 		case task.NONE:
 			pass = im.processNoneType(t, eventTaskMap)
+			break
 		case task.WEEKDAY:
 			pass = im.processWeekDayType(e, t, eventTaskMap)
-
+			break
+		default:
+			return nil, errors.New("not found task type")
 		}
 
 		if pass {
@@ -75,22 +80,30 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		} else {
 			channelEventResp.Pass = false
 		}
+		break
 	case channelM.AND:
 		if len(misses) > 0 || len(matches) == 0 {
 			channelEventResp.Pass = false
 		} else {
 			channelEventResp.Pass = true
 		}
+		break
+	default:
+		return nil, errors.New("not found channel operatortype")
 	}
 
 	if im.channel.ChannelMappingType == channelM.MISMATCH {
 		channelEventResp.Pass = !channelEventResp.Pass
 	}
 
+	fmt.Println("task component")
+	fmt.Println(channelEventResp.Pass)
+
 	return channelEventResp, nil
 }
 
 func (im *impl) processNoneType(t *task.Task, eventTaskMap map[string]bool) bool {
+	fmt.Println("t.ID : " + t.ID)
 	if _, ok := eventTaskMap[t.ID]; ok {
 		return true
 	} else if t.DefaultPass {

@@ -50,4 +50,7 @@ type Service interface {
 
 	GetAllMalls(ctx context.Context) ([]*channel.Mall, error)
 	GetMall(ctx context.Context, ID string) (*channel.Mall, error)
+
+	GetAllAppstores(ctx context.Context) ([]*channel.AppStore, error)
+	GetAppstore(ctx context.Context, ID string) (*channel.AppStore, error)
 }

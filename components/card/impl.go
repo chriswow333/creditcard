@@ -174,6 +174,15 @@ func (im *impl) calculateReturn(ctx context.Context,
 			PointReturn:      pointReturn,
 		}
 		break
+
+	case rewardM.OPEN_POINT:
+		pointReturn := im.calculatePointFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
+		cardRewardEventResp.FeedReturn = &feedbackM.FeedReturn{
+			FeedReturnStatus: feedbackM.ALL,
+			PointReturn:      pointReturn,
+		}
+		break
+
 	default:
 		return errors.New("no suitable reward type.")
 

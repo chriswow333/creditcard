@@ -2,6 +2,7 @@ package mobilepay
 
 import (
 	"context"
+	"fmt"
 
 	"example.com/creditcard/components/channel"
 	channelM "example.com/creditcard/models/channel"
@@ -69,5 +70,7 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		channelEventResp.Pass = !channelEventResp.Pass
 	}
 
+	fmt.Println("mobilepay component")
+	fmt.Println(channelEventResp.Pass)
 	return channelEventResp, nil
 }

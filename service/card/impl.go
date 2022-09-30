@@ -3,6 +3,7 @@ package card
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -162,6 +163,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 		malls := []*channelM.Mall{}
 		sports := []*channelM.Sport{}
 		convenienceStores := []*channelM.ConvenienceStore{}
+		appstores := []*channelM.AppStore{}
 
 		for _, rc := range rewrdChannels {
 
@@ -330,6 +332,17 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 				}
 				convenienceStores = append(convenienceStores, convenienceStore)
 				break
+			case int32(channelM.AppStoreType):
+
+				appstore, err := im.channelService.GetAppstore(ctx, rc.ChannelID)
+				if err != nil {
+					logrus.WithFields(logrus.Fields{
+						"": "",
+					}).Error(err)
+					return nil, err
+				}
+				appstores = append(appstores, appstore)
+				break
 
 			}
 		}
@@ -431,6 +444,13 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 			channelResps = append(channelResps, &channelM.ChannelResp{
 				ChannelType:       channelM.ConvenienceStoreType,
 				ConvenienceStores: convenienceStores,
+			})
+		}
+
+		if len(appstores) > 0 {
+			channelResps = append(channelResps, &channelM.ChannelResp{
+				ChannelType: channelM.AppStoreType,
+				Appstores:   appstores,
 			})
 		}
 
@@ -537,8 +557,8 @@ func (im *impl) CreateCardReward(ctx context.Context, cardReward *cardM.CardRewa
 
 	if err := im.cardRewardStore.Create(ctx, cardReward); err != nil {
 		logrus.WithFields(logrus.Fields{
-			"msg": err,
-		}).Fatal(err)
+			"msg": "",
+		}).Error(err)
 		return err
 	}
 
@@ -549,7 +569,7 @@ func (im *impl) CreateCardReward(ctx context.Context, cardReward *cardM.CardRewa
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"msg": "",
-			}).Fatal(err)
+			}).Error(err)
 			return err
 		}
 
@@ -608,6 +628,8 @@ func (im *impl) createRewardChannels(ctx context.Context, cardID, cardRewardID s
 				return err
 			}
 
+			fmt.Println(channelID)
+
 			rewardChannelM := &rewardChannelM.RewardChannel{
 				ID:           id.String(),
 				Order:        0,
@@ -635,6 +657,10 @@ func (im *impl) createRewardChannels(ctx context.Context, cardID, cardRewardID s
 
 func findAllChannelID(channel *channelM.Channel, channelTypeMap map[channelM.ChannelType]map[string]bool) error {
 
+	if channel.ChannelMappingType != channelM.MATCH {
+		return nil
+	}
+
 	switch channel.ChannelType {
 	case channelM.InnerChannelType:
 		for _, c := range channel.InnerChannels {
@@ -642,259 +668,169 @@ func findAllChannelID(channel *channelM.Channel, channelTypeMap map[channelM.Cha
 		}
 		break
 	case channelM.TaskType:
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, t := range channel.Tasks {
-				if _, ok := channelTypeMap[channel.ChannelType][t]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						t: true,
-					}
-				}
-			}
-		} else {
-			for _, t := range channel.Tasks {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					t: true,
-				}
-			}
+
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
+
+		for _, t := range channel.Tasks {
+			channelTypeMap[channel.ChannelType][t] = true
+		}
+
 		break
 	case channelM.MobilepayType:
 
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, m := range channel.Mobilepays {
-				if _, ok := channelTypeMap[channel.ChannelType][m]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						m: true,
-					}
-				}
-			}
-		} else {
-			for _, m := range channel.Mobilepays {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					m: true,
-				}
-			}
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, m := range channel.Mobilepays {
+			channelTypeMap[channel.ChannelType][m] = true
 		}
 
 		break
 	case channelM.EcommerceType:
 
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, e := range channel.Ecommerces {
-				if _, ok := channelTypeMap[channel.ChannelType][e]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						e: true,
-					}
-				}
-			}
-		} else {
-			for _, e := range channel.Ecommerces {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					e: true,
-				}
-			}
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, e := range channel.Ecommerces {
+			channelTypeMap[channel.ChannelType][e] = true
 		}
 
 		break
 	case channelM.SupermarketType:
 
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, s := range channel.Supermarkets {
-				if _, ok := channelTypeMap[channel.ChannelType][s]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						s: true,
-					}
-				}
-			}
-		} else {
-			for _, s := range channel.Supermarkets {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					s: true,
-				}
-			}
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, s := range channel.Supermarkets {
+			channelTypeMap[channel.ChannelType][s] = true
 		}
 
 		break
 	case channelM.OnlinegameType:
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, o := range channel.Onlinegames {
-				if _, ok := channelTypeMap[channel.ChannelType][o]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						o: true,
-					}
-				}
-			}
-		} else {
-			for _, o := range channel.Onlinegames {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					o: true,
-				}
-			}
+
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, o := range channel.Onlinegames {
+			channelTypeMap[channel.ChannelType][o] = true
 		}
 
 		break
 	case channelM.StreamingType:
 
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, s := range channel.Streamings {
-				if _, ok := channelTypeMap[channel.ChannelType][s]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						s: true,
-					}
-				}
-			}
-		} else {
-			for _, s := range channel.Streamings {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					s: true,
-				}
-			}
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
+
+		for _, s := range channel.Streamings {
+			channelTypeMap[channel.ChannelType][s] = true
+		}
+
 		break
 	case channelM.FoodType:
 
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, f := range channel.Foods {
-				if _, ok := channelTypeMap[channel.ChannelType][f]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						f: true,
-					}
-				}
-			}
-		} else {
-			for _, f := range channel.Foods {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					f: true,
-				}
-			}
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, f := range channel.Foods {
+			channelTypeMap[channel.ChannelType][f] = true
 		}
 
 		break
 	case channelM.TransportationType:
 
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, t := range channel.Transportations {
-				if _, ok := channelTypeMap[channel.ChannelType][t]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						t: true,
-					}
-				}
-			}
-		} else {
-			for _, t := range channel.Transportations {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					t: true,
-				}
-			}
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, t := range channel.Transportations {
+			channelTypeMap[channel.ChannelType][t] = true
 		}
 
 		break
 	case channelM.TravelType:
 
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, t := range channel.Travels {
-				if _, ok := channelTypeMap[channel.ChannelType][t]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						t: true,
-					}
-				}
-			}
-		} else {
-			for _, t := range channel.Travels {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					t: true,
-				}
-			}
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
+
+		for _, t := range channel.Travels {
+			channelTypeMap[channel.ChannelType][t] = true
+		}
+
 		break
 	case channelM.DeliveryType:
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, d := range channel.Deliveries {
-				if _, ok := channelTypeMap[channel.ChannelType][d]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						d: true,
-					}
-				}
-			}
-		} else {
-			for _, d := range channel.Deliveries {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					d: true,
-				}
-			}
+
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
+
+		for _, d := range channel.Deliveries {
+			channelTypeMap[channel.ChannelType][d] = true
+		}
+
 		break
 	case channelM.InsuranceType:
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, i := range channel.Insurances {
-				if _, ok := channelTypeMap[channel.ChannelType][i]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						i: true,
-					}
-				}
-			}
-		} else {
-			for _, i := range channel.Insurances {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					i: true,
-				}
-			}
+
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
+
+		for _, i := range channel.Insurances {
+			channelTypeMap[channel.ChannelType][i] = true
+		}
+
 		break
 	case channelM.MallType:
 
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, m := range channel.Malls {
-				if _, ok := channelTypeMap[channel.ChannelType][m]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						m: true,
-					}
-				}
-			}
-		} else {
-			for _, m := range channel.Malls {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					m: true,
-				}
-			}
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, m := range channel.Malls {
+			channelTypeMap[channel.ChannelType][m] = true
 		}
 
 		break
 	case channelM.SportType:
 
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, s := range channel.Sports {
-				if _, ok := channelTypeMap[channel.ChannelType][s]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						s: true,
-					}
-				}
-			}
-		} else {
-			for _, s := range channel.Sports {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					s: true,
-				}
-			}
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, s := range channel.Sports {
+			channelTypeMap[channel.ChannelType][s] = true
 		}
 
 		break
 	case channelM.ConvenienceStoreType:
-		if _, ok := channelTypeMap[channel.ChannelType]; ok {
-			for _, c := range channel.Conveniencestores {
-				if _, ok := channelTypeMap[channel.ChannelType][c]; !ok {
-					channelTypeMap[channel.ChannelType] = map[string]bool{
-						c: true,
-					}
-				}
-			}
-		} else {
-			for _, c := range channel.Conveniencestores {
-				channelTypeMap[channel.ChannelType] = map[string]bool{
-					c: true,
-				}
-			}
+
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
+
+		for _, c := range channel.Conveniencestores {
+			channelTypeMap[channel.ChannelType][c] = true
+		}
+
+		break
+
+	case channelM.AppStoreType:
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, c := range channel.AppStores {
+			channelTypeMap[channel.ChannelType][c] = true
+		}
+
 		break
 
 	default:

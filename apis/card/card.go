@@ -50,12 +50,11 @@ func (h *cardHandler) createCardReward(ctx *gin.Context) {
 
 	ctx.BindJSON(&carRewardModel)
 
-	err := h.cardSrc.CreateCardReward(ctx, &carRewardModel)
-
-	if err != nil {
+	if err := h.cardSrc.CreateCardReward(ctx, &carRewardModel); err != nil {
 		ctx.JSON(http.StatusInternalServerError, "")
 		return
 	}
+
 	ctx.JSON(http.StatusOK, gin.H{"data": "ok"})
 }
 

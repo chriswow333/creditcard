@@ -2,8 +2,10 @@ package reward
 
 import (
 	"context"
+	"errors"
 
 	payloadComp "example.com/creditcard/components/payload"
+	"github.com/sirupsen/logrus"
 
 	eventM "example.com/creditcard/models/event"
 	feedbackM "example.com/creditcard/models/feedback"
@@ -155,8 +157,32 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 
 		break
 
-	default:
+	case rewardM.OPEN_POINT:
+		pointReturn, err := im.calculatePointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
 
+		if err != nil {
+			return nil, err
+		}
+
+		pointReturn.CurrentCash = int64(e.Cash)
+		pointReturn.TotalCash = e.Cash
+
+		if pointReturn.ActualUseCash == pointReturn.CurrentCash {
+			rewardEventResp.RewardEventJudgeType = rewardM.ALL
+		} else if pointReturn.ActualUseCash == 0 {
+			rewardEventResp.RewardEventJudgeType = rewardM.NONE
+		} else {
+			rewardEventResp.RewardEventJudgeType = rewardM.SOME
+		}
+
+		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
+			PointReturn: pointReturn,
+		}
+
+		break
+	default:
+		logrus.Error("not found reward type in reward component")
+		return nil, errors.New("not found reward type in reward component")
 	}
 
 	return rewardEventResp, nil
