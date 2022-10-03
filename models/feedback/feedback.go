@@ -11,6 +11,7 @@ const (
 type Feedback struct {
 	Cashback  *Cashback  `json:"cashback,omitempty"`
 	Pointback *Pointback `json:"pointback,omitempty"`
+	Redback   *Redback   `json:"redback,omitempty"`
 }
 
 type FeedReturn struct {
@@ -18,4 +19,5 @@ type FeedReturn struct {
 
 	CashReturn  *CashReturn  `json:"cashReturn,omitempty"`
 	PointReturn *PointReturn `json:"pointReturn,omitempty"`
+	RedReturn   *RedReturn   `json:"redReturn,omitempty"`
 }

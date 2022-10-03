@@ -63,8 +63,6 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 
 	for _, cr := range im.card.CardRewards {
 
-		fmt.Println(cr.CardID)
-
 		if len(e.CardRewardIDs) != 0 {
 
 			matchedCardRewardID := false
@@ -136,8 +134,6 @@ func (im *impl) calculateReturn(ctx context.Context,
 	cr *cardM.CardReward, rewardEventResps []*rewardM.RewardEventResp,
 	cardRewardEventResp *cardM.CardRewardEventResp) error {
 
-	fmt.Println("reward type: ", cr.RewardType)
-
 	switch cr.RewardType {
 	case rewardM.CASH_TWD:
 
@@ -183,12 +179,108 @@ func (im *impl) calculateReturn(ctx context.Context,
 		}
 		break
 
+	case rewardM.RED_POINT:
+
+		redReturn := im.calculateRedFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
+
+		cardRewardEventResp.FeedReturn = &feedbackM.FeedReturn{
+			FeedReturnStatus: feedbackM.ALL,
+			RedReturn:        redReturn,
+		}
+
+		break
+
 	default:
 		return errors.New("no suitable reward type.")
 
 	}
 
 	return nil
+}
+
+func (im *impl) calculateRedFeedReturn(ctx context.Context, cardRewardOperator cardM.CardRewardOperator, rewardEventResps []*rewardM.RewardEventResp) *feedbackM.RedReturn {
+
+	redReturn := &feedbackM.RedReturn{}
+
+	var totalCash float64 = 0.0
+	var currentCash int64 = 0
+
+	var isRedbackGet bool = false
+	var redbackTimes int64 = 0.0
+
+	var actualUseCash int64 = 0
+	var actualRedback float64 = 0.0
+
+	switch cardRewardOperator {
+	case cardM.ADD:
+
+		for _, r := range rewardEventResps {
+
+			if r.RewardEventJudgeType == rewardM.NONE {
+				continue
+			}
+
+			totalCash = r.FeedReturn.RedReturn.TotalCash
+			currentCash = r.FeedReturn.RedReturn.CurrentCash
+
+			if r.FeedReturn.RedReturn.IsRedGet {
+
+				isRedbackGet = true
+
+				if actualUseCash < r.FeedReturn.RedReturn.ActualUseCash {
+					// get max actual use cash
+					actualUseCash = r.FeedReturn.RedReturn.ActualUseCash
+				}
+				redbackTimes += r.FeedReturn.RedReturn.RedbackTimes
+				actualRedback += r.FeedReturn.RedReturn.ActualRedback
+
+			}
+
+		}
+
+		redReturn.IsRedGet = isRedbackGet
+		redReturn.ActualRedback = actualRedback
+		redReturn.ActualUseCash = actualUseCash
+		redReturn.CurrentCash = currentCash
+		redReturn.TotalCash = totalCash
+		redReturn.RedbackTimes = redbackTimes
+
+		break
+
+	case cardM.MAXONE:
+		for _, r := range rewardEventResps {
+			if r.FeedReturn.RedReturn.IsRedGet {
+				if redbackTimes <= r.FeedReturn.RedReturn.RedbackTimes {
+					isRedbackGet = true
+					redbackTimes = r.FeedReturn.RedReturn.RedbackTimes
+					actualUseCash = r.FeedReturn.RedReturn.ActualUseCash
+					actualRedback = r.FeedReturn.RedReturn.ActualRedback
+					currentCash = r.FeedReturn.RedReturn.CurrentCash
+					totalCash = r.FeedReturn.RedReturn.TotalCash
+				}
+			}
+		}
+
+		redReturn.IsRedGet = isRedbackGet
+		redReturn.ActualRedback = actualRedback
+		redReturn.ActualUseCash = actualUseCash
+		redReturn.CurrentCash = currentCash
+		redReturn.TotalCash = totalCash
+		redReturn.RedbackTimes = redbackTimes
+
+		break
+
+	default:
+		logrus.Error("calculatePointFeedReturn Error operator")
+
+		redReturn.IsRedGet = isRedbackGet
+		redReturn.ActualRedback = actualRedback
+		redReturn.ActualUseCash = actualUseCash
+		redReturn.CurrentCash = currentCash
+		redReturn.TotalCash = totalCash
+		redReturn.RedbackTimes = redbackTimes
+	}
+	return redReturn
 }
 
 func (im *impl) calculatePointFeedReturn(ctx context.Context,

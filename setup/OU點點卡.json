@@ -176,6 +176,49 @@
                         ]
                     }
                 ]
+            },
+
+            {
+
+                "cardID":"672a9223-6a5a-4335-682f-1ef7e14f3a6b",
+                "title":"扣繳新光人壽保費享12期零利率或1.1%現金回饋",
+                "descs":[],
+                "startDate":1641078000,
+                "endDate":1672531199,
+                "cardRewardOperator":2,
+                "rewardType":1,
+                "cardRewardBonus":{
+                    "totalBonus":1.1
+                },
+                "cardRewardLimitTypes":[],
+                "constraintPassLogics":[],
+                "rewards":[
+                    {
+                        "order":6,
+                        "payloadOperator":2,
+                        "payloads":[
+                            {
+                                "feedback":{
+                                    "cashback":{
+                                        "cashbackType":1,
+                                        "cashCalculateType":2,
+                                        "bonus":0.011,
+                                        "min":0,
+                                        "max":0
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":12,
+                                    "channelMappingType":1,
+                                    "insurances":[
+                                        "c55fb5dc-12d8-4ffa-acda-ee0be244082f"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     }

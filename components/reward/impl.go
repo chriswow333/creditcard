@@ -3,6 +3,7 @@ package reward
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	payloadComp "example.com/creditcard/components/payload"
 	"github.com/sirupsen/logrus"
@@ -180,12 +181,113 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 		}
 
 		break
+
+	case rewardM.RED_POINT:
+		redReturn, err := im.calculateRedPointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
+
+		if err != nil {
+			return nil, err
+		}
+
+		redReturn.CurrentCash = int64(e.Cash)
+		redReturn.TotalCash = e.Cash
+		fmt.Println(redReturn.ActualUseCash)
+		if redReturn.ActualUseCash == redReturn.CurrentCash {
+			rewardEventResp.RewardEventJudgeType = rewardM.ALL
+		} else if redReturn.ActualUseCash == 0 {
+			rewardEventResp.RewardEventJudgeType = rewardM.NONE
+		} else {
+			rewardEventResp.RewardEventJudgeType = rewardM.SOME
+		}
+
+		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
+			RedReturn: redReturn,
+		}
+
+		break
 	default:
 		logrus.Error("not found reward type in reward component")
 		return nil, errors.New("not found reward type in reward component")
 	}
 
 	return rewardEventResp, nil
+}
+
+func (im *impl) calculateRedPointReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadEventResps []*payloadM.PayloadEventResp) (*feedbackM.RedReturn, error) {
+
+	redReturn := &feedbackM.RedReturn{}
+
+	switch operator {
+	case rewardM.ADD:
+
+		var totalCash float64 = 0.0
+		var currentCash int64 = 0
+
+		var isRedbackGet bool = false
+		var redbackTimes int64 = 0.0
+
+		var actualUseCash int64 = 0
+		var actualRedBack float64 = 0.0
+
+		for _, p := range payloadEventResps {
+
+			totalCash = p.FeedReturn.RedReturn.TotalCash
+			currentCash = p.FeedReturn.RedReturn.CurrentCash
+
+			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
+				isRedbackGet = true
+
+				if actualUseCash < p.FeedReturn.RedReturn.ActualUseCash {
+					// get max actual use cash
+					actualUseCash = p.FeedReturn.RedReturn.ActualUseCash
+				}
+
+				actualRedBack += p.FeedReturn.RedReturn.ActualRedback
+				redbackTimes += p.FeedReturn.RedReturn.RedbackTimes
+			}
+
+		}
+
+		redReturn.IsRedGet = isRedbackGet
+		redReturn.ActualRedback = actualRedBack
+		redReturn.ActualUseCash = actualUseCash
+		redReturn.CurrentCash = currentCash
+		redReturn.TotalCash = totalCash
+		redReturn.RedbackTimes = redbackTimes
+
+		break
+	case rewardM.MAXONE:
+
+		var maxBonus int64 = 0
+
+		var atLeastOnePass = false
+
+		finalPayload := &payloadM.PayloadEventResp{}
+		for _, p := range payloadEventResps {
+			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
+				if maxBonus < p.FeedReturn.RedReturn.RedbackTimes {
+					finalPayload = p
+					maxBonus = p.FeedReturn.RedReturn.RedbackTimes
+				}
+				atLeastOnePass = true
+			}
+		}
+
+		if atLeastOnePass {
+			redReturn.IsRedGet = finalPayload.FeedReturn.RedReturn.IsRedGet
+			redReturn.ActualRedback = finalPayload.FeedReturn.RedReturn.ActualRedback
+			redReturn.ActualUseCash = finalPayload.FeedReturn.RedReturn.ActualUseCash
+			redReturn.CurrentCash = finalPayload.FeedReturn.RedReturn.CurrentCash
+			redReturn.TotalCash = finalPayload.FeedReturn.RedReturn.TotalCash
+			redReturn.RedbackTimes = maxBonus
+		}
+
+		break
+	default:
+
+	}
+
+	return redReturn, nil
 }
 
 func (im *impl) calculatePointReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadEventResps []*payloadM.PayloadEventResp) (*feedbackM.PointReturn, error) {

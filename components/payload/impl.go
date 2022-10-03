@@ -2,7 +2,6 @@ package payload
 
 import (
 	"context"
-	"fmt"
 
 	"example.com/creditcard/components/channel"
 
@@ -75,17 +74,13 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.Payload
 
 		payloadEventResp.PayloadEventJudgeType = payloadM.NONE
 	}
-
 	return payloadEventResp, nil
 }
 
 func (im *impl) processFeedReturn(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.FeedReturn, error) {
 
 	// 計算回饋額
-	fmt.Println(im.payload.ID)
-	fmt.Println((*im.feedbackComponent))
 	feedReturn, err := (*im.feedbackComponent).Calculate(ctx, e, pass)
-
 	if err != nil {
 		return nil, err
 	}

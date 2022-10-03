@@ -1,0 +1,362 @@
+
+
+
+
+
+
+    {
+
+        "bankID":"6ad57003-8e97-4634-a171-fcc94a4e2b38",
+        "name":"新光三越聯名卡",
+        
+        "imagePath":"card/sk_c03",
+        "cardStatus":0,
+        "linkURL":"https://www.skbank.com.tw/cc_introduction.html?cardId=C03",
+
+        "otherReward":[
+            {
+                "title":"",
+                "descs":[
+                    
+                ]
+            }
+     
+        ]
+    }
+
+
+
+    {
+        "name":"卡友生日禮3%回饋%",
+        "descs":[
+            "正卡人生日當月於新光三越館內skm pay累計消費滿NT$5,000(含)以上，享3%刷卡金回饋。",
+            "(需登錄，最高300元)"
+        ],
+        "cardID":"ae9d35ea-479b-4094-7134-ad9c48d83312",
+        "taskType":1,
+        "TaskTypeModel":{},
+        "defaultPass":false
+    },
+
+
+    {
+        "cardRewards":[
+            {
+                "cardID":"ae9d35ea-479b-4094-7134-ad9c48d83312",
+                "title":"指定通路樂享10%回饋!",
+                "descs":[
+                    "活動期間內持新光三越聯名卡於每月指定通路消費，享10%刷卡金回饋!",
+                    "(需登錄，每月每歸戶最高回饋50元)"
+                ],
+                "startDate":1656633600,
+                "endDate":1672531199,
+                "cardRewardOperator":1,
+                "rewardType":1,
+                "cardRewardBonus":{
+                    "totalBonus":10
+                },
+                "cardRewardLimitTypes":[
+                    3
+                ],
+                "constraintPassLogics":[], 
+                "rewards":[
+                    {
+                        "order":0,
+                        "payloadOperator":1,
+                        "payloads":[
+                            {
+                                "feedback":{
+                                    "cashback":{
+                                        "cashbackType":1,
+                                        "cashCalculateType":2,
+                                        "bonus":0.1,
+                                        "min":0,
+                                        "max":500
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":2,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":9,
+                                            "channelMappingType":1,
+                                            "transportations":[
+                                                "3276bfc6-8d30-4ce0-80ad-6465fdd7f692",
+                                                "88c0dc96-7c17-47a7-be33-1bffdadcd13a"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":11,
+                                            "channelMappingType":1,
+                                            "deliveries":[
+                                                "86e3e8d1-c5e7-44ab-9e07-5f097a14905f",
+                                                "878fa435-93f6-4ee1-8e2d-0efcb91e7d6e"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+
+
+            {
+                "cardID":"ae9d35ea-479b-4094-7134-ad9c48d83312",
+                "title":"全館購物正品9折起",
+                "descs":[
+                    "持聯名卡於全館刷卡消費，一般商品平日可享9折或95折優惠，拍賣期間部份商品可再享95折。",
+                    "※公賣品、特價品、餐飲及部份商品除外。 "
+                ],
+                "startDate":1656633600,
+                "endDate":1672531199,
+                "cardRewardOperator":1,
+                "rewardType":1,
+                "cardRewardBonus":{
+                    "totalBonus":0
+                },
+                "cardRewardLimitTypes":[
+                    3
+                ],
+                "constraintPassLogics":[], 
+                "rewards":[
+                    {
+                        "order":0,
+                        "payloadOperator":1,
+                        "payloads":[
+                            {
+                                "feedback":{
+                                    "cashback":{
+                                        "cashbackType":1,
+                                        "cashCalculateType":2,
+                                        "bonus":0.1,
+                                        "min":0,
+                                        "max":0
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":2,
+                                    "channelType":13,
+                                    "channelMappingType":1,
+                                    "malls":[
+                                        "f79484d1-7bec-4906-8cb3-f0eedb0ef798"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+
+
+            {
+                "cardID":"ae9d35ea-479b-4094-7134-ad9c48d83312",
+                "title":"卡友生日禮3%回饋",
+                "descs":[
+                    "正卡人生日當月於新光三越館內skm pay累計消費滿NT$5,000(含)以上，享3%刷卡金回饋。",
+                    "(需登錄，最高300元)"
+                ],
+                "startDate":1640995200,
+                "endDate":1672531199,
+                "cardRewardOperator":1,
+                "rewardType":1,
+                "cardRewardBonus":{
+                    "totalBonus":3
+                },
+                "cardRewardLimitTypes":[
+                    3
+                ],
+                "constraintPassLogics":[], 
+                "rewards":[
+                    {
+                        "order":0,
+                        "payloadOperator":1,
+                        "payloads":[
+                            {
+                                "feedback":{
+                                    "cashback":{
+                                        "cashbackType":1,
+                                        "cashCalculateType":2,
+                                        "bonus":0.03,
+                                        "min":5000,
+                                        "max":0
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":13,
+                                            "channelMappingType":1,
+                                            "malls":[
+                                                "f79484d1-7bec-4906-8cb3-f0eedb0ef798"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":2,
+                                            "channelMappingType":1,
+                                            "tasks":[
+                                                "106d9c82-783b-460c-54c0-f04d580bca77"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":3,
+                                            "channelMappingType":1,
+                                            "mobilepays":[
+                                                "c9538a49-73e8-44d0-865b-7ebf38eeedfb"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+
+
+            {
+                "cardID":"ae9d35ea-479b-4094-7134-ad9c48d83312",
+                "title":"館內紅利點數最高3倍送",
+                "descs":[
+                    "館內單筆消費滿NT3,000(含)以上交易享",
+                    "● 平日週一至週四 : 紅利點數2倍(含原本1倍)。",
+                    "● 假日週五至週日 : 紅利點數3倍(含原本1倍)。"
+                ],
+                "startDate":1656633600,
+                "endDate":1672531199,
+                "cardRewardOperator":2,
+                "rewardType":6,
+                "cardRewardBonus":{
+                    "totalBonus":0
+                },
+                "cardRewardLimitTypes":[
+                    3
+                ],
+                "constraintPassLogics":[], 
+                "rewards":[
+                    {
+                        "order":0,
+                        "payloadOperator":2,
+                        "payloads":[
+                            {
+                                "feedback":{
+                                    "redback":{
+                                        "redCalculateType":1,
+                                        "min":3000,
+                                        "max":0,
+                                        "times":2
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":13,
+                                            "channelMappingType":1,
+                                            "malls":[
+                                                "f79484d1-7bec-4906-8cb3-f0eedb0ef798"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":2,
+                                            "channelMappingType":1,
+                                            "tasks":[
+                                                "529d8a92-739b-4979-4301-12d122055854"
+                                            ]
+                                        }
+                                    ],
+                                    
+                                }
+                            },
+                            {
+                                "feedback":{
+                                    "redback":{
+                                        "redCalculateType":1,
+                                        "min":3000,
+                                        "max":0,
+                                        "times":3
+                                    }
+                                },
+                                "channel":{
+
+                                    "channelOperatorType":1,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":13,
+                                            "channelMappingType":1,
+                                            "malls":[
+                                                "f79484d1-7bec-4906-8cb3-f0eedb0ef798"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":2,
+                                            "channelMappingType":1,
+                                            "tasks":[
+                                                "aaf859bf-4d97-429a-4150-3262c53135d3"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+
+            }
+        ]
+
+    }
+
+
+    {
+        "name":"平日週一至週四 : 紅利點數2倍(含原本1倍)",
+        "descs":[
+            ""
+        ],
+        "cardID":"ae9d35ea-479b-4094-7134-ad9c48d83312",
+        "taskType":2,
+        "TaskTypeModel":{
+            "weekDayLimit":{
+                "weekDays":[
+                    1,2,3,4
+                ]
+            }
+        },
+        "defaultPass":false
+    }
+
+    {
+        "name":"● 假日週五至週日 : 紅利點數3倍(含原本1倍)。",
+        "descs":[
+            ""
+        ],
+        "cardID":"ae9d35ea-479b-4094-7134-ad9c48d83312",
+        "taskType":2,
+        "TaskTypeModel":{
+            "weekDayLimit":{
+                "weekDays":[
+                    5,6,7
+                ]
+            }
+        },
+        "defaultPass":false
+    }

@@ -40,7 +40,7 @@ func (r *BankRoute) Create(ctx context.Context, in *pb.BankCreateRequest) (*pb.B
 	if err := r.bankService.Create(ctx, bank); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"msg": "",
-		}).Fatal(err)
+		}).Error(err)
 		resp := &pb.BankCreateReply{
 			Success: false,
 			Msg:     "error",

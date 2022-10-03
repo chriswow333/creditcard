@@ -29,6 +29,7 @@ import (
 	feedbackComp "example.com/creditcard/components/feedback"
 	cashbackComp "example.com/creditcard/components/feedback/cashback"
 	pointbackComp "example.com/creditcard/components/feedback/pointback"
+	redbackComp "example.com/creditcard/components/feedback/redback"
 
 	payloadComp "example.com/creditcard/components/payload"
 
@@ -230,7 +231,14 @@ func (im *impl) getFeedbackComponent(ctx context.Context, rewardType rewardM.Rew
 	case rewardM.OPEN_POINT:
 		pointbackComponent := pointbackComp.New(feedback.Pointback)
 		return &pointbackComponent, nil
+
+	case rewardM.RED_POINT:
+		redbackComponent := redbackComp.New(feedback.Redback)
+		return &redbackComponent, nil
 	default:
-		return nil, nil
+		logrus.WithFields(logrus.Fields{
+			"cardReward.getFeedbackComponent": "reward not found",
+		}).Error()
+		return nil, errors.New("not found reward type")
 	}
 }

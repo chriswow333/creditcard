@@ -12,6 +12,8 @@ const (
 	KUO_BROTHERS_POINT // 生活市集幣
 	WOWPRIME_POINT     // 王品瘋點數
 	OPEN_POINT         // OPEN POINT
+
+	RED_POINT // 紅利點數
 )
 
 type PayloadOperator int32
