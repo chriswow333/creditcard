@@ -69,8 +69,6 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 
 	}
 
-	fmt.Println(actualCashReturn)
-
 	feedReturn.FeedReturnStatus = feedReturnStatus
 	if feedReturnStatus == feedbackM.NONE {
 		cashReturn.IsCashbackGet = false
@@ -92,7 +90,7 @@ func (im *impl) takeFixedCashReturn(ctx context.Context, cash int64) (int64, flo
 		if cash <= im.Cashback.Max {
 			return cash, im.Cashback.Fixed, feedbackM.ALL
 		} else {
-			return 0, 0, feedbackM.NONE
+			return int64(im.Cashback.Fixed), im.Cashback.Fixed, feedbackM.SOME
 		}
 	} else if im.Cashback.Min != 0 && im.Cashback.Max == 0 {
 		if im.Cashback.Min <= cash {

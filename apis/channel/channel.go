@@ -71,6 +71,16 @@ func NewChannelHandler(
 
 	apis.Handle(rg, http.MethodGet, "/appstores", ch.getAppstores)
 	apis.Handle(rg, http.MethodGet, "/appstore/:ID", ch.getAppstoreByID)
+
+	apis.Handle(rg, http.MethodGet, "/hotels", ch.getHotels)
+	apis.Handle(rg, http.MethodGet, "/hotel/:ID", ch.getHotelByID)
+
+	apis.Handle(rg, http.MethodGet, "/amusements", ch.getAmusements)
+	apis.Handle(rg, http.MethodGet, "/amusement/:ID", ch.getAmusementlByID)
+
+	apis.Handle(rg, http.MethodGet, "/cinemas", ch.getCinemas)
+	apis.Handle(rg, http.MethodGet, "/cinema/:ID", ch.getCinemaByID)
+
 }
 
 func (h *channelHandler) getTasksByCardID(ctx *gin.Context) {
@@ -471,6 +481,84 @@ func (h *channelHandler) getAppstoreByID(ctx *gin.Context) {
 	ID := ctx.Param("ID")
 
 	resp, err := h.channelService.GetAppstore(ctx, ID)
+	if err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *channelHandler) getHotels(ctx *gin.Context) {
+
+	resp, err := h.channelService.GetAllHotels(ctx)
+	if err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *channelHandler) getHotelByID(ctx *gin.Context) {
+
+	ID := ctx.Param("ID")
+
+	resp, err := h.channelService.GetHotel(ctx, ID)
+	if err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *channelHandler) getAmusements(ctx *gin.Context) {
+
+	resp, err := h.channelService.GetAllAmusemnets(ctx)
+	if err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *channelHandler) getAmusementlByID(ctx *gin.Context) {
+
+	ID := ctx.Param("ID")
+
+	resp, err := h.channelService.GetAmusement(ctx, ID)
+	if err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *channelHandler) getCinemas(ctx *gin.Context) {
+
+	resp, err := h.channelService.GetAllCinemas(ctx)
+	if err != nil {
+		logrus.Error(err)
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resp)
+}
+
+func (h *channelHandler) getCinemaByID(ctx *gin.Context) {
+
+	ID := ctx.Param("ID")
+
+	resp, err := h.channelService.GetCinema(ctx, ID)
 	if err != nil {
 		logrus.Error(err)
 		ctx.JSON(http.StatusInternalServerError, err)

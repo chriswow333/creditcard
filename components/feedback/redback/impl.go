@@ -58,9 +58,50 @@ func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*fee
 
 		switch im.Redback.RedCalculateType {
 		case feedbackM.RED_TIMES:
-			actualUseCash = cash
-			actualRedBack = cash * im.Redback.Times
-			feedReturnStatus = feedbackM.ALL
+
+			if im.Redback.Min == 0 && im.Redback.Max == 0 {
+
+				actualUseCash = cash
+				actualRedBack = cash * im.Redback.Times
+				feedReturnStatus = feedbackM.ALL
+
+			} else if im.Redback.Min == 0 && im.Redback.Max != 0 {
+
+				if cash <= im.Redback.Max {
+
+					actualUseCash = cash
+					actualRedBack = cash * im.Redback.Times
+					feedReturnStatus = feedbackM.ALL
+
+				} else {
+
+					actualUseCash = im.Redback.Max
+					actualRedBack = im.Redback.Max * im.Redback.Times
+					feedReturnStatus = feedbackM.SOME
+
+				}
+
+			} else if im.Redback.Min != 0 && im.Redback.Max == 0 {
+				if cash >= im.Redback.Min {
+
+					actualUseCash = cash
+					actualRedBack = cash * im.Redback.Times
+					feedReturnStatus = feedbackM.ALL
+
+				}
+			} else {
+				if im.Redback.Min <= cash && cash <= im.Redback.Max {
+					actualUseCash = cash
+					actualRedBack = cash * im.Redback.Times
+					feedReturnStatus = feedbackM.ALL
+				} else if im.Redback.Max < cash {
+					actualUseCash = im.Redback.Max
+					actualRedBack = im.Redback.Max * im.Redback.Times
+					feedReturnStatus = feedbackM.SOME
+
+				}
+			}
+
 			break
 
 		default:

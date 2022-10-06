@@ -14,6 +14,8 @@ const (
 	OPEN_POINT         // OPEN POINT
 
 	RED_POINT // 紅利點數
+
+	YIDA_POINT // 義大禮券
 )
 
 type PayloadOperator int32

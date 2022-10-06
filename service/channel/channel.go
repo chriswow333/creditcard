@@ -53,4 +53,13 @@ type Service interface {
 
 	GetAllAppstores(ctx context.Context) ([]*channel.AppStore, error)
 	GetAppstore(ctx context.Context, ID string) (*channel.AppStore, error)
+
+	GetAllHotels(ctx context.Context) ([]*channel.Hotel, error)
+	GetHotel(ctx context.Context, ID string) (*channel.Hotel, error)
+
+	GetAllAmusemnets(ctx context.Context) ([]*channel.Amusement, error)
+	GetAmusement(ctx context.Context, ID string) (*channel.Amusement, error)
+
+	GetAllCinemas(ctx context.Context) ([]*channel.Cinema, error)
+	GetCinema(ctx context.Context, ID string) (*channel.Cinema, error)
 }

@@ -178,7 +178,13 @@ func (im *impl) calculateReturn(ctx context.Context,
 			PointReturn:      pointReturn,
 		}
 		break
-
+	case rewardM.YIDA_POINT:
+		pointReturn := im.calculatePointFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
+		cardRewardEventResp.FeedReturn = &feedbackM.FeedReturn{
+			FeedReturnStatus: feedbackM.ALL,
+			PointReturn:      pointReturn,
+		}
+		break
 	case rewardM.RED_POINT:
 
 		redReturn := im.calculateRedFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)

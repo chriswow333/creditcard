@@ -10,11 +10,14 @@ import (
 	cardComp "example.com/creditcard/components/card"
 	channelComp "example.com/creditcard/components/channel"
 
+	amusementComp "example.com/creditcard/components/channel/amusement"
 	appStoreComp "example.com/creditcard/components/channel/appstore"
+	cinemaComp "example.com/creditcard/components/channel/cinema"
 	convenienceStoreComp "example.com/creditcard/components/channel/conveniencestore"
 	deliveryComp "example.com/creditcard/components/channel/delivery"
 	ecommerceComp "example.com/creditcard/components/channel/ecommerce"
 	foodComp "example.com/creditcard/components/channel/food"
+	hotelComp "example.com/creditcard/components/channel/hotel"
 	insuranceComp "example.com/creditcard/components/channel/insurance"
 	mallComp "example.com/creditcard/components/channel/mall"
 	mobilepayComp "example.com/creditcard/components/channel/mobilepay"
@@ -204,7 +207,15 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 	case channelM.AppStoreType:
 		channelComponent = appStoreComp.New(channel)
 		break
-
+	case channelM.HotelType:
+		channelComponent = hotelComp.New(channel)
+		break
+	case channelM.AmusementType:
+		channelComponent = amusementComp.New(channel)
+		break
+	case channelM.CinemaType:
+		channelComponent = cinemaComp.New(channel)
+		break
 	default:
 		return nil, errors.New("failed in mapping contraint type")
 
@@ -229,6 +240,9 @@ func (im *impl) getFeedbackComponent(ctx context.Context, rewardType rewardM.Rew
 		pointbackComponent := pointbackComp.New(feedback.Pointback)
 		return &pointbackComponent, nil
 	case rewardM.OPEN_POINT:
+		pointbackComponent := pointbackComp.New(feedback.Pointback)
+		return &pointbackComponent, nil
+	case rewardM.YIDA_POINT:
 		pointbackComponent := pointbackComp.New(feedback.Pointback)
 		return &pointbackComponent, nil
 

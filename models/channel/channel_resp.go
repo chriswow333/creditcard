@@ -26,4 +26,7 @@ type ChannelResp struct {
 	ConvenienceStores []*ConvenienceStore `json:"conveniencestores,omitempty"`
 	Sports            []*Sport            `json:"sports,omitempty"`
 	Appstores         []*AppStore         `json:"appstores,omitempty"`
+	Hotels            []*Hotel            `json:"hotels,omitempty"`
+	Amusements        []*Amusement        `json:"amusements,omitempty"`
+	Cinemas           []*Cinema           `json:"cinemas,omitempty"`
 }

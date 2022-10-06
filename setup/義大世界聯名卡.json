@@ -1,0 +1,230 @@
+{
+
+    "bankID":"6ad57003-8e97-4634-a171-fcc94a4e2b38",
+    "name":"義大世界聯名卡",
+    
+    "imagePath":"card/sk_c08",
+    "cardStatus":0,
+    "linkURL":"https://www.skbank.com.tw/cc_introduction.html?cardId=C08",
+
+    "otherReward":[
+        {
+            "title":"",
+            "descs":[
+                
+            ]
+        }
+    ]
+}
+
+,
+
+
+{
+    "cardRewards":[
+        {
+            "cardID":"1fe62eee-bcef-4456-5646-d5d092ef80dc",
+                "title":"義大好感心，最高回饋22,000元",
+                "descs":[
+                    "1.活動時間刷新光義大卡一般消費達指定門檻並登錄， 即可獲得義大禮券回饋。",
+                    "2. 當日於義大世界購物廣場館內指定餐廳/美食街消費單筆1000元並登錄，即享100元刷卡金回饋。"
+                ],
+                "startDate":1640995200,
+                "endDate":1672531199,
+                "cardRewardOperator":1,
+                "rewardType":1,
+                "cardRewardBonus":{
+                    "totalBonus":0
+                },
+                "cardRewardLimitTypes":[
+                    1,3
+                ],
+                "constraintPassLogics":[],
+                "rewards":[
+                    {
+                        "order":0,
+                        "payloadOperator":2,
+                        "payloads":[
+                            {
+                                "feedback":{
+                                    "pointback":{
+                                        "pointbackType": 7,
+                                        "pointCalculateType":1,
+                                        "fixed":1300,
+                                        "min":80000,
+                                        "max":299999
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":13,
+                                            "channelMappingType":1,
+                                            "malls":[
+                                                "13a9cc0f-7eb1-43a6-8126-e4259f841ef5"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":17,
+                                            "channelMappingType":1,
+                                            "hotels":[
+                                                "d590fef0-dfcf-45f7-95d2-e8b2e73765bf",
+                                                "a3bcd52d-7c74-4f66-9c09-f655ae8eb052"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":18,
+                                            "channelMappingType":1,
+                                            "amusements":[
+                                                "eff2db7a-3afe-4b84-96ef-9f0732660be5"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+
+                            {
+                                "feedback":{
+                                    "pointback":{
+                                        "pointbackType": 7,
+                                        "pointCalculateType":1,
+                                        "fixed":6000,
+                                        "min":300000,
+                                        "max":499999
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":13,
+                                            "channelMappingType":1,
+                                            "malls":[
+                                                "13a9cc0f-7eb1-43a6-8126-e4259f841ef5"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":17,
+                                            "channelMappingType":1,
+                                            "hotels":[
+                                                "d590fef0-dfcf-45f7-95d2-e8b2e73765bf",
+                                                "a3bcd52d-7c74-4f66-9c09-f655ae8eb052"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":18,
+                                            "channelMappingType":1,
+                                            "amusements":[
+                                                "eff2db7a-3afe-4b84-96ef-9f0732660be5"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+
+                            {
+                                "feedback":{
+                                    "pointback":{
+                                        "pointbackType": 7,
+                                        "pointCalculateType":1,
+                                        "fixed":10000,
+                                        "min":500000,
+                                        "max":999999
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":13,
+                                            "channelMappingType":1,
+                                            "malls":[
+                                                "13a9cc0f-7eb1-43a6-8126-e4259f841ef5"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":17,
+                                            "channelMappingType":1,
+                                            "hotels":[
+                                                "d590fef0-dfcf-45f7-95d2-e8b2e73765bf",
+                                                "a3bcd52d-7c74-4f66-9c09-f655ae8eb052"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":18,
+                                            "channelMappingType":1,
+                                            "amusements":[
+                                                "eff2db7a-3afe-4b84-96ef-9f0732660be5"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+
+
+                            {
+                                "feedback":{
+                                    "pointback":{
+                                        "pointbackType": 7,
+                                        "pointCalculateType":1,
+                                        "fixed":22000,
+                                        "min":1000000,
+                                        "max":0
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":13,
+                                            "channelMappingType":1,
+                                            "malls":[
+                                                "13a9cc0f-7eb1-43a6-8126-e4259f841ef5"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":17,
+                                            "channelMappingType":1,
+                                            "hotels":[
+                                                "d590fef0-dfcf-45f7-95d2-e8b2e73765bf",
+                                                "a3bcd52d-7c74-4f66-9c09-f655ae8eb052"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":18,
+                                            "channelMappingType":1,
+                                            "amusements":[
+                                                "eff2db7a-3afe-4b84-96ef-9f0732660be5"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+        }
+    ]
+
+}

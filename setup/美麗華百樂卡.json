@@ -1,0 +1,191 @@
+{
+
+    "bankID":"6ad57003-8e97-4634-a171-fcc94a4e2b38",
+    "name":"美麗華百樂卡",
+    
+    "imagePath":"card/sk_c07",
+    "cardStatus":0,
+    "linkURL":"https://www.skbank.com.tw/cc_introduction.html?cardId=C07",
+
+    "otherReward":[
+        {
+            "title":"",
+            "descs":[
+                
+            ]
+        }
+ 
+    ]
+}
+
+
+{
+    "cardRewards":[
+
+        {
+            "cardID":"ed4e0505-3a9d-4178-601c-31901bde9933",
+            "title":"美麗好好食，指定餐飲滿仟送佰!",
+            "descs":[
+                "活動期間於美麗華館內指定餐廳/美食街刷新光美麗華卡，登錄即享單筆滿1,000元送100元刷卡金"
+            ],
+            "startDate":1640995200,
+            "endDate":1672531199,
+            "cardRewardOperator":1,
+            "rewardType":1,
+            "cardRewardBonus":{
+                "totalBonus":10
+            },
+            "cardRewardLimitTypes":[
+                3
+            ],
+            "constraintPassLogics":[], 
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashbackType":1,
+                                    "cashCalculateType":1,
+                                    "fixed":100,
+                                    "min":1000,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":2,
+                                "channelType":8,
+                                "channelMappingType":1,
+                                "foods":[
+                                    "f2c858c6-dd23-4aca-98ac-b440183241f0",
+                                    "177c7100-c8ae-4d0b-a323-075ea190231a",
+                                    "5ae71ba0-e197-4c5b-8203-e7d0ba81b5dd",
+                                    "b2e454b4-290b-4eef-b7e2-f638b3b7766d",
+                                    "e636f1a5-a399-4b36-8c0a-56b49717c2a8",
+                                    "0eb93ed1-2722-43c4-9f9b-30094b79e851",
+                                    "ca2c183a-b57f-4566-97fb-9faca979774a",
+                                    "73eed8ce-db04-4c80-9a39-e2582cfec0c4",
+                                    "a2e54138-c862-4f64-9b3c-6b0fe786886d",
+                                    "87e5270f-b372-46c7-8e19-d3281b246fbf",
+                                    "13686cb4-9ea3-4db3-95de-5e0b11fc2ee6",
+                                    "1f0b92ac-a0a1-4ed9-93e6-6f484b686cf1",
+                                    "47d015f3-3446-4136-98f4-5eec5b5fce76",
+                                    "6ad64e2e-abed-4a42-89e4-6d2a6b62525a"
+
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+
+        {
+            "cardID":"ed4e0505-3a9d-4178-601c-31901bde9933",
+            "title":"美麗華聯名卡館內優惠",
+            "descs":[
+                "1.館內購物享9折起折扣優惠",
+                " 持新光百樂卡於館內刷卡消費，享購物及餐飲85折-95折優惠(依各專櫃公告為主，部份專櫃及商品除外，詳情請洽各專櫃及餐廳人員)",
+                "2.憑卡館內免費停車最高4小時",
+                " 持新光百樂卡於館內享免費停車3小時、新光百樂鈦商卡享免費停車4小時，合併館內消費停車辦法一併計算，每日最高以4小時為限。",
+                "3.美食優惠",
+                " 美食街500元內免簽名，更享9-95折優惠(折扣以現場公告為主)。",
+                "4.刷卡分期0負擔",
+                " 館內刷卡消費不限金額，可享3期或6期分期0利率；館內STUDIO A、HTC、ASUS、SAMSUNG專櫃刷卡消費不限金額，可享12期分期0利率。",
+                "5.紅利折抵最划算，每1,000點可折抵70元",
+                "  館內消費不限金額，紅利點數每1000點可折抵70元，最高折抵100%"
+            ],
+            "startDate":1640995200,
+            "endDate":1672531199,
+            "cardRewardOperator":1,
+            "rewardType":1,
+            "cardRewardBonus":{
+                "totalBonus":10
+            },
+            "cardRewardLimitTypes":[
+                3
+            ],
+            "constraintPassLogics":[], 
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashbackType":1,
+                                    "cashCalculateType":2,
+                                    "bonus":0.1,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":2,
+                                "channelType":13,
+                                "channelMappingType":1,
+                                "malls":[
+                                    "17af8535-cdee-4714-84fd-9b95a88fde5b"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+
+
+        {
+            "cardID":"ed4e0505-3a9d-4178-601c-31901bde9933",
+            "title":"美麗華大直影城優惠-獨家68折購票折扣",
+            "descs":[
+                "1.週一至週五刷卡購票享68折，週六、日享早場優惠票價。",
+                "2.紅利點數4,500點兌換電影票套餐乙份"
+            ],
+            "startDate":1640995200,
+            "endDate":1672531199,
+            "cardRewardOperator":1,
+            "rewardType":1,
+            "cardRewardBonus":{
+                "totalBonus":10
+            },
+            "cardRewardLimitTypes":[
+                3
+            ],
+            "constraintPassLogics":[], 
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashbackType":1,
+                                    "cashCalculateType":2,
+                                    "bonus":0.32,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":2,
+                                "channelType":19,
+                                "channelMappingType":1,
+                                "cinemas":[
+                                    "17af8535-cdee-4714-84fd-9b95a88fde5b"
+                                ]
+
+                            }
+                        }
+
+                    ]
+                }
+            ]
+
+        }
+    ]
+}

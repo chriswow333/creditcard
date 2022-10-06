@@ -34,6 +34,9 @@ const (
 	SportType
 	ConvenienceStoreType
 	AppStoreType
+	HotelType
+	AmusementType
+	CinemaType
 )
 
 type Channel struct {
@@ -61,4 +64,7 @@ type Channel struct {
 	Conveniencestores []string `json:"conveniencestores,omitempty"`
 	Sports            []string `json:"sports,omitempty"`
 	AppStores         []string `json:"appstores,omitempty"`
+	Hotels            []string `json:"hotels,omitempty"`
+	Amusements        []string `json:"amusements,omitempty"`
+	Cinemas           []string `json:"cinemas,onmitempty"`
 }

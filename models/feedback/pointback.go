@@ -9,6 +9,7 @@ const (
 	KUO_BROTHERS_POINT
 	WOWPRIME_POINT
 	OPEN_POINT
+	YIDA_POINT
 )
 
 type PointCalculateType int32

@@ -5,11 +5,14 @@ import (
 
 	"example.com/creditcard/models/channel"
 	"example.com/creditcard/models/task"
+	amusementStore "example.com/creditcard/stores/amusement"
 	appStoreStore "example.com/creditcard/stores/appstore"
+	cinemaStore "example.com/creditcard/stores/cinema"
 	convenienceStoreStore "example.com/creditcard/stores/conveniencestore"
 	deliveryStore "example.com/creditcard/stores/delivery"
 	ecommerceStore "example.com/creditcard/stores/ecommerce"
 	foodStore "example.com/creditcard/stores/food"
+	hotelStore "example.com/creditcard/stores/hotel"
 	insuranceStore "example.com/creditcard/stores/insurance"
 	mallStore "example.com/creditcard/stores/mall"
 	mobilepayStore "example.com/creditcard/stores/mobilepay"
@@ -45,6 +48,11 @@ type impl struct {
 	mallStore             mallStore.Store
 
 	appStoreStore appStoreStore.Store
+
+	hotelStore     hotelStore.Store
+	amusementStore amusementStore.Store
+
+	cinemaStore cinemaStore.Store
 }
 
 func New(
@@ -63,7 +71,9 @@ func New(
 	sportStore sportStore.Store,
 	convenienceStoreStore convenienceStoreStore.Store,
 	appStoreStore appStoreStore.Store,
-
+	hotelStore hotelStore.Store,
+	amusementStore amusementStore.Store,
+	cinemaStore cinemaStore.Store,
 ) Service {
 	return &impl{
 		taskStore:             taskStore,
@@ -81,6 +91,9 @@ func New(
 		sportStore:            sportStore,
 		convenienceStoreStore: convenienceStoreStore,
 		appStoreStore:         appStoreStore,
+		hotelStore:            hotelStore,
+		amusementStore:        amusementStore,
+		cinemaStore:           cinemaStore,
 	}
 }
 
@@ -410,4 +423,63 @@ func (im *impl) GetAppstore(ctx context.Context, ID string) (*channel.AppStore, 
 	}
 
 	return appStore, nil
+}
+
+func (im *impl) GetAllHotels(ctx context.Context) ([]*channel.Hotel, error) {
+	hotelStores, err := im.hotelStore.GetAll(ctx)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return hotelStores, nil
+}
+func (im *impl) GetHotel(ctx context.Context, ID string) (*channel.Hotel, error) {
+
+	hotelStore, err := im.hotelStore.GetByID(ctx, ID)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return hotelStore, nil
+}
+
+func (im *impl) GetAllAmusemnets(ctx context.Context) ([]*channel.Amusement, error) {
+	amusements, err := im.amusementStore.GetAll(ctx)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return amusements, nil
+}
+func (im *impl) GetAmusement(ctx context.Context, ID string) (*channel.Amusement, error) {
+	amusement, err := im.amusementStore.GetByID(ctx, ID)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return amusement, nil
+}
+
+func (im *impl) GetAllCinemas(ctx context.Context) ([]*channel.Cinema, error) {
+	cinemas, err := im.cinemaStore.GetAll(ctx)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return cinemas, nil
+}
+
+func (im *impl) GetCinema(ctx context.Context, ID string) (*channel.Cinema, error) {
+	cinema, err := im.cinemaStore.GetByID(ctx, ID)
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+
+	return cinema, nil
 }

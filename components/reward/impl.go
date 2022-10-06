@@ -3,7 +3,6 @@ package reward
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	payloadComp "example.com/creditcard/components/payload"
 	"github.com/sirupsen/logrus"
@@ -182,6 +181,30 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 
 		break
 
+	case rewardM.YIDA_POINT:
+		pointReturn, err := im.calculatePointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
+
+		if err != nil {
+			return nil, err
+		}
+
+		pointReturn.CurrentCash = int64(e.Cash)
+		pointReturn.TotalCash = e.Cash
+
+		if pointReturn.ActualUseCash == pointReturn.CurrentCash {
+			rewardEventResp.RewardEventJudgeType = rewardM.ALL
+		} else if pointReturn.ActualUseCash == 0 {
+			rewardEventResp.RewardEventJudgeType = rewardM.NONE
+		} else {
+			rewardEventResp.RewardEventJudgeType = rewardM.SOME
+		}
+
+		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
+			PointReturn: pointReturn,
+		}
+
+		break
+
 	case rewardM.RED_POINT:
 		redReturn, err := im.calculateRedPointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
 
@@ -190,8 +213,9 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 		}
 
 		redReturn.CurrentCash = int64(e.Cash)
+
 		redReturn.TotalCash = e.Cash
-		fmt.Println(redReturn.ActualUseCash)
+
 		if redReturn.ActualUseCash == redReturn.CurrentCash {
 			rewardEventResp.RewardEventJudgeType = rewardM.ALL
 		} else if redReturn.ActualUseCash == 0 {
