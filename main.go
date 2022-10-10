@@ -1,13 +1,6 @@
 package main
 
 import (
-	"example.com/creditcard/apis/bank"
-	"example.com/creditcard/apis/card"
-	"example.com/creditcard/apis/channel"
-	"example.com/creditcard/apis/evaluator"
-	"example.com/creditcard/apis/image"
-	"example.com/creditcard/apis/reward"
-	"example.com/creditcard/apis/reward_channel"
 	"example.com/creditcard/base/psql"
 	_ "example.com/creditcard/base/psql"
 	"go.uber.org/dig"
@@ -18,9 +11,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
+	"example.com/creditcard/apis/bank"
+	"example.com/creditcard/apis/card"
+	"example.com/creditcard/apis/channel"
+	"example.com/creditcard/apis/evaluator"
+	"example.com/creditcard/apis/feedback_desc"
+	"example.com/creditcard/apis/image"
+	"example.com/creditcard/apis/reward"
+	"example.com/creditcard/apis/reward_channel"
+
 	bankService "example.com/creditcard/service/bank"
 	cardService "example.com/creditcard/service/card"
 	channelService "example.com/creditcard/service/channel"
+	feedbackDescService "example.com/creditcard/service/feedback_desc"
 	rewardService "example.com/creditcard/service/reward"
 	rewardChannelService "example.com/creditcard/service/reward_channel"
 
@@ -34,6 +37,7 @@ import (
 	conveniencestoreStore "example.com/creditcard/stores/conveniencestore"
 	deliveryStore "example.com/creditcard/stores/delivery"
 	ecommerceStore "example.com/creditcard/stores/ecommerce"
+	feedbackDescStore "example.com/creditcard/stores/feedback_desc"
 	foodStore "example.com/creditcard/stores/food"
 	hotelStore "example.com/creditcard/stores/hotel"
 	insuranceStore "example.com/creditcard/stores/insurance"
@@ -64,6 +68,7 @@ func BuildContainer() *dig.Container {
 	container.Provide(rewardService.New)
 	container.Provide(channelService.New)
 	container.Provide(rewardChannelService.New)
+	container.Provide(feedbackDescService.New)
 
 	// store
 	container.Provide(bankStore.New)
@@ -90,6 +95,7 @@ func BuildContainer() *dig.Container {
 	container.Provide(hotelStore.New)
 	container.Provide(amusementStore.New)
 	container.Provide(cinemaStore.New)
+	container.Provide(feedbackDescStore.New)
 
 	// builder
 	container.Provide(cardrewardBuilder.New)
@@ -108,6 +114,7 @@ func NewServer(
 	rewardSrc rewardService.Service,
 	channelSrc channelService.Service,
 	rewardChannelSrc rewardChannelService.Service,
+	feedbackSrc feedbackDescService.Service,
 
 	evaluatorMod evaluatorModule.Module,
 
@@ -134,6 +141,8 @@ func NewServer(
 	evaluator.NewEvaluatorHandler(v1.Group("/evaluator"), evaluatorMod)
 
 	image.NewImageHandler(v1.Group("/image"))
+
+	feedback_desc.NewFeedbackDescHandler(v1.Group("/feedback_desc"), feedbackSrc)
 
 	return router
 }

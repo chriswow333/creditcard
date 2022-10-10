@@ -13,6 +13,8 @@ import (
 	rewardM "example.com/creditcard/models/reward"
 	"example.com/creditcard/service/bank"
 	"github.com/sirupsen/logrus"
+
+	feedbackDescStore "example.com/creditcard/stores/feedback_desc"
 )
 
 type impl struct {
@@ -20,6 +22,7 @@ type impl struct {
 	rewardMapper             map[string][]*reward.Component
 	cardRewardOperatorMapper map[rewardM.RewardType]cardM.CardRewardOperator
 	bankService              bank.Service
+	feedbackDescStore        feedbackDescStore.Store
 }
 
 func New(
@@ -27,7 +30,7 @@ func New(
 	rewardMapper map[string][]*reward.Component,
 	cardRewardOperatorMapper map[rewardM.RewardType]cardM.CardRewardOperator,
 	bankService bank.Service,
-
+	feedbackDescStore feedbackDescStore.Store,
 ) Component {
 
 	impl := &impl{
@@ -35,6 +38,7 @@ func New(
 		rewardMapper:             rewardMapper,
 		cardRewardOperatorMapper: cardRewardOperatorMapper,
 		bankService:              bankService,
+		feedbackDescStore:        feedbackDescStore,
 	}
 
 	return impl
@@ -45,6 +49,12 @@ const DATE_FORMAT = "2006/01/02"
 func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventResp, error) {
 
 	bankVo, err := im.bankService.GetByID(ctx, im.card.BankID)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"not bankVo ": err,
+		}).Error(err)
+		return nil, err
+	}
 
 	updateDate := time.Unix(im.card.UpdateDate, 0).Format(DATE_FORMAT)
 
@@ -87,16 +97,26 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 		startDate := time.Unix(cr.StartDate, 0).Format(DATE_FORMAT)
 		endDate := time.Unix(cr.EndDate, 0).Format(DATE_FORMAT)
 
+		feedbackDesc, err := im.feedbackDescStore.GetByID(ctx, cr.FeedbackDescID)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"not found feedback ": err,
+			}).Error(err)
+			return nil, err
+		}
+
 		cardRewardEventResp := &cardM.CardRewardEventResp{
-			ID:                   cr.ID,
-			CardRewardOperator:   cr.CardRewardOperator,
-			RewardType:           cr.RewardType,
+			ID:                 cr.ID,
+			CardRewardOperator: cr.CardRewardOperator,
+			RewardType:         cr.RewardType,
+			CardRewardBonus:    cr.CardRewardBonus,
+
 			Title:                cr.Title,
 			Descs:                cr.Descs,
 			StartDate:            startDate,
 			EndDate:              endDate,
 			CardRewardLimitTypes: cr.CardRewardLimitTypes,
-			CardRewardBonus:      cr.CardRewardBonus,
+			FeedbackDesc:         feedbackDesc,
 		}
 
 		if rewardComps, ok := im.rewardMapper[cr.ID]; ok {
@@ -122,7 +142,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 
 			logrus.WithFields(logrus.Fields{
 				"not found card reward ": err,
-			})
+			}).Error(err)
 
 		}
 	}
@@ -135,7 +155,7 @@ func (im *impl) calculateReturn(ctx context.Context,
 	cardRewardEventResp *cardM.CardRewardEventResp) error {
 
 	switch cr.RewardType {
-	case rewardM.CASH_TWD:
+	case rewardM.CASH:
 
 		cashReturn := im.calculateCashFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
 
@@ -144,7 +164,7 @@ func (im *impl) calculateReturn(ctx context.Context,
 			CashReturn:       cashReturn,
 		}
 		break
-	case rewardM.LINE_POINT:
+	case rewardM.POINT:
 
 		pointReturn := im.calculatePointFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
 
@@ -153,39 +173,8 @@ func (im *impl) calculateReturn(ctx context.Context,
 			PointReturn:      pointReturn,
 		}
 		break
-	case rewardM.KUO_BROTHERS_POINT:
 
-		pointReturn := im.calculatePointFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
-
-		cardRewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-			FeedReturnStatus: feedbackM.ALL,
-			PointReturn:      pointReturn,
-		}
-		break
-	case rewardM.WOWPRIME_POINT:
-		pointReturn := im.calculatePointFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
-
-		cardRewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-			FeedReturnStatus: feedbackM.ALL,
-			PointReturn:      pointReturn,
-		}
-		break
-
-	case rewardM.OPEN_POINT:
-		pointReturn := im.calculatePointFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
-		cardRewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-			FeedReturnStatus: feedbackM.ALL,
-			PointReturn:      pointReturn,
-		}
-		break
-	case rewardM.YIDA_POINT:
-		pointReturn := im.calculatePointFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
-		cardRewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-			FeedReturnStatus: feedbackM.ALL,
-			PointReturn:      pointReturn,
-		}
-		break
-	case rewardM.RED_POINT:
+	case rewardM.RED:
 
 		redReturn := im.calculateRedFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
 

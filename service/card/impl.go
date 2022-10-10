@@ -3,11 +3,13 @@ package card
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
 	cardM "example.com/creditcard/models/card"
 	channelM "example.com/creditcard/models/channel"
+	"example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
 	rewardChannelM "example.com/creditcard/models/reward_channel"
 	"example.com/creditcard/models/task"
@@ -16,6 +18,7 @@ import (
 	"example.com/creditcard/service/channel"
 	"example.com/creditcard/stores/card"
 	"example.com/creditcard/stores/card_reward"
+	feedbackDescStore "example.com/creditcard/stores/feedback_desc"
 	"example.com/creditcard/stores/reward"
 	"example.com/creditcard/stores/reward_channel"
 
@@ -35,9 +38,11 @@ const DATE_FORMAT = "2006/01/02"
 type impl struct {
 	dig.In
 
-	cardStore            card.Store
-	rewardStore          reward.Store
-	cardRewardStore      card_reward.Store
+	cardStore         card.Store
+	rewardStore       reward.Store
+	cardRewardStore   card_reward.Store
+	feedbackDescStore feedbackDescStore.Store
+
 	bankService          bank.Service
 	rewardChannelService reward_channel.Store
 	channelService       channel.Service
@@ -50,6 +55,7 @@ func New(
 	bankService bank.Service,
 	rewardChannelService reward_channel.Store,
 	channelService channel.Service,
+	feedbackDescStore feedbackDescStore.Store,
 ) Service {
 	return &impl{
 		cardStore:            cardStore,
@@ -58,6 +64,7 @@ func New(
 		bankService:          bankService,
 		rewardChannelService: rewardChannelService,
 		channelService:       channelService,
+		feedbackDescStore:    feedbackDescStore,
 	}
 }
 
@@ -118,24 +125,49 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
 	return card, nil
 }
 
+func (im *impl) getFeedbackDesc(ctx context.Context, feedbackID string) (*feedback.FeedbackDesc, error) {
+
+	feedbackDesc, err := im.feedbackDescStore.GetByID(ctx, feedbackID)
+
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"": "",
+		}).Error(err)
+		return nil, err
+	}
+
+	return feedbackDesc, nil
+}
+
 func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.CardReward) ([]*cardM.CardRewardResp, error) {
 
 	cardRewardResps := []*cardM.CardRewardResp{}
 
 	for _, cr := range cardRewards {
+
+		feedbackDesc, err := im.getFeedbackDesc(ctx, cr.FeedbackDescID)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"": "",
+			}).Error(err)
+			return nil, err
+		}
+
 		startDate := time.Unix(cr.StartDate, 0).Format(DATE_FORMAT)
 		endDate := time.Unix(cr.EndDate, 0).Format(DATE_FORMAT)
 
 		cardRewardResp := &cardM.CardRewardResp{
-			ID:                   cr.ID,
-			RewardType:           cr.RewardType,
+			ID:              cr.ID,
+			RewardType:      cr.RewardType,
+			CardRewardBonus: cr.CardRewardBonus,
+
 			ConstraintPassLogics: cr.ConstraintPassLogics,
 			Title:                cr.Title,
 			Descs:                cr.Descs,
 			StartDate:            startDate,
 			EndDate:              endDate,
 			CardRewardLimitTypes: cr.CardRewardLimitTypes,
-			CardRewardBonus:      cr.CardRewardBonus,
+			FeedbackDesc:         feedbackDesc,
 		}
 
 		cardRewardID := cr.ID
@@ -371,11 +403,11 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 				break
 
 			case int32(channelM.CinemaType):
-
+				fmt.Println("I am in cinema type " + rc.ChannelID)
 				cinema, err := im.channelService.GetCinema(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
-						"": "",
+						"card.transCardRewardResp": "",
 					}).Error(err)
 					return nil, err
 				}

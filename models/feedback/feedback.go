@@ -8,6 +8,14 @@ const (
 	NONE
 )
 
+type FeedbackDesc struct {
+	ID                    string   `json:"id"`
+	FeedbackType          int32    `json:"feedbackType"`
+	FeedbackCalculateType int32    `json:"feedbackCalculateType"`
+	Name                  string   `json:"name"`
+	Descs                 []string `json:"descs"`
+}
+
 type Feedback struct {
 	Cashback  *Cashback  `json:"cashback,omitempty"`
 	Pointback *Pointback `json:"pointback,omitempty"`

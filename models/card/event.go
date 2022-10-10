@@ -29,13 +29,13 @@ type CardRewardEventResp struct {
 	EndDate   string `json:"endDate"`
 
 	CardRewardOperator CardRewardOperator `json:"cardRewardOperator,omitempty"`
-	RewardType         rewardM.RewardType `json:"rewardType,omitempty"`
 
-	CardRewardBonus *CardRewardBonus `json:"cardRewardBonus,omitempty"`
+	RewardType      rewardM.RewardType `json:"rewardType,omitempty"`
+	CardRewardBonus *CardRewardBonus   `json:"cardRewardBonus"`
 
 	CardRewardLimitTypes []CardRewardLimitType `json:"cardRewardLimitTypes"`
 
-	FeedReturn *feedback.FeedReturn `json:"feedReturn,omitempty"`
+	FeedbackDesc *feedback.FeedbackDesc `json:"feedbackDesc,omitempty"`
 
-	// RewardEventResps []*rewardM.RewardEventResp `json:"rewardEventResps,omitempty"`
+	FeedReturn *feedback.FeedReturn `json:"feedReturn,omitempty"`
 }

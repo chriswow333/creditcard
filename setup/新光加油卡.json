@@ -1,0 +1,21 @@
+
+{
+
+    "bankID":"6ad57003-8e97-4634-a171-fcc94a4e2b38",
+    "name":"新光加油卡",
+    
+    "imagePath":"card/sk_c10",
+    "cardStatus":0,
+    "linkURL":"https://www.skbank.com.tw/cc_introduction.html?cardId=C10",
+
+    "otherReward":[
+        {
+            "title":"",
+            "descs":[
+                
+            ]
+        }
+ 
+    ]
+}
+

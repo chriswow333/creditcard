@@ -196,3 +196,30 @@ create table food (
     "id" VARCHAR(36) PRIMARY KEY,
 	"name" VARCHAR(100)
 );
+
+
+
+
+DROP TABLE  IF EXISTS cashback;
+create table cashback (
+    "id" VARCHAR(36) PRIMARY KEY,
+	"name" VARCHAR(100),
+	"descs" JSON
+);
+
+
+
+DROP TABLE  IF EXISTS pointback;
+create table pointback (
+    "id" VARCHAR(36) PRIMARY KEY,
+	"name" VARCHAR(100),
+	"descs" JSON
+);
+
+
+DROP TABLE  IF EXISTS redback;
+create table redback (
+    "id" VARCHAR(36) PRIMARY KEY,
+	"name" VARCHAR(100),
+	"descs" JSON
+);

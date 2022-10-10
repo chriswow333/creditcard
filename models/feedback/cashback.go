@@ -1,11 +1,5 @@
 package feedback
 
-type CashbackType int32
-
-const (
-	NTD CashbackType = iota + 1
-)
-
 type CashCalculateType int32
 
 const (
@@ -14,8 +8,6 @@ const (
 )
 
 type Cashback struct {
-	CashbackType CashbackType `json:"cashbackType,omitempty"`
-
 	CashCalculateType CashCalculateType `json:"cashCalculateType,omitempty"`
 
 	Fixed float64 `json:"fixed,omitempty"`

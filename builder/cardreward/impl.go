@@ -45,6 +45,8 @@ import (
 	feedbackM "example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
 	"example.com/creditcard/models/task"
+
+	feedbackDescStore "example.com/creditcard/stores/feedback_desc"
 )
 
 type impl struct {
@@ -52,15 +54,19 @@ type impl struct {
 
 	channelService channel.Service
 	bankService    bank.Service
+
+	feedbackDescStore feedbackDescStore.Store
 }
 
 func New(
 	channelService channel.Service,
 	bankService bank.Service,
+	feedbackDescStore feedbackDescStore.Store,
 ) Builder {
 	return &impl{
-		channelService: channelService,
-		bankService:    bankService,
+		channelService:    channelService,
+		bankService:       bankService,
+		feedbackDescStore: feedbackDescStore,
 	}
 
 }
@@ -112,7 +118,7 @@ func (im *impl) BuildCardComponent(ctx context.Context, card *cardM.Card) (cardC
 
 	}
 
-	cardComponent := cardComp.New(card, rewardMapper, cardRewardOperatorMapper, im.bankService)
+	cardComponent := cardComp.New(card, rewardMapper, cardRewardOperatorMapper, im.bankService, im.feedbackDescStore)
 
 	return cardComponent, nil
 }
@@ -227,26 +233,13 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 func (im *impl) getFeedbackComponent(ctx context.Context, rewardType rewardM.RewardType, feedback *feedbackM.Feedback) (*feedbackComp.Component, error) {
 
 	switch rewardType {
-	case rewardM.CASH_TWD:
+	case rewardM.CASH:
 		cashbackComponent := cashbackComp.New(feedback.Cashback)
 		return &cashbackComponent, nil
-	case rewardM.LINE_POINT:
+	case rewardM.POINT:
 		pointbackComponent := pointbackComp.New(feedback.Pointback)
 		return &pointbackComponent, nil
-	case rewardM.KUO_BROTHERS_POINT:
-		pointbackComponent := pointbackComp.New(feedback.Pointback)
-		return &pointbackComponent, nil
-	case rewardM.WOWPRIME_POINT:
-		pointbackComponent := pointbackComp.New(feedback.Pointback)
-		return &pointbackComponent, nil
-	case rewardM.OPEN_POINT:
-		pointbackComponent := pointbackComp.New(feedback.Pointback)
-		return &pointbackComponent, nil
-	case rewardM.YIDA_POINT:
-		pointbackComponent := pointbackComp.New(feedback.Pointback)
-		return &pointbackComponent, nil
-
-	case rewardM.RED_POINT:
+	case rewardM.RED:
 		redbackComponent := redbackComp.New(feedback.Redback)
 		return &redbackComponent, nil
 	default:

@@ -2,15 +2,14 @@ package feedback
 
 // 點數回饋
 
-type PointbackType int32
-
-const (
-	LINE_POINT PointbackType = iota + 1
-	KUO_BROTHERS_POINT
-	WOWPRIME_POINT
-	OPEN_POINT
-	YIDA_POINT
-)
+// store in db
+// const (
+// 	LINE_POINT PointbackType = iota + 1
+// 	KUO_BROTHERS_POINT
+// 	WOWPRIME_POINT
+// 	OPEN_POINT
+// 	YIDA_POINT
+// )
 
 type PointCalculateType int32
 
@@ -20,7 +19,6 @@ const (
 )
 
 type Pointback struct {
-	PointbackType      PointbackType      `json:"pointbackType,omitempty"`
 	PointCalculateType PointCalculateType `json:"pointCalculateType,omitempty"`
 
 	Fixed float64 `json:"fixed,omitempty"`

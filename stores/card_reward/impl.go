@@ -23,8 +23,8 @@ func New(psql *pgx.ConnPool) Store {
 
 const INSERT_CARD_REWARD_STAT = "INSERT INTO card_reward " +
 	"(\"id\", \"card_id\", \"card_reward_operator\", \"title\", \"descs\", start_date, end_date, \"reward_type\", " +
-	" constraint_pass_logic, card_reward_limit_types, card_reward_bonus) " +
-	" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)"
+	" constraint_pass_logic, card_reward_limit_types, feedback_desc_id, card_reward_bonus) " +
+	" VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
 
 func (im *impl) Create(ctx context.Context, cardReward *cardM.CardReward) error {
 
@@ -49,6 +49,7 @@ func (im *impl) Create(ctx context.Context, cardReward *cardM.CardReward) error 
 		cardReward.RewardType,
 		cardReward.ConstraintPassLogics,
 		cardReward.CardRewardLimitTypes,
+		cardReward.FeedbackDescID,
 		cardReward.CardRewardBonus,
 	}
 	if _, err := tx.Exec(INSERT_CARD_REWARD_STAT, updater...); err != nil {
@@ -63,7 +64,7 @@ func (im *impl) Create(ctx context.Context, cardReward *cardM.CardReward) error 
 }
 
 const SELECT_BY_CARDID_STAT = "SELECT \"id\", card_id, card_reward_operator, \"title\", \"descs\", " +
-	" start_date, end_date, reward_type, constraint_pass_logic, card_reward_limit_types, card_reward_bonus " +
+	" start_date, end_date, reward_type, constraint_pass_logic, card_reward_limit_types, feedback_desc_id, card_reward_bonus " +
 	" FROM card_reward " +
 	" WHERE \"card_id\"=$1"
 
@@ -95,6 +96,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*cardM.CardRe
 			&cardReward.RewardType,
 			&cardReward.ConstraintPassLogics,
 			&cardReward.CardRewardLimitTypes,
+			&cardReward.FeedbackDescID,
 			&cardReward.CardRewardBonus,
 		}
 
@@ -112,7 +114,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*cardM.CardRe
 }
 
 const SELECT_BY_ID_STAT = "SELECT \"id\", card_id, card_reward_operator, \"title\", \"descs\", " +
-	" start_date, end_date, reward_type, constraint_pass_logic, card_reward_limit_types, card_reward_bonus " +
+	" start_date, end_date, reward_type, constraint_pass_logic, card_reward_limit_types, feedback_desc_id, card_reward_bonus " +
 	" FROM card_reward " +
 	" WHERE \"id\"=$1"
 
@@ -130,6 +132,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.CardReward, erro
 		&cardReward.RewardType,
 		&cardReward.ConstraintPassLogics,
 		&cardReward.CardRewardLimitTypes,
+		&cardReward.FeedbackDescID,
 		&cardReward.CardRewardBonus,
 	}
 

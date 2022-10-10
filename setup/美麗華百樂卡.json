@@ -150,7 +150,7 @@
             "cardRewardOperator":1,
             "rewardType":1,
             "cardRewardBonus":{
-                "totalBonus":10
+                "totalBonus":32
             },
             "cardRewardLimitTypes":[
                 3
@@ -176,7 +176,7 @@
                                 "channelType":19,
                                 "channelMappingType":1,
                                 "cinemas":[
-                                    "17af8535-cdee-4714-84fd-9b95a88fde5b"
+                                    "34cd3208-d721-4df6-9fc0-353ac84066ce"
                                 ]
 
                             }

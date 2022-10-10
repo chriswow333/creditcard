@@ -2,6 +2,7 @@ package card
 
 import (
 	"example.com/creditcard/models/channel"
+	"example.com/creditcard/models/feedback"
 	"example.com/creditcard/models/reward"
 )
 
@@ -35,7 +36,9 @@ type CardRewardResp struct {
 	EndDate   string `json:"endDate"`
 
 	CardRewardOperator CardRewardOperator `json:"cardRewardOperator,omitempty"` // (R0+(R1&(R2|R3)))
-	RewardType         reward.RewardType  `json:"rewardType,omitempty"`
+
+	RewardType      reward.RewardType `json:"rewardType,omitempty"`
+	CardRewardBonus *CardRewardBonus  `json:"cardRewardBonus"`
 
 	CardRewardLimitTypes []CardRewardLimitType `json:"cardRewardLimitTypes"`
 
@@ -43,7 +46,7 @@ type CardRewardResp struct {
 
 	ChannelResps []*channel.ChannelResp `json:"channelResps"`
 
-	CardRewardBonus *CardRewardBonus `json:"cardRewardBonus,omitempty"`
+	FeedbackDesc *feedback.FeedbackDesc `json:"feedbackDesc,omitempty"`
 }
 
 type OtherRewardResp struct {

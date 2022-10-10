@@ -61,7 +61,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 	rewardEventResp.PayloadEventResps = payloadEventResps
 
 	switch im.rewardType {
-	case rewardM.CASH_TWD:
+	case rewardM.CASH:
 		cashReturn, err := im.calculateCashReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
 
 		if err != nil {
@@ -84,7 +84,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 		}
 		break
 
-	case rewardM.LINE_POINT:
+	case rewardM.POINT:
 
 		pointReturn, err := im.calculatePointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
 
@@ -108,104 +108,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 		}
 		break
 
-	case rewardM.KUO_BROTHERS_POINT:
-
-		pointReturn, err := im.calculatePointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
-
-		if err != nil {
-			return nil, err
-		}
-
-		pointReturn.CurrentCash = int64(e.Cash)
-		pointReturn.TotalCash = e.Cash
-
-		if pointReturn.ActualUseCash == pointReturn.CurrentCash {
-			rewardEventResp.RewardEventJudgeType = rewardM.ALL
-		} else if pointReturn.ActualUseCash == 0 {
-			rewardEventResp.RewardEventJudgeType = rewardM.NONE
-		} else {
-			rewardEventResp.RewardEventJudgeType = rewardM.SOME
-		}
-
-		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-			PointReturn: pointReturn,
-		}
-		break
-
-	case rewardM.WOWPRIME_POINT:
-
-		pointReturn, err := im.calculatePointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
-
-		if err != nil {
-			return nil, err
-		}
-
-		pointReturn.CurrentCash = int64(e.Cash)
-		pointReturn.TotalCash = e.Cash
-
-		if pointReturn.ActualUseCash == pointReturn.CurrentCash {
-			rewardEventResp.RewardEventJudgeType = rewardM.ALL
-		} else if pointReturn.ActualUseCash == 0 {
-			rewardEventResp.RewardEventJudgeType = rewardM.NONE
-		} else {
-			rewardEventResp.RewardEventJudgeType = rewardM.SOME
-		}
-
-		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-			PointReturn: pointReturn,
-		}
-
-		break
-
-	case rewardM.OPEN_POINT:
-		pointReturn, err := im.calculatePointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
-
-		if err != nil {
-			return nil, err
-		}
-
-		pointReturn.CurrentCash = int64(e.Cash)
-		pointReturn.TotalCash = e.Cash
-
-		if pointReturn.ActualUseCash == pointReturn.CurrentCash {
-			rewardEventResp.RewardEventJudgeType = rewardM.ALL
-		} else if pointReturn.ActualUseCash == 0 {
-			rewardEventResp.RewardEventJudgeType = rewardM.NONE
-		} else {
-			rewardEventResp.RewardEventJudgeType = rewardM.SOME
-		}
-
-		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-			PointReturn: pointReturn,
-		}
-
-		break
-
-	case rewardM.YIDA_POINT:
-		pointReturn, err := im.calculatePointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
-
-		if err != nil {
-			return nil, err
-		}
-
-		pointReturn.CurrentCash = int64(e.Cash)
-		pointReturn.TotalCash = e.Cash
-
-		if pointReturn.ActualUseCash == pointReturn.CurrentCash {
-			rewardEventResp.RewardEventJudgeType = rewardM.ALL
-		} else if pointReturn.ActualUseCash == 0 {
-			rewardEventResp.RewardEventJudgeType = rewardM.NONE
-		} else {
-			rewardEventResp.RewardEventJudgeType = rewardM.SOME
-		}
-
-		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-			PointReturn: pointReturn,
-		}
-
-		break
-
-	case rewardM.RED_POINT:
+	case rewardM.RED:
 		redReturn, err := im.calculateRedPointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
 
 		if err != nil {

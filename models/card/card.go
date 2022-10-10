@@ -13,9 +13,10 @@ const (
 )
 
 type Card struct {
-	ID     string `json:"id"`
-	BankID string `json:"bankID"`
-	Name   string `json:"name,omitempty"`
+	ID     string   `json:"id"`
+	BankID string   `json:"bankID"`
+	Name   string   `json:"name,omitempty"`
+	Descs  []string `json:"descs"`
 
 	UpdateDate int64 `json:"updateDate,omitempty"`
 
@@ -47,8 +48,9 @@ type CardReward struct {
 
 	CardRewardOperator CardRewardOperator `json:"cardRewardOperator,omitempty"` // (R0+(R1&(R2|R3)))
 	RewardType         reward.RewardType  `json:"rewardType,omitempty"`
+	CardRewardBonus    *CardRewardBonus   `json:"cardRewardBonus"` // show 9折優惠 or 10%回饋 等等
 
-	CardRewardBonus *CardRewardBonus `json:"cardRewardBonus,omitempty"`
+	FeedbackDescID string `json:"feedbackDescID"`
 
 	CardRewardLimitTypes []CardRewardLimitType `json:"cardRewardLimitTypes"`
 
@@ -58,7 +60,8 @@ type CardReward struct {
 }
 
 type CardRewardBonus struct {
-	TotalBonus float64 `json:"totalBonus"`
+	TotalBonus float64 `json:"totalBonus"` // for percentage reward like ? / 10 %回饋
+	FixedDesc  string  `json:"fixedDesc"`  // for fixed reward like 9折優惠
 }
 
 type CardRewardLimitType int32
