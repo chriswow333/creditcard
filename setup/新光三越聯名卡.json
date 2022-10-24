@@ -52,8 +52,10 @@
                 "endDate":1672531199,
                 "cardRewardOperator":1,
                 "rewardType":1,
+                "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
                 "cardRewardBonus":{
-                    "totalBonus":10
+                    "totalBonus":10,
+                    "fixedDesc":""
                 },
                 "cardRewardLimitTypes":[
                     3
@@ -117,8 +119,10 @@
                 "endDate":1672531199,
                 "cardRewardOperator":1,
                 "rewardType":1,
+                "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
                 "cardRewardBonus":{
-                    "totalBonus":0
+                    "totalBonus":10,
+                    "fixedDesc":""
                 },
                 "cardRewardLimitTypes":[
                     3
@@ -165,8 +169,10 @@
                 "endDate":1672531199,
                 "cardRewardOperator":1,
                 "rewardType":1,
+                "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
                 "cardRewardBonus":{
-                    "totalBonus":3
+                    "totalBonus":3,
+                    "fixedDesc":""
                 },
                 "cardRewardLimitTypes":[
                     3

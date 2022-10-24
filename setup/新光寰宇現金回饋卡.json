@@ -68,6 +68,7 @@
                 "endDate":1672531199,
                 "cardRewardOperator":1,
                 "rewardType":1,
+                "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
                 "cardRewardBonus":{
                     "totalBonus":13
                 },
@@ -218,7 +219,7 @@
             },
             {
                 "cardID":"b55d7f08-d8cc-4bf5-4c0c-873a5be26724",
-                "title":"My FamiPay 10%",
+                "title":"My FamiPay 最高10%現金回饋",
                 "descs":[
                     "My FamiPay消費回饋10%(菸品不適用，每月每戶最高回饋50點)"
                 ],

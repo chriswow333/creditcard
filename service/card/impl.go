@@ -568,8 +568,10 @@ func (im *impl) GetRespByID(ctx context.Context, ID string) (*cardM.CardResp, er
 
 	bank, err := im.bankService.GetByID(ctx, card.BankID)
 	cardResp := &cardM.CardResp{
-		ID:       ID,
-		Name:     card.Name,
+		ID:    ID,
+		Name:  card.Name,
+		Descs: card.Descs,
+
 		BankID:   card.BankID,
 		BankName: bank.Name,
 

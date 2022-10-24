@@ -6,8 +6,9 @@ import (
 )
 
 type CardEventResp struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID    string   `json:"id"`
+	Name  string   `json:"name"`
+	Descs []string `json:"descs"`
 
 	BankID   string `json:"bankID"`
 	BankName string `json:"bankName"`

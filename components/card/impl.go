@@ -60,8 +60,9 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 
 	cardEventResp := &cardM.CardEventResp{
 
-		ID:   im.card.ID,
-		Name: im.card.Name,
+		ID:    im.card.ID,
+		Name:  im.card.Name,
+		Descs: im.card.Descs,
 
 		ImagePath: im.card.ImagePath,
 

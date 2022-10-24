@@ -61,7 +61,7 @@ type CardReward struct {
 
 type CardRewardBonus struct {
 	TotalBonus float64 `json:"totalBonus"` // for percentage reward like ? / 10 %回饋
-	FixedDesc  string  `json:"fixedDesc"`  // for fixed reward like 9折優惠
+
 }
 
 type CardRewardLimitType int32

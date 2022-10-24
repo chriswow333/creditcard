@@ -7,9 +7,10 @@ import (
 )
 
 type CardResp struct {
-	ID     string `json:"id"`
-	BankID string `json:"bankID"`
-	Name   string `json:"name"`
+	ID     string   `json:"id"`
+	BankID string   `json:"bankID"`
+	Name   string   `json:"name"`
+	Descs  []string `json:"descs"`
 
 	BankName string `json:"bankName"`
 
