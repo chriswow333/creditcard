@@ -9,14 +9,17 @@ import (
 )
 
 type impl struct {
-	channel *channelM.Channel
+	amusements []*channelM.Amusement
+	channel    *channelM.Channel
 }
 
 func New(
+	amusements []*channelM.Amusement,
 	channel *channelM.Channel,
 ) channel.Component {
 	return &impl{
-		channel: channel,
+		amusements: amusements,
+		channel:    channel,
 	}
 }
 
@@ -30,17 +33,17 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 
 	matches := []string{}
 	misses := []string{}
-	hotelMap := make(map[string]bool)
+	amusementMap := make(map[string]bool)
 
-	for _, st := range e.Hotels {
-		hotelMap[st] = true
+	for _, st := range e.Amusements {
+		amusementMap[st] = true
 	}
 
-	for _, st := range im.channel.AppStores {
-		if _, ok := hotelMap[st]; ok {
-			matches = append(matches, st)
+	for _, au := range im.amusements {
+		if _, ok := amusementMap[au.ID]; ok {
+			matches = append(matches, au.ID)
 		} else {
-			misses = append(misses, st)
+			misses = append(misses, au.ID)
 		}
 	}
 

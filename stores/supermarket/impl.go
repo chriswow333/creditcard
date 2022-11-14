@@ -22,7 +22,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO supermarket " +
-	"(\"id\", \"name\") VALUES ($1, $2)"
+	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, supermarket *channel.Supermarket) error {
 	tx, err := im.psql.Begin()
@@ -38,6 +38,7 @@ func (im *impl) Create(ctx context.Context, supermarket *channel.Supermarket) er
 	updater := []interface{}{
 		supermarket.ID,
 		supermarket.Name,
+		supermarket.ChannelLabels,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,7 +56,8 @@ func (im *impl) Create(ctx context.Context, supermarket *channel.Supermarket) er
 
 const UPDATE_BY_ID_STAT = "UPDATE supermarket SET " +
 	" \"name\" = $1 " +
-	" where \"id\" = $2"
+	" \"channel_label\" = $2 " +
+	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, supermarket *channel.Supermarket) error {
 	tx, err := im.psql.Begin()
@@ -70,6 +72,7 @@ func (im *impl) UpdateByID(ctx context.Context, supermarket *channel.Supermarket
 
 	updater := []interface{}{
 		supermarket.Name,
+		supermarket.ChannelLabels,
 		supermarket.ID,
 	}
 
@@ -84,7 +87,7 @@ func (im *impl) UpdateByID(ctx context.Context, supermarket *channel.Supermarket
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM supermarket "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Supermarket, error) {
@@ -103,6 +106,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Supermarket, error) {
 		selector := []interface{}{
 			&supermarket.ID,
 			&supermarket.Name,
+			&supermarket.ChannelLabels,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -118,7 +122,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Supermarket, error) {
 	return supermarkets, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM supermarket WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Supermarket, error) {
@@ -127,6 +131,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Supermarket, e
 	selector := []interface{}{
 		&supermarket.ID,
 		&supermarket.Name,
+		&supermarket.ChannelLabels,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

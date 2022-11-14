@@ -171,7 +171,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 		}
 
 		cardRewardID := cr.ID
-		rewrdChannels, err := im.rewardChannelService.GetByRewardID(ctx, cardRewardID)
+		rewardChannels, err := im.rewardChannelService.GetByRewardID(ctx, cardRewardID)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"": "",
@@ -199,7 +199,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 		amusements := []*channelM.Amusement{}
 		cinemas := []*channelM.Cinema{}
 
-		for _, rc := range rewrdChannels {
+		for _, rc := range rewardChannels {
 
 			switch rc.ChannelType {
 
@@ -218,12 +218,18 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 				break
 
 			case int32(channelM.MobilepayType):
-				mobilepay, err := im.channelService.GetMobilepay(ctx, rc.ChannelID)
-				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
-					return nil, err
+
+				mobilepay := &channelM.Mobilepay{}
+				if rc.AllPass {
+					mobilepay.ID = "allPass"
+				} else {
+					mobilepay, err = im.channelService.GetMobilepay(ctx, rc.ChannelID)
+					if err != nil {
+						logrus.WithFields(logrus.Fields{
+							"": "",
+						}).Error(err)
+						return nil, err
+					}
 				}
 
 				mobilepays = append(mobilepays, mobilepay)
@@ -279,12 +285,19 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				break
 			case int32(channelM.FoodType):
-				food, err := im.channelService.GetFood(ctx, rc.ChannelID)
-				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
-					return nil, err
+
+				food := &channelM.Food{}
+
+				if "allPass" == rc.ChannelID {
+					food.ID = "allPass"
+				} else {
+					food, err = im.channelService.GetFood(ctx, rc.ChannelID)
+					if err != nil {
+						logrus.WithFields(logrus.Fields{
+							"": "",
+						}).Error(err)
+						return nil, err
+					}
 				}
 				foods = append(foods, food)
 
@@ -427,9 +440,17 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 		}
 
 		if len(mobilepays) > 0 {
+
+			allPass := false
+
+			if "allPass" == mobilepays[0].ID {
+				allPass = true
+			}
+
 			channelResps = append(channelResps, &channelM.ChannelResp{
 				ChannelType: channelM.MobilepayType,
 				Mobilepays:  mobilepays,
+				AllPass:     allPass,
 			})
 		}
 
@@ -462,9 +483,17 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 		}
 
 		if len(foods) > 0 {
+
+			allPass := false
+
+			if "allPass" == foods[0].ID {
+				allPass = true
+			}
+
 			channelResps = append(channelResps, &channelM.ChannelResp{
 				ChannelType: channelM.FoodType,
 				Foods:       foods,
+				AllPass:     allPass,
 			})
 		}
 
@@ -706,7 +735,7 @@ func (im *impl) createRewardChannels(ctx context.Context, cardID, cardRewardID s
 
 	for channelType, channelIDMap := range channelTypeMap {
 
-		for channelID, _ := range channelIDMap {
+		for channelID := range channelIDMap {
 			id, err := uuid.NewV4()
 
 			if err != nil {
@@ -771,8 +800,12 @@ func findAllChannelID(channel *channelM.Channel, channelTypeMap map[channelM.Cha
 			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
 
-		for _, m := range channel.Mobilepays {
-			channelTypeMap[channel.ChannelType][m] = true
+		if channel.AllPass {
+			channelTypeMap[channel.ChannelType]["allPass"] = true
+		} else {
+			for _, m := range channel.Mobilepays {
+				channelTypeMap[channel.ChannelType][m] = true
+			}
 		}
 
 		break
@@ -826,8 +859,12 @@ func findAllChannelID(channel *channelM.Channel, channelTypeMap map[channelM.Cha
 			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
 
-		for _, f := range channel.Foods {
-			channelTypeMap[channel.ChannelType][f] = true
+		if channel.AllPass {
+			channelTypeMap[channel.ChannelType]["allPass"] = true
+		} else {
+			for _, f := range channel.Foods {
+				channelTypeMap[channel.ChannelType][f] = true
+			}
 		}
 
 		break

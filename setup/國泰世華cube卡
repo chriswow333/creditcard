@@ -1,0 +1,326 @@
+{
+
+    "bankID":"d1895ea1-f064-419f-92d1-edd0ddd25936",
+    "name":"CUBE卡",
+    
+    "imagePath":"card/sk_c07",
+    "cardStatus":0,
+    "linkURL":"https://www.cathaybk.com.tw/cathaybk/personal/product/credit-card/cards/cube/",
+
+    "otherReward":[
+        {
+            "title":"",
+            "descs":[
+                
+            ]
+        }
+ 
+    ]
+}
+
+
+"6e25c9d3-f8e6-4ab8-9e06-e4ebe5d080ba"
+
+
+
+
+{
+    "cardRewards":[
+        {
+            "cardID":"5d88c699-4e2f-4793-4e6c-ae8b705b37e4",
+            "title":"玩數位",
+            "descs":[],
+            "startDate":1667701585,
+            "endDate":1672531199,
+            "cardRewardOperator":1,
+            "rewardType":2,
+            "feedbackDescID":"1bd0c1a2-32a1-44ce-b331-363c4fad5a52",
+            "cardRewardBonus":{
+                "totalBonus":10
+            },
+            "cardRewardLimitTypes":[
+                
+            ],
+            "constraintPassLogics":[],
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "pointback":{
+                                    "pointCalculateType":2,
+                                    "bonus":0.003,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":2,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "6e25c9d3-f8e6-4ab8-9e06-e4ebe5d080ba"
+                                ]
+                            }
+                        }
+                    ]
+                },
+
+
+                {
+                    "order":1,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "pointback":{
+                                    "pointCalculateType":2,
+                                    "bonus":0.037,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":1,
+                                "channelMappingType":1,
+                                "innerChannels":[
+                                    {
+                                        "channelOperatorType":2,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":2,
+                                                "mobilepays":[
+                                                    "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
+                                                    "0cfb3fae-ea37-451e-a51d-bb142c48bf77",
+                                                    "4ca3330e-16ed-4612-a45b-5831a57ff12c"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "channelOperatorType":2,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelMappingType":1,
+                                                "channelType":16,
+                                                "appstores":[
+                                                    "68672189-19c7-4be8-a764-e71a32e4542e",
+                                                    "253d162f-c6e8-4a8d-a31e-ef1c77552b71"
+                                                ]               
+                                            },
+        
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelMappingType":1,
+                                                "channelType":7,
+                                                "streamings":[
+                                                    "24d54d61-59cf-4b34-80d2-b91e2e56c560",
+                                                    "aeac6139-5582-48af-a17c-a590fef21865",
+                                                    "859f96ca-a319-4f69-9c10-3d05fb109c50",
+                                                    "96b7c040-a153-466c-8d6b-7c977602d0de",
+                                                    "fab8633e-8a2d-4878-9d36-db664328baaa",
+                                                    "3493cc41-0229-421e-b0a8-8e82cf4ae194"
+                                                ]
+                                            },
+                                            
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelMappingType":1,
+                                                "channelType":4,
+                                                "ecommerces":[
+                                                    "ad2e2c24-56b4-43bb-be64-1d7f8a432455",
+                                                    "71cebd97-bdea-4bdb-921a-6ed48ef043f4",
+                                                    "dc404a4d-a79e-4883-b84e-7009f4744260",
+                                                    "6360eec3-9a3b-4499-aeb6-f19c10136624",
+                                                    "eaa922c9-053d-4d56-a7e0-cdfe78b2a11f",
+                                                    "e8ae9755-c536-4f72-a49c-c1e2db2acd37",
+                                                    "f2e4b992-f43f-405c-b6f4-16c979f1f362",
+                                                    "d77d898d-5773-43af-89ec-e0245b5f40d2",
+                                                    "9fae6086-b5b5-4830-8605-2f3d7ad01b21"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+
+{
+
+    
+
+    "cardID":"5d88c699-4e2f-4793-4e6c-ae8b705b37e4",
+    "title":"樂饗購",
+    "descs":[],
+    "startDate":1667701585,
+    "endDate":1672531199,
+    "cardRewardOperator":1,
+    "rewardType":2,
+    "feedbackDescID":"1bd0c1a2-32a1-44ce-b331-363c4fad5a52",
+    "cardRewardBonus":{
+        "totalBonus":3.3
+    },
+    "cardRewardLimitTypes":[
+        
+    ],
+    "constraintPassLogics":[],
+    "rewards":[
+        {
+            "order":0,
+            "payloadOperator":1,
+            "payloads":[
+                {
+                    "feedback":{
+                        "pointback":{
+                            "pointCalculateType":2,
+                            "bonus":0.003,
+                            "min":0,
+                            "max":0
+                        }
+                    },
+                    "channel":{
+                        "channelOperatorType":2,
+                        "channelType":2,
+                        "channelMappingType":1,
+                        "tasks":[
+                            "6e25c9d3-f8e6-4ab8-9e06-e4ebe5d080ba"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "order":0,
+            "payloadOperator":1,
+            "payloads":[
+                {
+                    "feedback":{
+                        "pointback":{
+                            "pointCalculateType":2,
+                            "bonus":0.03,
+                            "min":0,
+                            "max":0
+                        }
+                    },
+                    "channel":{
+
+                        "channelOperatorType":2,
+                        "channelType":1,
+                        "channelMappingType":1,
+                        "allPass":false,
+                        "innerChannels":[
+                            {
+                                "channelOperatorType":2,
+                                "channelType":13,
+                                "channelMappingType":1,
+                                "allPass":false,
+                                "malls":[
+                                    "f79484d1-7bec-4906-8cb3-f0eedb0ef798",
+                                    "13a9cc0f-7eb1-43a6-8126-e4259f841ef5",
+                                    "85709f45-bbda-405d-8c5a-63698042040f",
+                                    "83de47f8-6aa4-4ddc-93d7-def444dbae7d",
+                                    "36a4ff91-88b7-463f-b259-baf1cd61857b",
+                                    "c82dcb29-4765-4a1f-9528-081cc7a897c3",
+                                    "b66b9649-97b8-44de-b631-17890fde810a",
+                                    "e54d8ad1-f69a-400f-a3d4-f0a9faa1bd08",
+                                    "8542d33a-70fa-48ef-b97a-5bbea019911c",
+                                    "50dbde82-9597-40b8-a186-154fb4422027",
+                                    "b8333f1e-e04f-4855-b7d1-f26f4217e0a0",
+                                    "460e055f-e8a8-49be-a5f5-d2060ba66666",
+                                    "e9c45c8d-7135-4d60-be9e-346e761a07b8",
+                                    "0ef725d2-ddc7-4524-9291-82a2d83cca84",
+                                    "fd12dc63-8f0e-4d5f-9f6e-89842bc98728",
+                                    "476efe61-c5db-41fd-b3d5-8f20456c9a40",
+                                    "eebfe808-2c82-4c6c-a8cd-9a03e18fa015",
+                                    "d6d7c52b-c443-4075-9877-772587adbccd",
+                                    "0dffeb7f-df90-4b0f-953d-15bae55f8dd3",
+                                    "6065a093-1288-457a-a4ba-b0cc0ef4942d",
+                                    "233eff95-9633-4fe9-88fb-cbbcccc4fc9e",
+                                    "deb338c1-e81c-4846-a911-2d20f60057f5",
+                                    "df9e1c02-554f-4e35-9275-712bbc5481e5",
+                                    "d96a3137-94db-4656-9240-bb9cf6c8b13e",
+                                    "7749460f-393f-4ff8-bdba-f1b3f30ece14",
+                                    "f7f4ca1f-46ed-4ae1-a8df-2fcc60954b4d",
+                                    "cb890b69-a692-4c4a-96a1-0a6323a8d075",
+                                    "c201e5a5-ad28-46f0-8508-a344a974a339",
+                                    "12157035-c8f0-4767-b935-369d86aacfe6",
+                                    "0a3855c1-d6c7-4d71-a896-3d61e270a44b",
+                                    "fbd6a00f-c892-4dde-b8a6-7ec3105eb721",
+                                    "f8b9a1fb-c3b1-463a-b7ef-3e04ea9568c0",
+                                    "7aad2a18-fde1-4867-9928-c179016473f5",
+                                    "a5c0da3b-597e-4293-b719-76530f1cd36b",
+                                    "ce39ac24-ead4-46e7-aeb5-0a79c7086a32",
+                                    "4df48e90-c2bf-476a-8627-d3fd0cabde5d",
+                                    "c6a0efc0-389c-486a-b4b9-3e5b1a1c2608",
+                                    "bd14a664-e138-4dec-a70b-d65b3041c3de",
+                                    "f61e6d67-bfbf-4128-b6f9-37bf17d264f4",
+                                    "028e8b5e-fcd6-450f-a7b7-fb79eb6018fa",
+                                    "c1889ba4-ed17-4856-a562-93bb577749a9",
+                                    "bddce4dc-6f15-40ec-bfd0-545615fb44b0",
+                                    "6a9a9e54-3400-4488-8fe8-7dce30f7fb41",
+                                    "92b80f23-6881-481d-8866-ddd5fed02e0c",
+                                    "1bcb3690-8ea5-40ff-8d6f-efef1d4b2170",
+                                    "49492526-dc34-456f-b20e-664ef3e4a2cd",
+                                    "fb959618-a7ee-4441-b59f-c050a4dc3743",
+                                    "3544755f-af48-492b-84dc-6c5e7a6634c5",
+                                    "80126d48-064e-4ef2-8069-6fe75369c6d7",
+                                    "b5ce21e1-68a9-4472-804b-83859ce350c8",
+                                    "6ca3cff4-75d6-48e8-a66c-53eb20898c0c",
+                                    "cd4aacbf-9fc2-4789-92fc-1bc8d28ea0d4",
+                                    "bcd56f1c-aa53-42d4-96c7-53f68483bf71",
+                                    "d109ab88-e43c-4d96-8428-7ecbef965d61",
+                                    "c179e2af-c360-4378-887d-21c7b2161559",
+                                    "d207618a-692c-45b2-9b8c-72952231280c",
+                                    "6fd0d029-2190-47c7-aa4c-c2d5fe141cff"
+                                ]
+                            },
+
+
+                            {
+                                "channelOperatorType":2,
+                                "channelType":11,
+                                "channelMappingType":1,
+                                "allPass":false,
+                                "deliveries":[
+                                    "86e3e8d1-c5e7-44ab-9e07-5f097a14905f",
+                                    "878fa435-93f6-4ee1-8e2d-0efcb91e7d6e",
+                                    "5ea5f0b8-7692-4934-98c9-a3cb71f16573",
+                                    "e0ccb860-2835-42ee-9637-a6ef222da761",
+                                    "41a8aee3-4e7b-46fd-9b05-12682406f88c",
+                                    "312d9471-bdf2-4fc4-b3ab-953411d4b117"
+                                ]
+                            },
+
+                            {
+                                "channelOperatorType":2,
+                                "channelType":8,
+                                "channelMappingType":1,
+                                "allPass":true,
+                                "excludedChannelLabels":[1],
+                                "foods":[]
+                            }
+                        ]
+
+                    }
+                }
+            ]
+        }
+    ]
+}

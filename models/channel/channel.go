@@ -14,6 +14,13 @@ const (
 	MISMATCH
 )
 
+type ChannelLabel int32
+
+const (
+	MICRO_PAYMENT = iota + 1 // 小額支付
+
+)
+
 type ChannelType int32
 
 const (
@@ -49,6 +56,9 @@ type Channel struct {
 	InnerChannels []*Channel `json:"innerChannels,omitempty"`
 
 	Tasks []string `json:"tasks,omitempty"`
+
+	AllPass               bool           `json:"allPass"`
+	ExcludedChannelLabels []ChannelLabel `json:"excludedChannelLabels"`
 
 	Mobilepays        []string `json:"mobilepays,omitempty"`
 	Ecommerces        []string `json:"ecommerces,omitempty"`

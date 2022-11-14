@@ -22,7 +22,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO sport " +
-	"(\"id\", \"name\") VALUES ($1, $2)"
+	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, sport *channel.Sport) error {
 	tx, err := im.psql.Begin()
@@ -38,6 +38,7 @@ func (im *impl) Create(ctx context.Context, sport *channel.Sport) error {
 	updater := []interface{}{
 		sport.ID,
 		sport.Name,
+		sport.ChannelLabels,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,7 +56,8 @@ func (im *impl) Create(ctx context.Context, sport *channel.Sport) error {
 
 const UPDATE_BY_ID_STAT = "UPDATE sport SET " +
 	" \"name\" = $1 " +
-	" where \"id\" = $2"
+	" \"channel_label\" = $2 " +
+	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, sport *channel.Sport) error {
 	tx, err := im.psql.Begin()
@@ -70,6 +72,7 @@ func (im *impl) UpdateByID(ctx context.Context, sport *channel.Sport) error {
 
 	updater := []interface{}{
 		sport.Name,
+		sport.ChannelLabels,
 		sport.ID,
 	}
 
@@ -84,7 +87,7 @@ func (im *impl) UpdateByID(ctx context.Context, sport *channel.Sport) error {
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM sport "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Sport, error) {
@@ -103,6 +106,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Sport, error) {
 		selector := []interface{}{
 			&sport.ID,
 			&sport.Name,
+			&sport.ChannelLabels,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -118,7 +122,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Sport, error) {
 	return sports, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM sport WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Sport, error) {
@@ -127,6 +131,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Sport, error) 
 	selector := []interface{}{
 		&sport.ID,
 		&sport.Name,
+		&sport.ChannelLabels,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

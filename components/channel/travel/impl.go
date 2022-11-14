@@ -9,13 +9,16 @@ import (
 )
 
 type impl struct {
+	travels []*channelM.Travel
 	channel *channelM.Channel
 }
 
 func New(
+	travels []*channelM.Travel,
 	channel *channelM.Channel,
 ) channel.Component {
 	return &impl{
+		travels: travels,
 		channel: channel,
 	}
 }

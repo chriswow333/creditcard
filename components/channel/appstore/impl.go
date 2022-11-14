@@ -10,15 +10,18 @@ import (
 )
 
 type impl struct {
-	channel *channelM.Channel
+	appstores []*channelM.AppStore
+	channel   *channelM.Channel
 }
 
 func New(
+	appstores []*channelM.AppStore,
 	channel *channelM.Channel,
 ) channel.Component {
 
 	return &impl{
-		channel: channel,
+		appstores: appstores,
+		channel:   channel,
 	}
 }
 

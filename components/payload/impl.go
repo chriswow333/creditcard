@@ -65,7 +65,9 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.Payload
 		}
 
 	} else {
+
 		feedReturn, err = im.processFeedReturn(ctx, e, false)
+
 		if err != nil {
 			return nil, err
 		}

@@ -42,11 +42,12 @@ type Event struct {
 	Deliveries        []string `json:"deliveries"`
 	Travels           []string `json:"travels"`
 	Insurances        []string `json:"insurances"`
-	Sports            []string `json:"sports"`
 	Malls             []string `json:"malls"`
 	Conveniencestores []string `json:"conveniencestores"`
+	Sports            []string `json:"sports"`
 	AppStores         []string `json:"appstores"`
 	Hotels            []string `json:"hotels"`
+	Amusements        []string `json:"amusements"`
 	Cinemas           []string `json:"cinemas"`
 }
 

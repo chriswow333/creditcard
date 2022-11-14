@@ -22,7 +22,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO travel " +
-	"(\"id\", \"name\") VALUES ($1, $2)"
+	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, travel *channel.Travel) error {
 	tx, err := im.psql.Begin()
@@ -38,6 +38,7 @@ func (im *impl) Create(ctx context.Context, travel *channel.Travel) error {
 	updater := []interface{}{
 		travel.ID,
 		travel.Name,
+		travel.ChannelLabels,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,7 +56,8 @@ func (im *impl) Create(ctx context.Context, travel *channel.Travel) error {
 
 const UPDATE_BY_ID_STAT = "UPDATE travel SET " +
 	" \"name\" = $1 " +
-	" where \"id\" = $2"
+	" \"channel_label\" = $2 " +
+	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, travel *channel.Travel) error {
 	tx, err := im.psql.Begin()
@@ -71,6 +73,7 @@ func (im *impl) UpdateByID(ctx context.Context, travel *channel.Travel) error {
 	updater := []interface{}{
 		travel.Name,
 		travel.ID,
+		travel.ChannelLabels,
 	}
 
 	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
@@ -84,7 +87,7 @@ func (im *impl) UpdateByID(ctx context.Context, travel *channel.Travel) error {
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM travel "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Travel, error) {
@@ -103,6 +106,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Travel, error) {
 		selector := []interface{}{
 			&travel.ID,
 			&travel.Name,
+			&travel.ChannelLabels,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -118,7 +122,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Travel, error) {
 	return travels, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM Travel WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Travel, error) {
@@ -127,6 +131,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Travel, error)
 	selector := []interface{}{
 		&travel.ID,
 		&travel.Name,
+		&travel.ChannelLabels,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

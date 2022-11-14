@@ -10,15 +10,18 @@ import (
 )
 
 type impl struct {
-	channel *channelM.Channel
+	deliveries []*channelM.Delivery
+	channel    *channelM.Channel
 }
 
 func New(
+	deliveries []*channelM.Delivery,
 	channel *channelM.Channel,
 ) channel.Component {
 
 	return &impl{
-		channel: channel,
+		deliveries: deliveries,
+		channel:    channel,
 	}
 }
 

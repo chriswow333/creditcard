@@ -10,6 +10,8 @@ type ChannelResp struct {
 
 	ChannelType ChannelType `json:"channelType,omitempty"`
 
+	AllPass bool `json:"allPass"`
+
 	Tasks []*task.Task `json:"tasks,omitempty"`
 
 	Mobilepays        []*Mobilepay        `json:"mobilepays,omitempty"`

@@ -22,7 +22,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO onlinegame " +
-	"(\"id\", \"name\") VALUES ($1, $2)"
+	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, onlinegame *channel.Onlinegame) error {
 	tx, err := im.psql.Begin()
@@ -38,6 +38,7 @@ func (im *impl) Create(ctx context.Context, onlinegame *channel.Onlinegame) erro
 	updater := []interface{}{
 		onlinegame.ID,
 		onlinegame.Name,
+		onlinegame.ChannelLabels,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,7 +56,8 @@ func (im *impl) Create(ctx context.Context, onlinegame *channel.Onlinegame) erro
 
 const UPDATE_BY_ID_STAT = "UPDATE onlinegame SET " +
 	" \"name\" = $1 " +
-	" where \"id\" = $2"
+	" \"channel_label\" = $2 " +
+	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, onlinegame *channel.Onlinegame) error {
 	tx, err := im.psql.Begin()
@@ -70,6 +72,7 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *channel.Onlinegame) 
 
 	updater := []interface{}{
 		onlinegame.Name,
+		onlinegame.ChannelLabels,
 		onlinegame.ID,
 	}
 
@@ -84,7 +87,7 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *channel.Onlinegame) 
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM onlinegame "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Onlinegame, error) {
@@ -103,6 +106,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Onlinegame, error) {
 		selector := []interface{}{
 			&onlinegame.ID,
 			&onlinegame.Name,
+			&onlinegame.ChannelLabels,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -118,7 +122,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Onlinegame, error) {
 	return onlinegames, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM onlinegame WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Onlinegame, error) {
@@ -127,6 +131,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Onlinegame, er
 	selector := []interface{}{
 		&onlinegame.ID,
 		&onlinegame.Name,
+		&onlinegame.ChannelLabels,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

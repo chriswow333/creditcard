@@ -22,7 +22,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO amusement " +
-	"(\"id\", \"name\") VALUES ($1, $2)"
+	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, amusement *channel.Amusement) error {
 	tx, err := im.psql.Begin()
@@ -38,6 +38,7 @@ func (im *impl) Create(ctx context.Context, amusement *channel.Amusement) error 
 	updater := []interface{}{
 		amusement.ID,
 		amusement.Name,
+		amusement.ChannelLabels,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,7 +56,8 @@ func (im *impl) Create(ctx context.Context, amusement *channel.Amusement) error 
 
 const UPDATE_BY_ID_STAT = "UPDATE amusement SET " +
 	" \"name\" = $1 " +
-	" where \"id\" = $2"
+	" \"channel_label\" = $2 " +
+	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, amusement *channel.Amusement) error {
 	tx, err := im.psql.Begin()
@@ -70,6 +72,7 @@ func (im *impl) UpdateByID(ctx context.Context, amusement *channel.Amusement) er
 
 	updater := []interface{}{
 		amusement.Name,
+		amusement.ChannelLabels,
 		amusement.ID,
 	}
 
@@ -84,7 +87,7 @@ func (im *impl) UpdateByID(ctx context.Context, amusement *channel.Amusement) er
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM amusement "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Amusement, error) {
@@ -103,6 +106,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Amusement, error) {
 		selector := []interface{}{
 			&amusement.ID,
 			&amusement.Name,
+			&amusement.ChannelLabels,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -118,7 +122,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Amusement, error) {
 	return amusements, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM amusement WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Amusement, error) {
@@ -127,6 +131,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Amusement, err
 	selector := []interface{}{
 		&amusement.ID,
 		&amusement.Name,
+		&amusement.ChannelLabels,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {

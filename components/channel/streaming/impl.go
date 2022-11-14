@@ -9,14 +9,17 @@ import (
 )
 
 type impl struct {
-	channel *channelM.Channel
+	streamings []*channelM.Streaming
+	channel    *channelM.Channel
 }
 
 func New(
+	streamings []*channelM.Streaming,
 	channel *channelM.Channel,
 ) channel.Component {
 	return &impl{
-		channel: channel,
+		streamings: streamings,
+		channel:    channel,
 	}
 }
 
@@ -36,11 +39,11 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		streamingMap[st] = true
 	}
 
-	for _, st := range im.channel.Streamings {
-		if _, ok := streamingMap[st]; ok {
-			matches = append(matches, st)
+	for _, st := range im.streamings {
+		if _, ok := streamingMap[st.ID]; ok {
+			matches = append(matches, st.ID)
 		} else {
-			misses = append(misses, st)
+			misses = append(misses, st.ID)
 		}
 	}
 

@@ -2,6 +2,7 @@ package food
 
 import (
 	"context"
+	"fmt"
 
 	"example.com/creditcard/components/channel"
 	channelM "example.com/creditcard/models/channel"
@@ -9,13 +10,18 @@ import (
 )
 
 type impl struct {
+	foods   []*channelM.Food
 	channel *channelM.Channel
 }
 
 func New(
+
+	foods []*channelM.Food,
 	channel *channelM.Channel,
+
 ) channel.Component {
 	return &impl{
+		foods:   foods,
 		channel: channel,
 	}
 }
@@ -36,13 +42,35 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		foodMap[st] = true
 	}
 
-	for _, st := range im.channel.Foods {
-		if _, ok := foodMap[st]; ok {
-			matches = append(matches, st)
+	channelLabels := im.channel.ExcludedChannelLabels
+	channelLabelMap := make(map[channelM.ChannelLabel]bool)
+
+	for _, label := range channelLabels {
+		channelLabelMap[label] = true
+	}
+
+	for _, fo := range im.foods {
+		if _, ok := foodMap[fo.ID]; ok {
+			matchExcludedLabel := false
+			for _, foLabel := range fo.ChannelLabels {
+				if _, ok := channelLabelMap[foLabel]; ok {
+					matchExcludedLabel = true
+					break
+				}
+			}
+			if matchExcludedLabel {
+				misses = append(misses, fo.ID)
+			} else {
+				matches = append(matches, fo.ID)
+			}
+
 		} else {
-			misses = append(misses, st)
+			misses = append(misses, fo.ID)
 		}
 	}
+
+	fmt.Println(matches)
+	fmt.Println(channelLabelMap)
 
 	channelEventResp.Matches = matches
 	channelEventResp.Misses = misses

@@ -9,14 +9,17 @@ import (
 )
 
 type impl struct {
-	channel *channelM.Channel
+	supermarkets []*channelM.Supermarket
+	channel      *channelM.Channel
 }
 
 func New(
+	supermarkets []*channelM.Supermarket,
 	channel *channelM.Channel,
 ) channel.Component {
 	return &impl{
-		channel: channel,
+		supermarkets: supermarkets,
+		channel:      channel,
 	}
 }
 
@@ -36,11 +39,11 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		supermarketMap[su] = true
 	}
 
-	for _, su := range im.channel.Supermarkets {
-		if _, ok := supermarketMap[su]; ok {
-			matches = append(matches, su)
+	for _, su := range im.supermarkets {
+		if _, ok := supermarketMap[su.ID]; ok {
+			matches = append(matches, su.ID)
 		} else {
-			misses = append(misses, su)
+			misses = append(misses, su.ID)
 		}
 	}
 

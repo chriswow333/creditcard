@@ -10,15 +10,18 @@ import (
 )
 
 type impl struct {
-	channel *channelM.Channel
+	ecommerces []*channelM.Ecommerce
+	channel    *channelM.Channel
 }
 
 func New(
+	ecommerces []*channelM.Ecommerce,
 	channel *channelM.Channel,
 ) channel.Component {
 
 	return &impl{
-		channel: channel,
+		ecommerces: ecommerces,
+		channel:    channel,
 	}
 }
 
@@ -39,11 +42,11 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		ecommerceMap[ec] = true
 	}
 
-	for _, ec := range im.channel.Ecommerces {
-		if _, ok := ecommerceMap[ec]; ok {
-			matches = append(matches, ec)
+	for _, ec := range im.ecommerces {
+		if _, ok := ecommerceMap[ec.ID]; ok {
+			matches = append(matches, ec.ID)
 		} else {
-			misses = append(misses, ec)
+			misses = append(misses, ec.ID)
 		}
 	}
 

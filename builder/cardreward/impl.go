@@ -47,6 +47,24 @@ import (
 	"example.com/creditcard/models/task"
 
 	feedbackDescStore "example.com/creditcard/stores/feedback_desc"
+
+	amusementStore "example.com/creditcard/stores/amusement"
+	appstoreStore "example.com/creditcard/stores/appstore"
+	cinemaStore "example.com/creditcard/stores/cinema"
+	conveniencestoreStore "example.com/creditcard/stores/conveniencestore"
+	deliveryStore "example.com/creditcard/stores/delivery"
+	ecommerceStore "example.com/creditcard/stores/ecommerce"
+	foodStore "example.com/creditcard/stores/food"
+	hotelStore "example.com/creditcard/stores/hotel"
+	insuraceStore "example.com/creditcard/stores/insurance"
+	mallStore "example.com/creditcard/stores/mall"
+	mobilepayStore "example.com/creditcard/stores/mobilepay"
+	onlinegameStore "example.com/creditcard/stores/onlinegame"
+	sportStore "example.com/creditcard/stores/sport"
+	streamingStore "example.com/creditcard/stores/streaming"
+	supermarketStore "example.com/creditcard/stores/supermarket"
+	transportationStore "example.com/creditcard/stores/transportation"
+	travelStore "example.com/creditcard/stores/travel"
 )
 
 type impl struct {
@@ -55,18 +73,71 @@ type impl struct {
 	channelService channel.Service
 	bankService    bank.Service
 
-	feedbackDescStore feedbackDescStore.Store
+	feedbackDescStore     feedbackDescStore.Store
+	mobilepayStore        mobilepayStore.Store
+	ecommerceStore        ecommerceStore.Store
+	amusementStore        amusementStore.Store
+	supermarketStore      supermarketStore.Store
+	onlinegameStore       onlinegameStore.Store
+	streamingStore        streamingStore.Store
+	foodStore             foodStore.Store
+	transportationStore   transportationStore.Store
+	deliveryStore         deliveryStore.Store
+	travelStore           travelStore.Store
+	insuraceStore         insuraceStore.Store
+	mallStore             mallStore.Store
+	conveniencestoreStore conveniencestoreStore.Store
+	sportStore            sportStore.Store
+	appstoreStore         appstoreStore.Store
+	hotelStore            hotelStore.Store
+	cinemaStore           cinemaStore.Store
 }
 
 func New(
 	channelService channel.Service,
 	bankService bank.Service,
+
 	feedbackDescStore feedbackDescStore.Store,
+	mobilepayStore mobilepayStore.Store,
+	ecommerceStore ecommerceStore.Store,
+	amusementStore amusementStore.Store,
+	supermarketStore supermarketStore.Store,
+	onlinegameStore onlinegameStore.Store,
+	streamingStore streamingStore.Store,
+	foodStore foodStore.Store,
+	transportationStore transportationStore.Store,
+	deliveryStore deliveryStore.Store,
+	travelStore travelStore.Store,
+	insuraceStore insuraceStore.Store,
+	mallStore mallStore.Store,
+	conveniencestoreStore conveniencestoreStore.Store,
+	sportStore sportStore.Store,
+	appstoreStore appstoreStore.Store,
+	hotelStore hotelStore.Store,
+	cinemaStore cinemaStore.Store,
+
 ) Builder {
 	return &impl{
-		channelService:    channelService,
-		bankService:       bankService,
-		feedbackDescStore: feedbackDescStore,
+		channelService:        channelService,
+		bankService:           bankService,
+		feedbackDescStore:     feedbackDescStore,
+		mobilepayStore:        mobilepayStore,
+		ecommerceStore:        ecommerceStore,
+		amusementStore:        amusementStore,
+		supermarketStore:      supermarketStore,
+		onlinegameStore:       onlinegameStore,
+		streamingStore:        streamingStore,
+		foodStore:             foodStore,
+		transportationStore:   transportationStore,
+		deliveryStore:         deliveryStore,
+		travelStore:           travelStore,
+		insuraceStore:         insuraceStore,
+		mallStore:             mallStore,
+		conveniencestoreStore: conveniencestoreStore,
+		sportStore:            sportStore,
+		appstoreStore:         appstoreStore,
+		hotelStore:            hotelStore,
+		cinemaStore:           cinemaStore,
 	}
 
 }
@@ -152,7 +223,6 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		break
 	case channelM.TaskType:
 
-		//
 		tasks := []*task.Task{}
 		for _, t := range channel.Tasks {
 			task, err := im.channelService.GetTaskByID(ctx, t)
@@ -172,55 +242,610 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 
 		break
 	case channelM.MobilepayType:
-		channelComponent = mobilepayComp.New(channel)
+		mobilepayIDs := channel.Mobilepays
+		mobilepays := []*channelM.Mobilepay{}
+
+		if channel.AllPass {
+			allMobilepays, err := im.mobilepayStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"mobilepay get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+			mobilepays = allMobilepays
+		} else {
+			for _, id := range mobilepayIDs {
+				mobilepay, err := im.mobilepayStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"mobilepay get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				mobilepays = append(mobilepays, mobilepay)
+			}
+		}
+
+		channelComponent = mobilepayComp.New(mobilepays, channel)
 		break
 	case channelM.EcommerceType:
-		channelComponent = ecommerceComp.New(channel)
+
+		ecommerceIDs := channel.Ecommerces
+		ecommerces := []*channelM.Ecommerce{}
+
+		if channel.AllPass {
+
+			allEcommerces, err := im.ecommerceStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"mobilepay get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+			ecommerces = allEcommerces
+		} else {
+			for _, id := range ecommerceIDs {
+				ecommerce, err := im.ecommerceStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"mobilepay get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				ecommerces = append(ecommerces, ecommerce)
+			}
+		}
+
+		channelComponent = ecommerceComp.New(ecommerces, channel)
 		break
 	case channelM.SupermarketType:
-		channelComponent = supermarketComp.New(channel)
+
+		supermarketIDs := channel.Supermarkets
+		supermarkets := []*channelM.Supermarket{}
+
+		if channel.AllPass {
+
+			allSupermarkets, err := im.supermarketStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"supermarket get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+			supermarkets = allSupermarkets
+
+		} else {
+			for _, id := range supermarketIDs {
+				supermarket, err := im.supermarketStore.GetByID(ctx, id)
+
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"supermarket get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				supermarkets = append(supermarkets, supermarket)
+			}
+		}
+
+		channelComponent = supermarketComp.New(supermarkets, channel)
 		break
 	case channelM.OnlinegameType:
-		channelComponent = onlinegameComp.New(channel)
+
+		onlinegameIDs := channel.Onlinegames
+		onlinegames := []*channelM.Onlinegame{}
+
+		if channel.AllPass {
+
+			allOnlinegames, err := im.onlinegameStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"onlinegamge get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+			onlinegames = allOnlinegames
+
+		} else {
+			for _, id := range onlinegameIDs {
+				onlinegame, err := im.onlinegameStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"onlinegamge get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				onlinegames = append(onlinegames, onlinegame)
+			}
+
+		}
+
+		channelComponent = onlinegameComp.New(onlinegames, channel)
 		break
+
 	case channelM.StreamingType:
-		channelComponent = streamingComp.New(channel)
+
+		streamingIDs := channel.Streamings
+		streamings := []*channelM.Streaming{}
+
+		if channel.AllPass {
+
+			allStreamings, err := im.streamingStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"streaming get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+
+			streamings = allStreamings
+
+		} else {
+			for _, id := range streamingIDs {
+				steraming, err := im.streamingStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"streaming get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				streamings = append(streamings, steraming)
+			}
+		}
+
+		channelComponent = streamingComp.New(streamings, channel)
 		break
 	case channelM.FoodType:
-		channelComponent = foodComp.New(channel)
+
+		foodIDs := channel.Foods
+		foods := []*channelM.Food{}
+
+		if channel.AllPass {
+
+			allFoods, err := im.foodStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"food get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+
+			foods = allFoods
+
+		} else {
+			for _, id := range foodIDs {
+
+				food, err := im.foodStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"food get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+
+				foods = append(foods, food)
+			}
+		}
+
+		channelComponent = foodComp.New(foods, channel)
 		break
 	case channelM.TransportationType:
-		channelComponent = transportationComp.New(channel)
+
+		transportationIDs := channel.Transportations
+		transportations := []*channelM.Transportation{}
+
+		if channel.AllPass {
+			allTransportations, err := im.transportationStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"transportation get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+
+			transportations = allTransportations
+		} else {
+
+			for _, id := range transportationIDs {
+				transportation, err := im.transportationStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"transportation get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				transportations = append(transportations, transportation)
+			}
+
+		}
+
+		channelComponent = transportationComp.New(transportations, channel)
+
 		break
 	case channelM.DeliveryType:
-		channelComponent = deliveryComp.New(channel)
+
+		deliveryIDs := channel.Deliveries
+		deliveries := []*channelM.Delivery{}
+
+		if channel.AllPass {
+			allDeliveries, err := im.deliveryStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"delivery get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+			deliveries = allDeliveries
+		} else {
+			for _, id := range deliveryIDs {
+				delivery, err := im.deliveryStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"delivery get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				deliveries = append(deliveries, delivery)
+			}
+
+		}
+
+		channelComponent = deliveryComp.New(deliveries, channel)
 		break
+
 	case channelM.TravelType:
-		channelComponent = travelComp.New(channel)
+
+		travelIDs := channel.Travels
+		travels := []*channelM.Travel{}
+
+		if channel.AllPass {
+			allTravels, err := im.travelStore.GetAll(ctx)
+
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"travel get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+
+			travels = allTravels
+
+		} else {
+			for _, id := range travelIDs {
+				travel, err := im.travelStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"travel get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				travels = append(travels, travel)
+			}
+		}
+
+		channelComponent = travelComp.New(travels, channel)
 		break
+
 	case channelM.InsuranceType:
-		channelComponent = insuranceComp.New(channel)
+
+		insuranceIDs := channel.Insurances
+		insurances := []*channelM.Insurance{}
+
+		if channel.AllPass {
+			allInsurances, err := im.insuraceStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"insurance get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+			insurances = allInsurances
+
+		} else {
+			for _, id := range insuranceIDs {
+				insurance, err := im.insuraceStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"insurance get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				insurances = append(insurances, insurance)
+			}
+
+		}
+
+		channelComponent = insuranceComp.New(insurances, channel)
 		break
 	case channelM.MallType:
-		channelComponent = mallComp.New(channel)
+
+		mallIDs := channel.Malls
+		malls := []*channelM.Mall{}
+
+		if channel.AllPass {
+
+			allMalls, err := im.mallStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"mall get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+			malls = allMalls
+
+		} else {
+			for _, id := range mallIDs {
+				mall, err := im.mallStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"mall get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				malls = append(malls, mall)
+			}
+		}
+
+		channelComponent = mallComp.New(malls, channel)
 		break
 	case channelM.ConvenienceStoreType:
-		channelComponent = convenienceStoreComp.New(channel)
+		conveniencestoreIDs := channel.Conveniencestores
+		conveniencestores := []*channelM.ConvenienceStore{}
+
+		if channel.AllPass {
+
+			allConveniencestores, err := im.conveniencestoreStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"conveniencestore get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+
+			conveniencestores = allConveniencestores
+
+		} else {
+			for _, id := range conveniencestoreIDs {
+				conveniencestore, err := im.conveniencestoreStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"conveniencestore get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				conveniencestores = append(conveniencestores, conveniencestore)
+			}
+		}
+
+		channelComponent = convenienceStoreComp.New(conveniencestores, channel)
 		break
 	case channelM.SportType:
-		channelComponent = sportComp.New(channel)
+
+		sportIDs := channel.Sports
+		sports := []*channelM.Sport{}
+
+		if channel.AllPass {
+
+			allSports, err := im.sportStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"sport get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+
+			sports = allSports
+		} else {
+			for _, id := range sportIDs {
+				sport, err := im.sportStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"sport get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				sports = append(sports, sport)
+			}
+		}
+
+		channelComponent = sportComp.New(sports, channel)
 		break
+
 	case channelM.AppStoreType:
-		channelComponent = appStoreComp.New(channel)
+
+		appstoreIDs := channel.AppStores
+		appstores := []*channelM.AppStore{}
+
+		if channel.AllPass {
+
+			allAppstores, err := im.appstoreStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"appstore get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+
+			appstores = allAppstores
+
+		} else {
+			for _, id := range appstoreIDs {
+				appstore, err := im.appstoreStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"appstore get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				appstores = append(appstores, appstore)
+			}
+		}
+
+		channelComponent = appStoreComp.New(appstores, channel)
 		break
+
 	case channelM.HotelType:
-		channelComponent = hotelComp.New(channel)
+
+		hotelIDs := channel.Hotels
+		hotels := []*channelM.Hotel{}
+
+		if channel.AllPass {
+			allHotels, err := im.hotelStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"hotel get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+			hotels = allHotels
+		} else {
+			for _, id := range hotelIDs {
+				hotel, err := im.hotelStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"hotel get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				hotels = append(hotels, hotel)
+			}
+		}
+
+		channelComponent = hotelComp.New(hotels, channel)
 		break
 	case channelM.AmusementType:
-		channelComponent = amusementComp.New(channel)
+
+		amusementIDs := channel.Amusements
+		amusements := []*channelM.Amusement{}
+
+		if channel.AllPass {
+
+			allAumsements, err := im.amusementStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"amusement get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+
+			amusements = allAumsements
+
+		} else {
+			for _, id := range amusementIDs {
+				amusement, err := im.amusementStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"amusement get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				amusements = append(amusements, amusement)
+			}
+		}
+
+		channelComponent = amusementComp.New(amusements, channel)
 		break
 	case channelM.CinemaType:
-		channelComponent = cinemaComp.New(channel)
+
+		cinemaIDs := channel.Cinemas
+		cinemas := []*channelM.Cinema{}
+
+		if channel.AllPass {
+
+			allCinemas, err := im.cinemaStore.GetAll(ctx)
+			if err != nil {
+				logrus.WithFields(
+					logrus.Fields{
+						"cinema get error": err,
+					},
+				).Error(err)
+				return nil, err
+			}
+
+			cinemas = allCinemas
+
+		} else {
+			for _, id := range cinemaIDs {
+				cinema, err := im.cinemaStore.GetByID(ctx, id)
+				if err != nil {
+					logrus.WithFields(
+						logrus.Fields{
+							"cinema get error": err,
+						},
+					).Error(err)
+					return nil, err
+				}
+				cinemas = append(cinemas, cinema)
+			}
+		}
+
+		channelComponent = cinemaComp.New(cinemas, channel)
+
 		break
 	default:
 		return nil, errors.New("failed in mapping contraint type")

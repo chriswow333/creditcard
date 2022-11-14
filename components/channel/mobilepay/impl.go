@@ -4,20 +4,25 @@ import (
 	"context"
 	"fmt"
 
-	"example.com/creditcard/components/channel"
+	channelComp "example.com/creditcard/components/channel"
 	channelM "example.com/creditcard/models/channel"
 	eventM "example.com/creditcard/models/event"
 )
 
 type impl struct {
-	channel *channelM.Channel
+	mobilepays []*channelM.Mobilepay
+	channel    *channelM.Channel
 }
 
 func New(
+
+	mobilepays []*channelM.Mobilepay,
 	channel *channelM.Channel,
-) channel.Component {
+
+) channelComp.Component {
 	return &impl{
-		channel: channel,
+		mobilepays: mobilepays,
+		channel:    channel,
 	}
 }
 
@@ -39,12 +44,12 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 
 	}
 
-	for _, mo := range im.channel.Mobilepays {
+	for _, mo := range im.mobilepays {
 
-		if _, ok := mobilepayMap[mo]; ok {
-			matches = append(matches, mo)
+		if _, ok := mobilepayMap[mo.ID]; ok {
+			matches = append(matches, mo.ID)
 		} else {
-			misses = append(misses, mo)
+			misses = append(misses, mo.ID)
 		}
 	}
 
@@ -52,25 +57,32 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 	channelEventResp.Misses = misses
 
 	switch im.channel.ChannelOperatorType {
+
 	case channelM.OR:
+
 		if len(matches) > 0 {
 			channelEventResp.Pass = true
 		} else {
 			channelEventResp.Pass = false
 		}
+
 	case channelM.AND:
+
 		if len(misses) > 0 || len(matches) == 0 {
 			channelEventResp.Pass = false
 		} else {
 			channelEventResp.Pass = true
 		}
+
 	}
 
 	if im.channel.ChannelMappingType == channelM.MISMATCH {
 		channelEventResp.Pass = !channelEventResp.Pass
 	}
 
+	fmt.Println(im.channel.ChannelMappingType)
 	fmt.Println("mobilepay component")
 	fmt.Println(channelEventResp.Pass)
+
 	return channelEventResp, nil
 }

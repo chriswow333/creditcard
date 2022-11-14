@@ -9,15 +9,19 @@ import (
 )
 
 type impl struct {
-	channel *channelM.Channel
+	onlinegames []*channelM.Onlinegame
+	channel     *channelM.Channel
 }
 
 func New(
+	onlinegames []*channelM.Onlinegame,
 	channel *channelM.Channel,
+
 ) channel.Component {
 
 	return &impl{
-		channel: channel,
+		onlinegames: onlinegames,
+		channel:     channel,
 	}
 }
 
@@ -37,11 +41,11 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		onlinegameMap[on] = true
 	}
 
-	for _, on := range im.channel.Onlinegames {
-		if _, ok := onlinegameMap[on]; ok {
-			matches = append(matches, on)
+	for _, on := range im.onlinegames {
+		if _, ok := onlinegameMap[on.ID]; ok {
+			matches = append(matches, on.ID)
 		} else {
-			misses = append(misses, on)
+			misses = append(misses, on.ID)
 		}
 	}
 

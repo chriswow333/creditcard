@@ -1,0 +1,153 @@
+{
+
+    "bankID":"d1895ea1-f064-419f-92d1-edd0ddd25936",
+    "name":"玉山數位e卡",
+    
+    "imagePath":"card/sk_c07",
+    "cardStatus":0,
+    "linkURL":"https://www.esunbank.com.tw/event/credit/dgecard/index.html#tag01",
+
+    "otherReward":[
+        {
+            "title":"",
+            "descs":[
+                
+            ]
+        }
+ 
+    ]
+}
+
+
+{
+    "name":"國內外一般消費享0.5%現金回饋無上限",
+    "descs":[],
+    "cardID":"40d4a8f0-ee23-4be5-46df-54b96ff9de40",
+    "taskType":1,
+    "TaskTypeModel":{},
+    "defaultPass":true
+},
+// a115a58e-3048-4f89-7432-9b7a13030bab
+
+{
+    "cardRewards":[
+        {
+            "cardID":"40d4a8f0-ee23-4be5-46df-54b96ff9de40",
+            "title":"綠色消費e起來",
+            "descs":[
+                "指定綠色消費最高享10%現金回饋"
+            ],
+            "startDate":1656633600,
+            "endDate":1672531199,
+            "cardRewardOperator":1,
+            "rewardType":1,
+            "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
+            "cardRewardBonus":{
+                "totalBonus":10
+            },
+            "cardRewardLimitTypes":[
+                
+            ],
+            "constraintPassLogics":[],
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.095,
+                                    "min":0,
+                                    "max":2632
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":2,
+                                "channelType":1,
+                                "channelMappingType":1,
+                                "innerChannels":[
+                                    {
+                                        "channelOperatorType":2,
+                                        "channelType":9,
+                                        "channelMappingType":1,
+                                        "transportations":[
+                                            "d15c7429-cc47-4c0c-93bb-43bee45153d1",
+                                            "46c55f1f-9d90-4ed1-b028-739ecbdf0cc4",
+                                            "87d2d07a-ab49-4678-97ba-ad8e386a2281",
+                                            "1e113cc0-9a29-41e7-a13e-c514798acd03",
+                                            "2059e68c-6eca-4cb1-a853-f35c934b1be1",
+                                            "a0123116-75cc-42f6-ac71-45efc2aa9965"
+                                        ]
+                                    },
+                                    {
+                                        "channelOperatorType":2,
+                                        "channelType":4,
+                                        "channelMappingType":1,
+                                        "ecommerces":[
+                                            "61fd3d3a-3263-4d63-b660-9af1aa02992d",
+                                            "153db646-74f0-480a-8d57-c87e1cdbee23"
+                                        ]
+                                    },
+
+
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":15,
+                                                "channelMappingType":1,
+                                                "convenienceStores":[
+                                                    "524d370b-97d2-40ad-935a-3b26d9d86d72",
+                                                    "877033d4-fa76-4c3b-8769-b94b482e5220",
+                                                    "6aaa675c-ed05-40a7-8eac-49f318e88f05",
+                                                    "b8f766de-6b45-4936-ac48-839cb41a2c16",
+                                                    "60371408-67c6-4932-b813-807af6796315",
+                                                ]
+                                            },
+
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":1,
+                                                "mobilepays":[
+                                                    "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+                                                    "334c5079-8436-44dd-bc31-bf1a7769c604",
+                                                    "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                                    "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                                    "77073cfc-db16-4d30-b9ec-7a79012855ca"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.005,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "a115a58e-3048-4f89-7432-9b7a13030bab"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

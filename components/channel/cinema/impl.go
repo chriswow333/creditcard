@@ -10,14 +10,17 @@ import (
 )
 
 type impl struct {
+	cinemas []*channelM.Cinema
 	channel *channelM.Channel
 }
 
 func New(
+	cinemas []*channelM.Cinema,
 	channel *channelM.Channel,
 ) channel.Component {
 
 	return &impl{
+		cinemas: cinemas,
 		channel: channel,
 	}
 }
