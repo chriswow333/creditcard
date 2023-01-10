@@ -1,0 +1,1054 @@
+
+
+
+// post card
+
+{
+    "bankID":"202e598d-5a4c-476e-a8bf-451cc24a53e5",
+    "name":"永豐幣倍卡",
+    "imagePath":"card/sinopac-dual-currency.png",
+    "cardStatus":0,
+    "linkURL":"https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/dual-currency-card.html",
+    "descs":[
+        "美元、日圓、歐元三種幣別選擇",
+        "國外消費2%現金回饋，刷外幣回饋外幣",
+        "商務、旅遊、消費理財、進修，一卡雙幣尊享匯利"
+    ],
+    "otherRewards":[
+
+        {
+            "title":"首刷最高送400元購物金",
+            "descs":[
+                "好禮一：首辦加碼禮送【200元UberEats購物金】",
+                "活動期間：2022/10/1~12/31",
+                "活動內容：首次申辦幣倍卡 (不限新舊戶)，核卡後30天內一般消費或全聯福利中心消費【刷3筆各滿599元】或【綁定6大行動支付刷3筆不限金額】，享加碼贈「200元UberEats購物金」乙份(電子禮序號)(限量，需登錄)。",
+                "好禮二：新戶再加碼送【200元7-11購物金】",
+                "活動期間：2022/10/1~12/31",
+                "活動內容：新戶申辦幣倍卡，核卡後30天內一般消費或全聯福利中心消費【刷3筆各滿599元】或【綁定6大行動支付刷3筆不限金額】再加碼贈「7-ELEVEN購物金200元」乙份(電子禮券)！(無需登錄，符合名單自動發送)"
+            ]
+
+        },
+
+        {
+            "title":"2022年10-12月幣倍卡淘寶加碼活動",
+            "descs":[
+                "活動期間：2022/10/24 20:00:00~12/31 23:59:59",
+                "活動內容：限使用永豐銀行幣倍卡支付之用戶。結帳綁定信用卡並儲存卡片，享實付金額滿NT$2,000減NT$100；按照訂單付款成功時間，先到先得。本活動僅限臺灣用戶於手機淘寶或淘寶lite並使用永豐幣倍卡(公司卡、配銷卡、儲值卡不適用)支付。"
+            ]
+        },
+
+        {
+            "title":"新戶任刷3筆贈「豐城」或「全聯」購物金500元」",
+            "descs":[
+                "活動期間：2022/7/1-2022/12/31",
+                "活動內容：新戶申辦幣倍卡，核卡後30天內一般消費或全聯福利中心消費【刷3筆各滿599元】或【綁定6大行動支付刷3筆不限金額】即可獲贈「豐城」或「全聯」購物金500元！",
+                "※6大行動支付：Apple Pay、LINE Pay、Google Pay、Samsung Pay、Garmin Pay、Fitbit Pay。※豐城或全聯福利中心購物金限於接獲符合滿額贈之通知簡訊當月至次月底前，需先登入豐城並連結至各商家單筆消費滿500元，或至全聯福利中心單筆消費滿500元，符合消費次月抵用逾期失效。※新戶定義：從未持有永豐銀行信用卡或停卡已滿6個月(含)以上之客戶。"
+            ]
+        },
+
+        {
+            "title":"線上換匯最高減6分",
+            "descs":[
+                "專案期間：2022/1/1-12/31",
+                "專案優惠：幣倍卡卡友透過MMA金融交易網/行動銀行/DAWHO APP以新臺幣結購下列外幣，享有減分優惠。"
+            ]
+        },
+
+        {
+            "title":"「幣倍金融信用卡」享8次免ATM跨行手續費",
+            "descs":[
+                "活動期間：2022/1/1-12/31",
+                "1.核卡當月立享8次ATM跨行交易免手續費優惠。",
+                "2.每月以幣倍金融信用卡不限金額任刷一筆國內消費，次月繼續享有8次免跨行手續費優惠。",
+                "※本優惠限幣倍金融信用卡始得適用。"
+            ]
+        },
+
+        {
+            "title":"新戶核卡後6個月內享6.66%循環利率",
+            "descs":[
+                "活動期間：2022/1/1-12/31",
+                "活動內容：新戶申辦永豐幣倍卡，核卡次月起計算至第6個月月底止，適用6.66%循環信用年利率。"
+            ]
+        },
+
+
+        {
+            "title":"機場週邊停車服務",
+            "descs":[
+                "活動期間：2022/1/1-12/31",
+                "活動內容：活動期間內「幣倍卡」持卡人，可享1年3次，每次最長7天之免費停車服務。(持卡人須於使用本服務前一天主動來電0800-699-999完成預約)。"
+            ]
+        },
+
+        {
+            "title":"3,500萬高額旅遊保險",
+            "descs":[
+                "活動期間：2022/1/1-12/31",
+                "活動內容：刷卡支付公共運輸交通工具全部費用或80%以上旅遊團費，就可享有3,500萬元旅遊平安險，讓您及家人出外旅遊開心又安心。"
+            ]
+        }
+    ]
+}
+
+
+{
+    "name":"國內一般消費享現金回饋",
+    "descs":[],
+    "cardID":"b79b1e41-9535-4d6a-7bc2-5f277156a667",
+    "taskType":3,
+    "taskTypeModel":{
+        "channelLabelLimit":{
+            "channelLabels":[
+                3
+            ]
+        }
+    },
+    "defaultPass":false
+}
+
+,
+
+
+{
+    "name":"國外一般消費享現金回饋",
+    "descs":[],
+    "cardID":"b79b1e41-9535-4d6a-7bc2-5f277156a667",
+    "taskType":3,
+    "taskTypeModel":{
+        "channelLabelLimit":{
+            "channelLabels":[
+                2
+            ]
+        }
+    },
+    "defaultPass":false
+}
+
+,
+
+
+{
+    "name":"消費任務加碼-懂匯",
+    "descs":[
+        "活動內容：幣倍卡卡友完成以下任務即符合任務加碼及精選通路加碼",
+        "【任務一】綁定電子或行動帳單且設定本行台外幣帳戶自動扣繳帳款",
+        "※若您於本行數位帳戶開戶且同時申辦幣倍卡，則您已符合任務一",
+        "【任務二】與本行往來符合以下任一且達等值台幣金額1元以上~",
+        "①外幣存款月平均餘額或",
+        "②台外幣帳戶間換匯單筆金額或",
+        "③臨櫃投保外幣保單月扣繳單筆金額",
+        "※1元~10萬元屬【懂匯】資格；10萬元以上屬【超匯】資格",
+        "【任務三】當期帳單之幣倍卡新增一般消費滿2,000元(含)以上"
+    ],
+    "cardID":"b79b1e41-9535-4d6a-7bc2-5f277156a667",
+    "taskType":1,
+    "taskTypeModel":{
+    },
+    "defaultPass":false
+}
+
+,
+
+
+
+{
+    "name":"消費任務加碼-超匯",
+    "descs":[
+        "活動內容：幣倍卡卡友完成以下任務即符合任務加碼及精選通路加碼",
+        "【任務一】綁定電子或行動帳單且設定本行台外幣帳戶自動扣繳帳款",
+        "※若您於本行數位帳戶開戶且同時申辦幣倍卡，則您已符合任務一",
+        "【任務二】與本行往來符合以下任一且達等值台幣金額1元以上~",
+        "①外幣存款月平均餘額或",
+        "②台外幣帳戶間換匯單筆金額或",
+        "③臨櫃投保外幣保單月扣繳單筆金額",
+        "※1元~10萬元屬【懂匯】資格；10萬元以上屬【超匯】資格",
+        "【任務三】當期帳單之幣倍卡新增一般消費滿2,000元(含)以上"
+    ],
+    "cardID":"b79b1e41-9535-4d6a-7bc2-5f277156a667",
+    "taskType":1,
+    "taskTypeModel":{
+    },
+    "defaultPass":false
+}
+
+,
+
+
+{
+    "name":"通路旅遊和飯店類",
+    "descs":[],
+    "cardID":"b79b1e41-9535-4d6a-7bc2-5f277156a667",
+    "taskType":4,
+    "taskTypeModel":{
+        "channelLimit":{
+            "channels":[
+                10,17
+            ]
+        }
+    },
+    "defaultPass":false
+}
+
+,
+
+
+
+{
+    "cardRewards":[
+        
+        
+        {
+            "cardID":"b79b1e41-9535-4d6a-7bc2-5f277156a667",
+            "title":"指定保費1.2%現金回饋",
+            "descs":[
+                "以幣倍卡代繳指定16家壽險公司保費享1.2%現金回饋無上限",
+                "※16家特選保險公司：富邦人壽、南山人壽、中國人壽、保誠人壽、台灣人壽、康健人壽、國泰人壽(含原國寶人壽保單)、新光人壽、遠雄人壽、全球人壽、台新人壽、元大人壽、宏泰人壽、安聯人壽、臺銀人壽、友邦人壽",
+                "※上述所有指定保費均不含特定行銷專案保費(包含但不限於法國巴黎/安聯…等特定專案保費)"
+            ],
+            
+            "startDate":1667701585,
+            "endDate":1734933134,
+            "cardRewardOperator":1,
+            "rewardType":1,
+            "cardRewardLimitTypes":[
+            ],
+            "constraintPassLogics":[],
+            "feedbackBonus":{
+                "cashFeedbackBonus":{
+                    "cashCalculateType":2,
+                    "cashFeedbackBonusType":1,
+                    "totalBonus":1.2,
+                    "title":"現金回饋",
+                    "returnBonusTitle":"%現金回饋",
+                    "cashReturnTitlePrefix":"現省",
+                    "cashReturnTitleSuffix":"元"
+                }
+            },
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":2,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.012,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":2,
+                                "channelType":12,
+                                "channelMappingType":1,
+                                "insurances":[
+                                    "15397b64-7a6b-4d1d-bd5d-f4ef0637c826",
+                                    "2abcb015-92b3-4b2c-b373-a4b43346deaa",
+                                    "ec0c96d7-0e9a-4095-8231-380a055ce668",
+                                    "8ebfed71-5453-418d-985e-4dd956a596ea",
+                                    "f24d0e91-c728-46f2-85d6-49552835e8b6",
+                                    "c55fb5dc-12d8-4ffa-acda-ee0be244082f",
+                                    "7cd1b1f3-6851-4a38-a3e5-27ba94d5dc10",
+                                    "74f0a20f-102b-4368-8993-4250e5c78eb2",
+                                    "4f9ff2b5-7ba9-43b0-8789-ea4099d85abb",
+                                    "e5d15c40-13ba-41e0-bc6b-290ee4f6a268",
+                                    "bdcb6629-6933-4aa5-84b3-022e256fcbd9",
+                                    "204f81e0-dd07-472c-a0f0-8acfcf35e048",
+                                    "3d2a36ad-f6ed-4b93-aadd-58ceda9302d5",
+                                    "dbf64c94-aa14-44a3-9e19-b7dec4a9ff97",
+                                    "2f9d69d4-9f51-4517-bae3-ddf2cce4ccde",
+                                    "57dc8e38-7137-49fe-81f2-53108c58b5b6"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+
+
+        {
+            "cardID":"b79b1e41-9535-4d6a-7bc2-5f277156a667",
+            "title":"精選通路最高7%回饋",
+            "descs":[
+                "國內1%、國外2%回饋無上限",
+                "任務加碼1%",
+                "精選通路4%"
+            ],
+            "startDate":1667701585,
+            "endDate":1734933134,
+            "cardRewardOperator":1,
+            "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
+            "rewardType":1,
+            "cardRewardLimitTypes":[
+            ],
+            "constraintPassLogics":[],
+            "feedbackBonus":{
+                "cashFeedbackBonus":{
+                    "cashCalculateType":2,
+                    "cashFeedbackBonusType":1,
+                    "totalBonus":7,
+                    "title":"現金回饋",
+                    "returnBonusTitle":"%現金回饋",
+                    "cashReturnTitlePrefix":"現省",
+                    "cashReturnTitleSuffix":"元"
+                }
+            },
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":2,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.001,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "0aeca2b3-d853-4d8d-4c52-b72fc3ba3d75"
+                                ]
+                            }
+                        },
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.002,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "4bda94d1-7a67-4480-4645-3808792ec8be"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "order":1,
+                    "payloadOperator":2,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.001,
+                                    "min":2000,
+                                    "max":10000
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "0aeca2b3-d853-4d8d-4c52-b72fc3ba3d75",
+                                    "80308ba0-8af7-4350-69f7-8c6e272a7974"
+                                ]
+                            }
+                        },
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.001,
+                                    "min":2000,
+                                    "max":30000
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "4bda94d1-7a67-4480-4645-3808792ec8be",
+                                    "80308ba0-8af7-4350-69f7-8c6e272a7974"
+                                ]
+                            }
+                        },
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.001,
+                                    "min":2000,
+                                    "max":10000
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "0aeca2b3-d853-4d8d-4c52-b72fc3ba3d75",
+                                    "355557d8-ee49-4c2a-557b-9eae41e6b877"
+                                ]
+                            }
+                        },
+
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.001,
+                                    "min":2000,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "4bda94d1-7a67-4480-4645-3808792ec8be",
+                                    "355557d8-ee49-4c2a-557b-9eae41e6b877"
+                                ]
+                            }
+                        }
+                    ]
+                },
+
+
+                {
+                    "order":2,
+                    "payloadOperator":2,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.004,
+                                    "min":2000,
+                                    "max":5000
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":1,
+                                "channelMappingType":1,
+                                "innerChannels":[
+                                    {
+                                        "channelOperatorType":2,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":2,
+                                                "channelMappingType":1,
+                                                "tasks":[
+                                                    "974ab19d-e11d-4ad3-5e0b-fe4db1dc76ce"
+                                                ]
+                                            },
+
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":4,
+                                                "channelMappingType":1,
+                                                "ecommerces":[
+                                                    "f2e4b992-f43f-405c-b6f4-16c979f1f362",
+                                                    "d77d898d-5773-43af-89ec-e0245b5f40d2",
+                                                    "175ea548-3c82-4c98-8bf5-83970902098d",
+                                                    "7f25933b-90dc-4c9a-a002-9bce5efde6dc",
+                                                    "6aa51e62-0d06-4b08-a4ec-fc7f77028b3f",
+                                                    "e8ac23f9-eb23-42e2-9c5d-789734da64a2",
+                                                    "76c838c8-9a89-4e0d-b461-f07912f05057",
+                                                    "424ad297-372d-4c8b-bc32-ecae35aca9da",
+                                                    "06fd50df-7843-4b96-809e-cb3af4d7420b",
+                                                    "5ced38ed-27b6-4c8e-8e0e-e9431cfc4b3d",
+                                                    "312bca3f-f08b-468c-8f92-9c8d7724dfa8",
+                                                    "cb38a494-8708-496e-a010-2b83fb984136",
+                                                    "e7e34ebc-bd2a-490d-89ec-14f5d7074c56",
+                                                    "3b1f6818-633f-493b-8395-1881d8786aaf",
+                                                    "65196e70-f8fb-4a38-a4bd-02c7e696189f",
+                                                    "842e1052-8087-41ea-8fb7-755146bdfa47",
+                                                    "d7c9fc8a-5b05-42df-8734-aa59e7bab6d8",
+                                                    "3c5aa91a-c59f-4345-8780-a43c896d1be9"
+                                                ]
+                                            }
+                                        ]
+                                    }, 
+                                    {
+                                        "channelOperatorType":2,
+                                        "channelType":2,
+                                        "channelMappingType":1,
+                                        "tasks":[
+                                            "80308ba0-8af7-4350-69f7-8c6e272a7974",
+                                            "355557d8-ee49-4c2a-557b-9eae41e6b877"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+
+
+
+
+
+
+
+
+{
+    "cardID":"0c1f5080-e478-4948-4999-00ef25c968b4",
+    "cardRewardDesc":"",
+    
+    "cardRewardOperator":1,
+    "rewardType":1,
+    
+    "constraintPassLogics":[
+        {
+            "logic":"(f9c973b6-a08b-421c-a2b8-109a844e672d^6146825c-a47e-4f1c-8da7-e9684c61ac26)",
+            "message":"懂匯與超匯不得合併選擇"
+        }
+    ],
+
+    "rewards":[
+        {
+            "order":0,
+
+            "title":"一般消費",
+            "subTitle":"基本回饋",
+            
+            "startDate":1625097600,
+            "endDate":1648684800,
+            
+            "payloadOperator":1,
+            "payloads":[
+               {
+                    "descs":[],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":1,
+                            "bonus":0.01,
+                            "min":0,
+                            "max":0
+                        }
+                    },
+                    "constraint":{
+                        "constraintOperatorType":2,
+                        "constraintType":2,
+                        "constraintMappingType":1,
+                        "customizations":[
+                            "c8970470-ba81-4b3b-b77c-c49c1b8964e9"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "order":1,
+            "title":"特選加碼+2%(懂匯)",
+            "subTitle":"行動支付",
+            "startDate":1625097600,
+            "endDate":1648684800,
+            "payloadOperator":1,
+            "payloads":[
+               {
+                    "descs":[],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":0,
+                            "bonus":0.02,
+                            "min":0,
+                            "max":5000
+                        }
+                    },
+                    "constraint":{
+                        "constraintOperatorType":1,
+                        "constraintType":1,
+                        "constraintMappingType":1,
+                        "innerConstraints":[
+                            {
+                                        
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "fef8892e-5f25-4b5a-a1a9-cfbb07724738",
+                                    "6146825c-a47e-4f1c-8da7-e9684c61ac26",
+                                    "e3bb967b-aec2-4dbd-81b2-a100371487e2"
+                                ]
+                            },
+                            {
+                                
+                                "constraintOperatorType":2,
+                                "constraintType":4,
+                                "constraintMappingType":1,
+                                "mobilepays":[ 
+                                    "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+                                    "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
+                                    "334c5079-8436-44dd-bc31-bf1a7769c604",
+                                    "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                    "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                    "77073cfc-db16-4d30-b9ec-7a79012855ca"
+                                ]
+                                  
+                            }
+                        ]
+                    }
+                }
+                
+            ]
+        },
+
+        {
+            "order":2,
+            "title":"特選加碼+2%(超匯)",
+            "subTitle":"行動支付",
+            "startDate":1625097600,
+            "endDate":1648684800,
+            "payloadOperator":2,
+            "payloads":[
+               {
+                    "descs":[],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":0,
+                            "bonus":0.02,
+                            "min":0,
+                            "max":15000
+                        }
+                    },
+                    "constraint":{
+                        "constraintOperatorType":1,
+                        "constraintType":1,
+                        "constraintMappingType":1,
+                        "innerConstraints":[
+                            {
+                                        
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "fef8892e-5f25-4b5a-a1a9-cfbb07724738",
+                                    "f9c973b6-a08b-421c-a2b8-109a844e672d",
+                                    "e3bb967b-aec2-4dbd-81b2-a100371487e2"
+                                ]
+                            },
+                            {
+                                
+                                "constraintOperatorType":2,
+                                "constraintType":4,
+                                "constraintMappingType":1,
+                                "mobilepays":[ 
+                                    "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+                                    "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
+                                    "334c5079-8436-44dd-bc31-bf1a7769c604",
+                                    "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                    "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                    "77073cfc-db16-4d30-b9ec-7a79012855ca"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "order":3,
+            "title":"豐城海外村再加碼+3%",
+            "subTitle":"行動支付",
+            "startDate":1625097600,
+            "endDate":1648684800,
+            "payloadOperator":2,
+            "payloads":[
+               {
+                    "descs":[],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":0,
+                            "bonus":0.03,
+                            "min":0,
+                            "max":6666.66
+                        }
+                    },
+                    "constraint":{
+                        "constraintOperatorType":1,
+                        "constraintType":1,
+                        "constraintMappingType":1,
+                        "innerConstraints":[
+                            {
+                                        
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "fef8892e-5f25-4b5a-a1a9-cfbb07724738",
+                                    "f9c973b6-a08b-421c-a2b8-109a844e672d",
+                                    "e3bb967b-aec2-4dbd-81b2-a100371487e2"
+                                ]
+                            },
+                            {
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "fdf3ad43-67db-4a1b-8fdd-2fe8a5e6e415"
+                                ]
+                            }
+                        ]
+                    }
+               }
+            ]
+        }
+    ]
+}
+
+
+
+
+
+{
+    "cardID":"cfae77f6-4eff-4112-5053-b129889e3ebb",
+    "cardRewardDescs":["第一點","第二點", "第三點"],
+    "rewardOthers":[
+        {
+            "title":"瘋狂加碼",
+            "descs":[
+                "1.就是要加碼"
+            ]
+        }
+    ],
+    "cardRewardOperator":1,
+    "rewardType":1,
+    "constraintPassLogics":[
+        {
+            "logic":"(b51232be-193c-4637-56ae-f74cbd973166^d22ad1e4-53b8-48da-4efb-a112bfa54119",
+            "message":"懂匯與超匯不得合併選擇"
+        }
+    ],
+    "rewards":[
+        {
+            "order":0,
+
+            "title":"一般消費",
+            "subTitle":"基本回饋",
+            
+            "startDate":1625097600,
+            "endDate":1680675517,
+            
+            "payloadOperator":1,
+            "payloads":[
+               {
+                    "descs":[],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":1,
+                            "bonus":0.01,
+                            "min":0,
+                            "max":0
+                        }
+                    },
+                    "constraint":{
+                        "constraintOperatorType":2,
+                        "constraintType":2,
+                        "constraintMappingType":1,
+                        "customizations":[
+                            "379de6d9-cc5c-4176-7a6b-0bee0f111ec8"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "order":1,
+            "title":"特選加碼+2%(懂匯)",
+            "subTitle":"行動支付",
+            "startDate":1625097600,
+            "endDate":1680675517,
+            "payloadOperator":1,
+            "payloads":[
+               {
+                    "descs":[],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":0,
+                            "bonus":0.02,
+                            "min":0,
+                            "max":5000
+                        }
+                    },
+                    "constraint":{
+                        "constraintOperatorType":1,
+                        "constraintType":1,
+                        "constraintMappingType":1,
+                        "innerConstraints":[
+                            {
+                                        
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "3414e630-22c4-4189-7bc7-87e243b2743d",
+                                    "b51232be-193c-4637-56ae-f74cbd973166",
+                                    "5a02b03a-b265-421c-6cda-71e7b0fcdbbf"
+                                ]
+                            },
+                            {
+                                
+                                "constraintOperatorType":2,
+                                "constraintType":4,
+                                "constraintMappingType":1,
+                                "mobilepays":[ 
+                                    "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+                                    "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
+                                    "334c5079-8436-44dd-bc31-bf1a7769c604",
+                                    "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                    "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                    "77073cfc-db16-4d30-b9ec-7a79012855ca"
+                                ]
+                                  
+                            }
+                        ]
+                    }
+                }
+                
+            ]
+        },
+
+        {
+            "order":2,
+            "title":"特選加碼+2%(超匯)",
+            "subTitle":"行動支付",
+            "startDate":1625097600,
+            "endDate":1680675517,
+            "payloadOperator":2,
+            "payloads":[
+               {
+                    "descs":[],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":0,
+                            "bonus":0.02,
+                            "min":0,
+                            "max":15000
+                        }
+                    },
+                    "constraint":{
+                        "constraintOperatorType":1,
+                        "constraintType":1,
+                        "constraintMappingType":1,
+                        "innerConstraints":[
+                            {
+                                        
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "3414e630-22c4-4189-7bc7-87e243b2743d",
+                                    "d22ad1e4-53b8-48da-4efb-a112bfa54119",
+                                    "5a02b03a-b265-421c-6cda-71e7b0fcdbbf"
+                                ]
+                            },
+                            {
+                                
+                                "constraintOperatorType":2,
+                                "constraintType":4,
+                                "constraintMappingType":1,
+                                "mobilepays":[ 
+                                    "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+                                    "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
+                                    "334c5079-8436-44dd-bc31-bf1a7769c604",
+                                    "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                    "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                    "77073cfc-db16-4d30-b9ec-7a79012855ca"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "order":3,
+            "title":"豐城海外村再加碼+3%",
+            "subTitle":"行動支付",
+            "startDate":1625097600,
+            "endDate":1680675517,
+            "payloadOperator":2,
+            "payloads":[
+               {
+                    "descs":[],
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":0,
+                            "bonus":0.03,
+                            "min":0,
+                            "max":6666.66
+                        }
+                    },
+                    "constraint":{
+                        "constraintOperatorType":1,
+                        "constraintType":1,
+                        "constraintMappingType":1,
+                        "innerConstraints":[
+                            {
+                                        
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "3414e630-22c4-4189-7bc7-87e243b2743d",
+                                    "ac518f00-ee62-4be9-4a00-fd5249fac232",
+                                    "5a02b03a-b265-421c-6cda-71e7b0fcdbbf"
+                                ]
+                            },
+                            {
+                                "constraintOperatorType":1,
+                                "constraintType":2,
+                                "constraintMappingType":1,
+                                "customizations":[
+                                    "765becf7-c38f-46b6-7d53-cee061cf7eb7"
+                                ]
+                            }
+                        ]
+                    }
+               }
+            ]
+        }
+    ]
+}
+
+
+
+
+
+
+{
+    "cardID":"cfae77f6-4eff-4112-5053-b129889e3ebb",
+    "cardRewardOperator":1,
+    "rewardType":1,
+    "constraintPassLogics":[
+        {
+            "logic":"(b51232be-193c-4637-56ae-f74cbd973166^d22ad1e4-53b8-48da-4efb-a112bfa54119",
+            "message":"懂匯與超匯不得同時選擇"
+        }
+    ],
+    "rewards":[
+        {
+            "payloadOperator":1,
+            "payloads":[
+                {
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":1,
+                            "bonus":0.01,
+                            "min":0,
+                            "max":0
+                        }
+                    },
+                    "channel":{
+                        "channelType":2,
+                        "channelOperatorType":1,
+                        "tasks":[
+                            "99bfe549-98f3-4b5c-54a1-38f51e296edd"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "payloadOperator":1,
+            "payloads":[
+                {
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":1,
+                            "bonus":0.01,
+                            "min":2000,
+                            "max":10000
+                        }
+                    },
+                    "channel":{
+                        "channelType":2,
+                        "channelOperatorType":1,
+                        "tasks":[
+                            "9b99f31e-9354-4d37-7e17-76d0fb4fab69"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "payloadOperator":1,
+            "payloads":[
+                {
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":1,
+                            "bonus":0.01,
+                            "min":2000,
+                            "max":30000
+                        }
+                    },
+                    "channel":{
+                        "channelType":2,
+                        "channelOperatorType":1,
+                        "task":[
+                            "4da7cda0-6f5a-4fda-44e6-87d450c50c3b"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "payloadOperator":1,
+            "payloads":[
+                {
+                    "feedback":{
+                        "cashback":{
+                            "cashbackType":1,
+                            "bonus":0.04,
+                            "min":2000,
+                            "max":5000
+                        }
+                    },
+                    "channel":{
+                        "channelType":1,
+                        "channelOperatorType":1,
+                        "innerChannels":[
+                            {
+                                "channelType":2,
+                                "channelOperatorType":1,
+                                "tasks":[
+                                    "de9a76fc-4f67-4f22-633f-648b72774239"
+                                ]
+                            },
+                            {
+                                "channelType":2,
+                                "channelOperatorType":2,
+                                "tasks":[
+                                    "4da7cda0-6f5a-4fda-44e6-87d450c50c3b",
+                                    "9b99f31e-9354-4d37-7e17-76d0fb4fab69"
+                                ]
+                            }
+                            
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

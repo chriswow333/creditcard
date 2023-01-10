@@ -19,7 +19,7 @@
         ]
     }
 
-,
+    ,
 
     // 網路新戶首月加碼10%
     {
@@ -32,8 +32,12 @@
         "taskType":3,
         "TaskTypeModel":{},
         "defaultPass":false
-    },
+    }
     
+    ,
+    
+
+
     // 基本回饋0.6% 回饋無上限
     {
         "name":"國內基本回饋0.6% 回饋無上限",
@@ -44,6 +48,8 @@
         "defaultPass":true
     }
     ,
+
+
   // 活動加碼0.4% 每期帳單最高回饋1000點
     {
         "name":"活動加碼0.4%每期帳單最高回饋1000點",
@@ -55,8 +61,31 @@
     },
 
 
+
+
+
+    {
+        "name":"新光快樂星期六】每週六指定通路最高回饋6%",
+        "descs":[],
+        "cardID":"b55d7f08-d8cc-4bf5-4c0c-873a5be26724",
+        "taskType":2,
+        "taskTypeModel":{
+            "weekDayLimit":{
+                "weekDays":[
+                    6
+                ]
+            }
+        },
+        "defaultPass":false
+    }
+
+
+
+
     {
         "cardRewards":[
+            
+            
             {
                 "cardID":"b55d7f08-d8cc-4bf5-4c0c-873a5be26724",
                 "title":"最高13%現金回饋",
@@ -73,7 +102,7 @@
                     "totalBonus":13
                 },
                 "cardRewardLimitTypes":[
-                    2
+                    2,4
                 ],
                 "constraintPassLogics":[],
                 "rewards":[
@@ -99,8 +128,10 @@
                                         "b6bbd6fa-468c-43b0-781f-9fe7d81da963"
                                     ]
                                 }
-                            },
-
+                            }
+                            
+                            ,
+                            
                             {
                                 "feedback":{
                                     "cashback":{
@@ -119,7 +150,12 @@
                                         "a55dd8fb-57fc-4a1d-5840-0abdc65da618"
                                     ]
                                 }
-                            },
+                            }
+                            
+                            ,
+
+
+
 
                             {
                                 "feedback":{
@@ -155,9 +191,12 @@
                                         }
                                     ]
                                 }
-                            },
+                            }
+                            
+                            ,
 
                             {
+
                                 "feedback":{
                                     "cashback":{
                                         "cashbackType":1,
@@ -213,10 +252,14 @@
                                     ]
                                 }
                             }
+
                         ]
                     }
                 ]
-            },
+                
+            }
+            ,
+
             {
                 "cardID":"b55d7f08-d8cc-4bf5-4c0c-873a5be26724",
                 "title":"My FamiPay 最高10%現金回饋",
@@ -230,6 +273,7 @@
                 "cardRewardBonus":{
                     "totalBonus":10
                 },
+                "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
                 "cardRewardLimitTypes":[],
                 "constraintPassLogics":[],
                 "rewards":[
@@ -274,8 +318,336 @@
                         ]
                     }
                 ]
-            },
+            }
+            
+            ,
 
+
+            {
+                "cardID":"b55d7f08-d8cc-4bf5-4c0c-873a5be26724",
+                "title":"每週六屈臣氏最高回饋6%",
+                "descs":[
+                    "單筆600元贈刷卡金",
+                    "每戶每月上限100元，需月月登錄",
+                    "第三方支付僅適用Watsons Pay"  
+                ],
+                "startDate":1641078000,
+                "endDate":1672531199,
+                "cardRewardOperator":2,
+                "rewardType":1,
+                "cardRewardBonus":{
+                    "totalBonus":6
+                },
+                "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
+                "cardRewardLimitTypes":[
+                    3
+                ],
+                "constraintPassLogics":[],
+                "rewards":[
+                    {
+                        "order":2,
+                        "payloadOperator":2,
+                        "payloads":[
+                            {
+                                "feedback":{
+                                    "cashback":{
+                                        "cashbackType":1,
+                                        "cashCalculateType":2,
+                                        "bonus":0.06,
+                                        "min":600,
+                                        "max":1666.67
+                                    }
+                                },
+                                "channel":{
+                                    "channelOperatorType":1,
+                                    "channelType":1,
+                                    "channelMappingType":1,
+                                    "innerChannels":[
+                                        {
+                                            "channelOperatorType":2,
+                                            "channelType":1,
+                                            "channelMappingType":1,
+                                            "innerChannels":[
+                                                {
+                                                    "channelOperatorType":1,
+                                                    "channelType":15,
+                                                    "channelMappingType":1,
+                                                    "conveniencestores":[
+                                                        "5cf40dc6-4d27-44ff-be97-b9b35419df42"
+                                                    ]
+                                                },
+                                                {
+                                                    "channelOperatorType":1,
+                                                    "channelType":3,
+                                                    "channelMappingType":1,
+                                                    "mobilepays":[
+                                                        "df5bde93-fd04-42e8-89ba-a2d60dc3851e"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":3,
+                                            "channelMappingType":2,
+                                            "mobilepays":[
+                                                "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
+                                                "81ceafb3-7e61-4a3f-81ad-d2f6ada8d1ff",
+                                                "d642bc6d-c863-4746-8af8-91b7c60a07f7",
+                                                "762470e2-2a2a-4bcf-85dd-996dc41dad67",
+                                                "41f8ed96-fc0d-43a8-9708-c050309dc039",
+                                                "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                                "77073cfc-db16-4d30-b9ec-7a79012855ca",
+                                                "c7ee2ff6-b0ab-4526-a0fa-7a251a80cecf",
+                                                "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                                "0cfb3fae-ea37-451e-a51d-bb142c48bf77",
+                                                "73c68fb4-46d7-4340-8d13-e00a3420469d",
+                                                "19454278-621c-424d-970a-9fb9b681db41",
+                                                "ad151a1c-67c2-47b2-83a6-f2e3a24f4d64",
+                                                "068f2802-18a6-459a-af35-075fd90d8235",
+                                                "f10796d1-d327-4560-8546-90ee9fde50d2"
+                                            ]
+                                        },
+                                        {
+                                            "channelOperatorType":1,
+                                            "channelType":2,
+                                            "channelMappingType":1,
+                                            "tasks":[
+                                                "1216acdb-bce5-40b8-4593-388d16d74c23"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+
+
+
+            // {
+            //     "cardID":"b55d7f08-d8cc-4bf5-4c0c-873a5be26724",
+            //     "title":"最高13%現金回饋",
+            //     "descs":[
+            //         "網路新戶指定支付消費加碼10%回饋",
+            //         "海外3%、指定數位3%、國內1%"
+            //     ],
+            //     "startDate":1656633600,
+            //     "endDate":1672531199,
+            //     "cardRewardOperator":1,
+            //     "rewardType":1,
+            //     "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
+            //     "cardRewardBonus":{
+            //         "totalBonus":13
+            //     },
+            //     "cardRewardLimitTypes":[
+            //         2
+            //     ],
+            //     "constraintPassLogics":[],
+            //     "rewards":[
+            //         {
+            //             "order":0,
+            //             "payloadOperator":1,
+            //             "payloads":[
+            //                 {
+            //                     "feedback":{
+            //                         "cashback":{
+            //                             "cashbackType":1,
+            //                             "cashCalculateType":2,
+            //                             "bonus":0.006,
+            //                             "min":0,
+            //                             "max":0
+            //                         }
+            //                     },
+            //                     "channel":{
+            //                         "channelOperatorType":1,
+            //                         "channelType":2,
+            //                         "channelMappingType":1,
+            //                         "tasks":[
+            //                             "b6bbd6fa-468c-43b0-781f-9fe7d81da963"
+            //                         ]
+            //                     }
+            //                 },
+
+            //                 {
+            //                     "feedback":{
+            //                         "cashback":{
+            //                             "cashbackType":1,
+            //                             "cashCalculateType":2,
+            //                             "bonus":0.004,
+            //                             "min":0,
+            //                             "max":1000
+            //                         }
+            //                     },
+            //                     "channel":{
+            //                         "channelOperatorType":1,
+            //                         "channelType":2,
+            //                         "channelMappingType":1,
+            //                         "tasks":[
+            //                             "a55dd8fb-57fc-4a1d-5840-0abdc65da618"
+            //                         ]
+            //                     }
+            //                 },
+
+            //                 {
+            //                     "feedback":{
+            //                         "cashback":{
+            //                             "cashbackType":1,
+            //                             "cashCalculateType":2,
+            //                             "bonus":0.1,
+            //                             "min":0,
+            //                             "max":1000
+            //                         }
+            //                     },
+            //                     "channel":{
+            //                         "channelOperatorType":1,
+            //                         "channelType":1,
+            //                         "channelMappingType":1,
+            //                         "innerChannels":[
+            //                             {
+            //                                 "channelOperatorType":1,
+            //                                 "channelType":2,
+            //                                 "channelMappingType":1,
+            //                                 "tasks":[
+            //                                     "4661f1e6-8f40-4714-6fe6-19a40d9721ca"
+            //                                 ]
+            //                             },
+            //                             {
+            //                                 "channelOperatorType":2,
+            //                                 "channelType":3,
+            //                                 "channelMappingType":1,
+            //                                 "mobilepays":[
+            //                                     "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+            //                                     "f10c7f91-9d06-46fe-ab06-4063c8556c9f"
+            //                                 ]
+            //                             }
+            //                         ]
+            //                     }
+            //                 },
+
+            //                 {
+            //                     "feedback":{
+            //                         "cashback":{
+            //                             "cashbackType":1,
+            //                             "cashCalculateType":2,
+            //                             "bonus":0.02,
+            //                             "min":0,
+            //                             "max":200
+            //                         }
+            //                     },
+            //                     "channel":{
+            //                         "channelOperatorType":2,
+            //                         "channelType":1,
+            //                         "channelMappingType":1,
+            //                         "innerChannels":[
+            //                             {
+            //                                 "channelOperatorType":2,
+            //                                 "channelType":3,
+            //                                 "channelMappingType":1,
+            //                                 "mobilepays":[
+            //                                     "f10c7f91-9d06-46fe-ab06-4063c8556c9f",
+            //                                     "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+            //                                     "334c5079-8436-44dd-bc31-bf1a7769c604",
+            //                                     "f10796d1-d327-4560-8546-90ee9fde50d2",
+            //                                     "0cfb3fae-ea37-451e-a51d-bb142c48bf77",
+            //                                     "73c68fb4-46d7-4340-8d13-e00a3420469d",
+            //                                     "19454278-621c-424d-970a-9fb9b681db41",
+            //                                     "ad151a1c-67c2-47b2-83a6-f2e3a24f4d64",
+            //                                     "068f2802-18a6-459a-af35-075fd90d8235"
+            //                                 ]
+            //                             },
+            //                             {
+            //                                 "channelOperatorType":2,
+            //                                 "channelType":4,
+            //                                 "channelMappingType":1,
+            //                                 "ecommerces":[
+            //                                   "c7978b48-df1a-4512-96d3-ac9ed8543d89",
+            //                                   "d200fee8-88b6-4105-9376-db2ae446d731",
+            //                                   "a1c32e39-a192-4ffd-86c8-41c7d560b57e",
+            //                                   "b4c46f7c-f484-4732-802f-0f3df4825435",
+            //                                   "f3d17c14-1d76-4acc-a571-da3e4ab4d4f8",
+            //                                   "ad2e2c24-56b4-43bb-be64-1d7f8a432455",
+            //                                   "7720f886-1920-4a13-b132-f393296b7eb7"
+            //                                 ]
+            //                             },
+            //                             {
+            //                                 "channelOperatorType":2,
+            //                                 "channelType":7,
+            //                                 "channelMappingType":1,
+            //                                 "streamings":[
+            //                                   "96b7c040-a153-466c-8d6b-7c977602d0de"
+            //                                 ]
+            //                             }
+            //                         ]
+            //                     }
+            //                 }
+            //             ]
+            //         }
+            //     ]
+            // },
+
+
+            // {
+            //     "cardID":"b55d7f08-d8cc-4bf5-4c0c-873a5be26724",
+            //     "title":"My FamiPay 最高10%現金回饋",
+            //     "descs":[
+            //         "My FamiPay消費回饋10%(菸品不適用，每月每戶最高回饋50點)"
+            //     ],
+            //     "startDate":1656633600,
+            //     "endDate":1672531199,
+            //     "cardRewardOperator":2,
+            //     "rewardType":1,
+            //     "cardRewardBonus":{
+            //         "totalBonus":10
+            //     },
+            //     "cardRewardLimitTypes":[],
+            //     "constraintPassLogics":[],
+            //     "rewards":[
+            //         {
+            //             "order":1,
+            //             "payloadOperator":2,
+            //             "payloads":[
+            //                 {
+            //                     "feedback":{
+            //                         "cashback":{
+            //                             "cashbackType":1,
+            //                             "cashCalculateType":2,
+            //                             "bonus":0.1,
+            //                             "min":0,
+            //                             "max":500
+            //                         }
+            //                     },
+            //                     "channel":{
+            //                         "channelOperatorType":1,
+            //                         "channelType":1,
+            //                         "channelMappingType":1,
+            //                         "innerChannels":[
+            //                             {
+            //                                 "channelOperatorType":1,
+            //                                 "channelType":3,
+            //                                 "channelMappingType":1,
+            //                                 "mobilepays":[
+            //                                     "81ceafb3-7e61-4a3f-81ad-d2f6ada8d1ff"
+            //                                 ]
+            //                             },
+            //                             {
+            //                                 "channelOperatorType":1,
+            //                                 "channelType":15,
+            //                                 "channelMappingType":1,
+            //                                 "conveniencestores":[
+            //                                     "97680529-5b6d-4b69-9f9d-3ff7ced172e9"
+            //                                 ]
+            //                             }
+            //                         ]   
+            //                     }
+            //                 }
+            //             ]
+            //         }
+            //     ]
+            // },
+
+            ,
 
             {
                 "cardID":"b55d7f08-d8cc-4bf5-4c0c-873a5be26724",

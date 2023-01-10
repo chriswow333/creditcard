@@ -2,6 +2,7 @@ package card
 
 import (
 	"example.com/creditcard/models/feedback"
+	feedbackM "example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
 )
 
@@ -31,12 +32,13 @@ type CardRewardEventResp struct {
 
 	CardRewardOperator CardRewardOperator `json:"cardRewardOperator,omitempty"`
 
-	RewardType      rewardM.RewardType `json:"rewardType,omitempty"`
-	CardRewardBonus *CardRewardBonus   `json:"cardRewardBonus"`
+	RewardType rewardM.RewardType `json:"rewardType,omitempty"`
+	// CardRewardBonus *CardRewardBonus   `json:"cardRewardBonus"`
 
 	CardRewardLimitTypes []CardRewardLimitType `json:"cardRewardLimitTypes"`
 
-	FeedbackDesc *feedback.FeedbackDesc `json:"feedbackDesc,omitempty"`
+	// FeedbackDesc *feedback.FeedbackDesc `json:"feedbackDesc,omitempty"`
+	FeedbackBonus *feedbackM.FeedbackBonus `json:"feedbackBonus"` // show 9折優惠 or 10%回饋 等等
 
 	FeedReturn *feedback.FeedReturn `json:"feedReturn,omitempty"`
 }

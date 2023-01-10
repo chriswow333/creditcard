@@ -5,19 +5,22 @@ import (
 	"example.com/creditcard/models/reward"
 )
 
-type CashType int32
+type SortType int32
 
 const (
-	NTD CashType = iota
-	USD
-	BONUS
+	NONE = iota
+	MATCH
+	MAX_REWARD_BONUS
+	MAX_REWARD_RETURN
+	MAX_REWARD_EXPECTED_BONUS
 )
 
 type Event struct {
 	ID string `json:"id"`
 
-	Cash     float64  `json:"cash"`
-	CashType CashType `json:"cashType"`
+	Cash int64 `json:"cash"`
+
+	SortType SortType `json:"sortType"`
 
 	CardIDs       []string `json:"cardIDs"`
 	CardRewardIDs []string `json:"cardRewardIDs"`

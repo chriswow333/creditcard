@@ -2,6 +2,8 @@ package psql
 
 import (
 	"log"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/jackc/pgx"
@@ -22,12 +24,32 @@ type Psql struct {
 }
 
 func NewPsql() *pgx.ConnPool {
+
+	username := os.Getenv("POSTGRES_USERNAME")
+	if username == "" {
+		username = "postgres"
+	}
+	password := os.Getenv("POSTGRES_PASSWORD")
+	if password == "" {
+		password = "z20339"
+	}
+	host := os.Getenv("POSTGRES_HOST")
+	if host == "" {
+		host = "127.0.0.1"
+	}
+	port := os.Getenv("POSTGRES_PORT")
+	if port == "" {
+		port = "5432"
+	}
+
+	portInt, err := strconv.ParseUint(port, 10, 64)
+
 	pgxConfig := pgx.ConnConfig{
-		Host:     "0.0.0.0",
+		Host:     host, //host.docker.internal
 		Database: "postgres",
-		Port:     5432,
-		User:     "postgres",
-		Password: "z20339",
+		Port:     uint16(portInt),
+		User:     username,
+		Password: password,
 	}
 
 	/*pgxConnPoolConfig := pgx.ConnPoolConfig{

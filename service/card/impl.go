@@ -3,22 +3,21 @@ package card
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
 	"time"
 
 	cardM "example.com/creditcard/models/card"
 	channelM "example.com/creditcard/models/channel"
-	"example.com/creditcard/models/feedback"
 	rewardM "example.com/creditcard/models/reward"
 	rewardChannelM "example.com/creditcard/models/reward_channel"
-	"example.com/creditcard/models/task"
+	taskM "example.com/creditcard/models/task"
 
 	"example.com/creditcard/service/bank"
 	"example.com/creditcard/service/channel"
 	"example.com/creditcard/stores/card"
 	"example.com/creditcard/stores/card_reward"
-	feedbackDescStore "example.com/creditcard/stores/feedback_desc"
+
+	// feedbackDescStore "example.com/creditcard/stores/feedback_desc"
 	"example.com/creditcard/stores/reward"
 	"example.com/creditcard/stores/reward_channel"
 
@@ -38,10 +37,10 @@ const DATE_FORMAT = "2006/01/02"
 type impl struct {
 	dig.In
 
-	cardStore         card.Store
-	rewardStore       reward.Store
-	cardRewardStore   card_reward.Store
-	feedbackDescStore feedbackDescStore.Store
+	cardStore       card.Store
+	rewardStore     reward.Store
+	cardRewardStore card_reward.Store
+	// feedbackDescStore feedbackDescStore.Store
 
 	bankService          bank.Service
 	rewardChannelService reward_channel.Store
@@ -55,7 +54,7 @@ func New(
 	bankService bank.Service,
 	rewardChannelService reward_channel.Store,
 	channelService channel.Service,
-	feedbackDescStore feedbackDescStore.Store,
+	// feedbackDescStore feedbackDescStore.Store,
 ) Service {
 	return &impl{
 		cardStore:            cardStore,
@@ -64,7 +63,7 @@ func New(
 		bankService:          bankService,
 		rewardChannelService: rewardChannelService,
 		channelService:       channelService,
-		feedbackDescStore:    feedbackDescStore,
+		// feedbackDescStore:    feedbackDescStore,
 	}
 }
 
@@ -125,19 +124,19 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
 	return card, nil
 }
 
-func (im *impl) getFeedbackDesc(ctx context.Context, feedbackID string) (*feedback.FeedbackDesc, error) {
+// func (im *impl) getFeedbackDesc(ctx context.Context, feedbackID string) (*feedback.FeedbackDesc, error) {
 
-	feedbackDesc, err := im.feedbackDescStore.GetByID(ctx, feedbackID)
+// 	feedbackDesc, err := im.feedbackDescStore.GetByID(ctx, feedbackID)
 
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
-		return nil, err
-	}
+// 	if err != nil {
+// 		logrus.WithFields(logrus.Fields{
+// 			"": "",
+// 		}).Error(err)
+// 		return nil, err
+// 	}
 
-	return feedbackDesc, nil
-}
+// 	return feedbackDesc, nil
+// }
 
 func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.CardReward) ([]*cardM.CardRewardResp, error) {
 
@@ -145,21 +144,21 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 	for _, cr := range cardRewards {
 
-		feedbackDesc, err := im.getFeedbackDesc(ctx, cr.FeedbackDescID)
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
-			return nil, err
-		}
+		// feedbackDesc, err := im.getFeedbackDesc(ctx, cr.FeedbackDescID)
+		// if err != nil {
+		// 	logrus.WithFields(logrus.Fields{
+		// 		"": "",
+		// 	}).Error(err)
+		// 	return nil, err
+		// }
 
 		startDate := time.Unix(cr.StartDate, 0).Format(DATE_FORMAT)
 		endDate := time.Unix(cr.EndDate, 0).Format(DATE_FORMAT)
 
 		cardRewardResp := &cardM.CardRewardResp{
-			ID:              cr.ID,
-			RewardType:      cr.RewardType,
-			CardRewardBonus: cr.CardRewardBonus,
+			ID:         cr.ID,
+			RewardType: cr.RewardType,
+			// CardRewardBonus: cr.CardRewardBonus,
 
 			ConstraintPassLogics: cr.ConstraintPassLogics,
 			Title:                cr.Title,
@@ -167,7 +166,8 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 			StartDate:            startDate,
 			EndDate:              endDate,
 			CardRewardLimitTypes: cr.CardRewardLimitTypes,
-			FeedbackDesc:         feedbackDesc,
+			FeedbackBonus:        cr.FeedbackBonus,
+			// FeedbackDesc:         feedbackDesc,
 		}
 
 		cardRewardID := cr.ID
@@ -179,25 +179,61 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 			return nil, err
 		}
 
-		tasks := []*task.Task{}
+		tasks := []*taskM.Task{}
+		taskMap := make(map[string]bool)
 
 		mobilepays := []*channelM.Mobilepay{}
+		mobilepayMap := make(map[string]bool)
+
 		ecommerces := []*channelM.Ecommerce{}
+		ecommerceMap := make(map[string]bool)
+
 		supermarkets := []*channelM.Supermarket{}
+		supermarketMap := make(map[string]bool)
+
 		onlinegames := []*channelM.Onlinegame{}
+		onlinegameMap := make(map[string]bool)
+
 		streamings := []*channelM.Streaming{}
+		streamingMap := make(map[string]bool)
+
 		foods := []*channelM.Food{}
+		foodMap := make(map[string]bool)
+
 		transportations := []*channelM.Transportation{}
+		transportationMap := make(map[string]bool)
+
 		travels := []*channelM.Travel{}
+		travelMap := make(map[string]bool)
+
 		deliveries := []*channelM.Delivery{}
+		deliveryMap := make(map[string]bool)
+
 		insurances := []*channelM.Insurance{}
+		insuranceMap := make(map[string]bool)
+
 		malls := []*channelM.Mall{}
+		mallMap := make(map[string]bool)
+
 		sports := []*channelM.Sport{}
+		sportMap := make(map[string]bool)
+
 		convenienceStores := []*channelM.ConvenienceStore{}
+		convenienceStoreMap := make(map[string]bool)
+
 		appstores := []*channelM.AppStore{}
+		appstoreMap := make(map[string]bool)
+
 		hotels := []*channelM.Hotel{}
+		hotelMap := make(map[string]bool)
+
 		amusements := []*channelM.Amusement{}
+		amusementMap := make(map[string]bool)
+
 		cinemas := []*channelM.Cinema{}
+		cinemaMap := make(map[string]bool)
+
+		channelResps := []*channelM.ChannelResp{}
 
 		for _, rc := range rewardChannels {
 
@@ -210,152 +246,528 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
 
-				tasks = append(tasks, task)
+				if task.TaskType == taskM.CHANNEL {
+
+					for _, ch := range task.TaskTypeModel.ChannelLimit.Channels {
+						switch ch {
+						case int32(channelM.MobilepayType):
+
+							allMobilepays, err := im.channelService.GetAllMobilepays(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, m := range allMobilepays {
+								if _, ok := mobilepayMap[m.ID]; !ok {
+									mobilepayMap[m.ID] = true
+									mobilepays = append(mobilepays, m)
+								}
+							}
+
+							break
+
+						case int32(channelM.EcommerceType):
+							allEcommerces, err := im.channelService.GetAllEcommerces(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, e := range allEcommerces {
+								if _, ok := ecommerceMap[e.ID]; !ok {
+									ecommerceMap[e.ID] = true
+									ecommerces = append(ecommerces, e)
+								}
+							}
+
+							break
+
+						case int32(channelM.SupermarketType):
+							allSupermarkets, err := im.channelService.GetAllSupermarkets(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, s := range allSupermarkets {
+								if _, ok := supermarketMap[s.ID]; !ok {
+									supermarketMap[s.ID] = true
+									supermarkets = append(supermarkets, s)
+								}
+							}
+
+							break
+
+						case int32(channelM.OnlinegameType):
+							allOnlinegames, err := im.channelService.GetAllOnlinegames(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, o := range allOnlinegames {
+								if _, ok := onlinegameMap[o.ID]; !ok {
+									onlinegameMap[o.ID] = true
+									onlinegames = append(onlinegames, o)
+								}
+							}
+
+							break
+
+						case int32(channelM.StreamingType):
+
+							allStreamings, err := im.channelService.GetAllStreamings(ctx)
+
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, s := range allStreamings {
+								if _, ok := streamingMap[s.ID]; !ok {
+									streamingMap[s.ID] = true
+									streamings = append(streamings, s)
+								}
+							}
+
+							break
+
+						case int32(channelM.FoodType):
+							allFoods, err := im.channelService.GetAllFoods(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, f := range allFoods {
+								if _, ok := foodMap[f.ID]; !ok {
+									foodMap[f.ID] = true
+									foods = append(foods, f)
+								}
+							}
+							break
+
+						case int32(channelM.TransportationType):
+							allTransportations, err := im.channelService.GetAllTransportations(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, t := range allTransportations {
+								if _, ok := transportationMap[t.ID]; !ok {
+									transportationMap[t.ID] = true
+									transportations = append(transportations, t)
+								}
+							}
+
+							break
+
+						case int32(channelM.TravelType):
+							allTravels, err := im.channelService.GetAllTravels(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, t := range allTravels {
+								if _, ok := travelMap[t.ID]; !ok {
+									travelMap[t.ID] = true
+									travels = append(travels, t)
+								}
+							}
+
+							break
+
+						case int32(channelM.DeliveryType):
+							allDeliveries, err := im.channelService.GetAllDeliverys(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, d := range allDeliveries {
+								if _, ok := deliveryMap[d.ID]; !ok {
+									deliveryMap[d.ID] = true
+									deliveries = append(deliveries, d)
+								}
+							}
+
+							break
+
+						case int32(channelM.InsuranceType):
+							allInurances, err := im.channelService.GetAllInsurances(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, i := range allInurances {
+								if _, ok := insuranceMap[i.ID]; !ok {
+									insuranceMap[i.ID] = true
+									insurances = append(insurances, i)
+								}
+							}
+
+							break
+
+						case int32(channelM.MallType):
+							allMalls, err := im.channelService.GetAllMalls(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, m := range allMalls {
+								if _, ok := mallMap[m.ID]; !ok {
+									mallMap[m.ID] = true
+									malls = append(malls, m)
+								}
+							}
+
+							break
+
+						case int32(channelM.SportType):
+							allSports, err := im.channelService.GetAllSports(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, s := range allSports {
+								if _, ok := sportMap[s.ID]; !ok {
+									sportMap[s.ID] = true
+									sports = append(sports, s)
+								}
+							}
+
+							break
+
+						case int32(channelM.ConvenienceStoreType):
+							allConvenienceStores, err := im.channelService.GetAllConvenienceStores(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, c := range allConvenienceStores {
+								if _, ok := convenienceStoreMap[c.ID]; !ok {
+									convenienceStoreMap[c.ID] = true
+									convenienceStores = append(convenienceStores, c)
+								}
+							}
+
+							break
+
+						case int32(channelM.AppStoreType):
+							allAppStores, err := im.channelService.GetAllAppstores(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, a := range allAppStores {
+								if _, ok := appstoreMap[a.ID]; !ok {
+									appstoreMap[a.ID] = true
+									appstores = append(appstores, a)
+								}
+							}
+
+							break
+
+						case int32(channelM.HotelType):
+							allHotels, err := im.channelService.GetAllHotels(ctx)
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, h := range allHotels {
+								if _, ok := hotelMap[h.ID]; !ok {
+									hotelMap[h.ID] = true
+									hotels = append(hotels, h)
+								}
+							}
+
+							break
+
+						case int32(channelM.AmusementType):
+
+							allAmusements, err := im.channelService.GetAllAmusemnets(ctx)
+
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, a := range allAmusements {
+								if _, ok := amusementMap[a.ID]; !ok {
+									amusementMap[a.ID] = true
+									amusements = append(amusements, a)
+								}
+							}
+
+							break
+
+						case int32(channelM.CinemaType):
+
+							allCinemas, err := im.channelService.GetAllCinemas(ctx)
+
+							if err != nil {
+								logrus.WithFields(logrus.Fields{
+									"": "",
+								}).Error(err)
+								break
+							}
+
+							for _, c := range allCinemas {
+								if _, ok := cinemaMap[c.ID]; !ok {
+									cinemaMap[c.ID] = true
+									cinemas = append(cinemas, c)
+								}
+							}
+
+							break
+						}
+
+					}
+				}
+
+				if _, ok := taskMap[task.ID]; !ok {
+					taskMap[task.ID] = true
+					tasks = append(tasks, task)
+				}
 
 				break
 
 			case int32(channelM.MobilepayType):
 
-				mobilepay := &channelM.Mobilepay{}
-				if rc.AllPass {
-					mobilepay.ID = "allPass"
-				} else {
-					mobilepay, err = im.channelService.GetMobilepay(ctx, rc.ChannelID)
-					if err != nil {
-						logrus.WithFields(logrus.Fields{
-							"": "",
-						}).Error(err)
-						return nil, err
-					}
-				}
-
-				mobilepays = append(mobilepays, mobilepay)
-
-				break
-
-			case int32(channelM.EcommerceType):
-				ecommerce, err := im.channelService.GetEcommerce(ctx, rc.ChannelID)
+				mobilepay, err := im.channelService.GetMobilepay(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
 
-				ecommerces = append(ecommerces, ecommerce)
+				if _, ok := mobilepayMap[mobilepay.ID]; !ok {
+					mobilepayMap[mobilepay.ID] = true
+					mobilepays = append(mobilepays, mobilepay)
+				}
+
+				break
+
+			case int32(channelM.EcommerceType):
+
+				ecommerce := &channelM.Ecommerce{}
+
+				ecommerce, err = im.channelService.GetEcommerce(ctx, rc.ChannelID)
+				if err != nil {
+					logrus.WithFields(logrus.Fields{
+						"": "",
+					}).Error(err)
+					break
+				}
+
+				if _, ok := ecommerceMap[ecommerce.ID]; !ok {
+					ecommerceMap[ecommerce.ID] = true
+					ecommerces = append(ecommerces, ecommerce)
+				}
+
 				break
 
 			case int32(channelM.SupermarketType):
+
 				supermarket, err := im.channelService.GetSupermarket(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
 
-				supermarkets = append(supermarkets, supermarket)
+				if _, ok := supermarketMap[supermarket.ID]; !ok {
+					supermarketMap[supermarket.ID] = true
+					supermarkets = append(supermarkets, supermarket)
+				}
+
 				break
 
 			case int32(channelM.OnlinegameType):
+
 				onlinegame, err := im.channelService.GetOnlinegame(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
 
-				onlinegames = append(onlinegames, onlinegame)
+				if _, ok := onlinegameMap[onlinegame.ID]; !ok {
+					onlinegameMap[onlinegame.ID] = true
+					onlinegames = append(onlinegames, onlinegame)
+				}
 
 				break
 
 			case int32(channelM.StreamingType):
+
 				streaming, err := im.channelService.GetStreaming(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				streamings = append(streamings, streaming)
+
+				if _, ok := streamingMap[streaming.ID]; !ok {
+					streamingMap[streaming.ID] = true
+					streamings = append(streamings, streaming)
+				}
 
 				break
+
 			case int32(channelM.FoodType):
 
-				food := &channelM.Food{}
+				food, err := im.channelService.GetFood(ctx, rc.ChannelID)
 
-				if "allPass" == rc.ChannelID {
-					food.ID = "allPass"
-				} else {
-					food, err = im.channelService.GetFood(ctx, rc.ChannelID)
-					if err != nil {
-						logrus.WithFields(logrus.Fields{
-							"": "",
-						}).Error(err)
-						return nil, err
-					}
+				if err != nil {
+					logrus.WithFields(logrus.Fields{
+						"": "",
+					}).Error(err)
+					break
 				}
-				foods = append(foods, food)
+
+				if _, ok := foodMap[food.ID]; !ok {
+					foodMap[food.ID] = true
+					foods = append(foods, food)
+				}
 
 				break
 
 			case int32(channelM.TransportationType):
+
 				transportation, err := im.channelService.GetTransportation(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				transportations = append(transportations, transportation)
+
+				if _, ok := transportationMap[transportation.ID]; !ok {
+					transportationMap[transportation.ID] = true
+					transportations = append(transportations, transportation)
+				}
+
 				break
 
 			case int32(channelM.TravelType):
+
 				travel, err := im.channelService.GetTravel(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				travels = append(travels, travel)
+
+				if _, ok := travelMap[travel.ID]; !ok {
+					travelMap[travel.ID] = true
+					travels = append(travels, travel)
+				}
+
 				break
 
 			case int32(channelM.DeliveryType):
+
 				delivery, err := im.channelService.GetDelivery(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				deliveries = append(deliveries, delivery)
+
+				if _, ok := deliveryMap[delivery.ID]; !ok {
+					deliveryMap[delivery.ID] = true
+					deliveries = append(deliveries, delivery)
+				}
+
 				break
 
 			case int32(channelM.InsuranceType):
+
 				insurance, err := im.channelService.GetInsurance(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				insurances = append(insurances, insurance)
+
+				if _, ok := insuranceMap[insurance.ID]; !ok {
+					insuranceMap[insurance.ID] = true
+					insurances = append(insurances, insurance)
+				}
+
 				break
+
 			case int32(channelM.MallType):
-				mall, err := im.channelService.GetMall(ctx, rc.ChannelID)
+
+				mall := &channelM.Mall{}
+
+				mall, err = im.channelService.GetMall(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				malls = append(malls, mall)
+
+				if _, ok := mallMap[mall.ID]; !ok {
+					mallMap[mall.ID] = true
+					malls = append(malls, mall)
+				}
+
 				break
+
 			case int32(channelM.SportType):
 
 				sport, err := im.channelService.GetSport(ctx, rc.ChannelID)
@@ -363,9 +775,14 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				sports = append(sports, sport)
+
+				if _, ok := sportMap[sport.ID]; !ok {
+					sportMap[sport.ID] = true
+					sports = append(sports, sport)
+				}
+
 				break
 
 			case int32(channelM.ConvenienceStoreType):
@@ -375,10 +792,16 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				convenienceStores = append(convenienceStores, convenienceStore)
+
+				if _, ok := convenienceStoreMap[convenienceStore.ID]; !ok {
+					convenienceStoreMap[convenienceStore.ID] = true
+					convenienceStores = append(convenienceStores, convenienceStore)
+				}
+
 				break
+
 			case int32(channelM.AppStoreType):
 
 				appstore, err := im.channelService.GetAppstore(ctx, rc.ChannelID)
@@ -386,9 +809,14 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				appstores = append(appstores, appstore)
+
+				if _, ok := appstoreMap[appstore.ID]; !ok {
+					appstoreMap[appstore.ID] = true
+					appstores = append(appstores, appstore)
+				}
+
 				break
 
 			case int32(channelM.HotelType):
@@ -398,9 +826,14 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				hotels = append(hotels, hotel)
+
+				if _, ok := hotelMap[hotel.ID]; !ok {
+					hotelMap[hotel.ID] = true
+					hotels = append(hotels, hotel)
+				}
+
 				break
 
 			case int32(channelM.AmusementType):
@@ -410,27 +843,35 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 					logrus.WithFields(logrus.Fields{
 						"": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				amusements = append(amusements, amusement)
+
+				if _, ok := amusementMap[amusement.ID]; !ok {
+					amusementMap[amusement.ID] = true
+					amusements = append(amusements, amusement)
+				}
+
 				break
 
 			case int32(channelM.CinemaType):
-				fmt.Println("I am in cinema type " + rc.ChannelID)
+
 				cinema, err := im.channelService.GetCinema(ctx, rc.ChannelID)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"card.transCardRewardResp": "",
 					}).Error(err)
-					return nil, err
+					break
 				}
-				cinemas = append(cinemas, cinema)
+
+				if _, ok := cinemaMap[cinema.ID]; !ok {
+					cinemaMap[cinema.ID] = true
+					cinemas = append(cinemas, cinema)
+				}
+
 				break
 
 			}
 		}
-
-		channelResps := []*channelM.ChannelResp{}
 
 		if len(tasks) > 0 {
 			channelResps = append(channelResps, &channelM.ChannelResp{
@@ -440,21 +881,14 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 		}
 
 		if len(mobilepays) > 0 {
-
-			allPass := false
-
-			if "allPass" == mobilepays[0].ID {
-				allPass = true
-			}
-
 			channelResps = append(channelResps, &channelM.ChannelResp{
 				ChannelType: channelM.MobilepayType,
 				Mobilepays:  mobilepays,
-				AllPass:     allPass,
 			})
 		}
 
 		if len(ecommerces) > 0 {
+
 			channelResps = append(channelResps, &channelM.ChannelResp{
 				ChannelType: channelM.EcommerceType,
 				Ecommerces:  ecommerces,
@@ -483,17 +917,9 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 		}
 
 		if len(foods) > 0 {
-
-			allPass := false
-
-			if "allPass" == foods[0].ID {
-				allPass = true
-			}
-
 			channelResps = append(channelResps, &channelM.ChannelResp{
 				ChannelType: channelM.FoodType,
 				Foods:       foods,
-				AllPass:     allPass,
 			})
 		}
 
@@ -573,6 +999,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 				Cinemas:     cinemas,
 			})
 		}
+
 		cardRewardResp.ChannelResps = channelResps
 
 		cardRewardResps = append(cardRewardResps, cardRewardResp)
@@ -800,12 +1227,8 @@ func findAllChannelID(channel *channelM.Channel, channelTypeMap map[channelM.Cha
 			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
 
-		if channel.AllPass {
-			channelTypeMap[channel.ChannelType]["allPass"] = true
-		} else {
-			for _, m := range channel.Mobilepays {
-				channelTypeMap[channel.ChannelType][m] = true
-			}
+		for _, m := range channel.Mobilepays {
+			channelTypeMap[channel.ChannelType][m] = true
 		}
 
 		break
@@ -859,12 +1282,8 @@ func findAllChannelID(channel *channelM.Channel, channelTypeMap map[channelM.Cha
 			channelTypeMap[channel.ChannelType] = make(map[string]bool)
 		}
 
-		if channel.AllPass {
-			channelTypeMap[channel.ChannelType]["allPass"] = true
-		} else {
-			for _, f := range channel.Foods {
-				channelTypeMap[channel.ChannelType][f] = true
-			}
+		for _, f := range channel.Foods {
+			channelTypeMap[channel.ChannelType][f] = true
 		}
 
 		break

@@ -69,8 +69,8 @@ const (
 	DomesticCache RewardType = iota // 國內現金回饋
 	AbroadCache                     // 國外現金回饋
 	Point                           // 點數回饋
-	Limited                         // 限量優惠
-	FirstGift                       // 首刷禮
+	// Limited                         // 限量優惠
+	// FirstGift                       // 首刷禮
 )
 
 func ConvertReward(rewardType int32) (RewardType, error) {
@@ -82,10 +82,10 @@ func ConvertReward(rewardType int32) (RewardType, error) {
 		return AbroadCache, nil
 	case int32(Point):
 		return Point, nil
-	case int32(Limited):
-		return Limited, nil
-	case int32(FirstGift):
-		return FirstGift, nil
+	// case int32(Limited):
+	// 	return Limited, nil
+	// case int32(FirstGift):
+	// 	return FirstGift, nil
 	default:
 		return 0, errors.New("ConvertReward No match rewardType: " + strconv.Itoa(int(rewardType)))
 	}

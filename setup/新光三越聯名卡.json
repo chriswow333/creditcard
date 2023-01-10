@@ -41,6 +41,7 @@
 
     {
         "cardRewards":[
+
             {
                 "cardID":"ae9d35ea-479b-4094-7134-ad9c48d83312",
                 "title":"指定通路樂享10%回饋!",
@@ -54,13 +55,22 @@
                 "rewardType":1,
                 "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
                 "cardRewardBonus":{
-                    "totalBonus":10,
-                    "fixedDesc":""
+                    "totalBonus":10
                 },
                 "cardRewardLimitTypes":[
                     3
                 ],
                 "constraintPassLogics":[], 
+                "feedbackBonus":{
+                    "cashFeedbackBonus":{
+                        "cashFeedbackBonusType":1,
+                        "totalBonus":10,
+                        "title":"現金回饋",
+                        "returnBonusTitle":"%現金回饋",
+                        "cashReturnTitlePrefix":"現省",
+                        "cashReturnTitleSuffix":"元"
+                    }
+                },
                 "rewards":[
                     {
                         "order":0,
@@ -105,7 +115,9 @@
                         ]
                     }
                 ]
-            },
+            }
+            
+            ,
 
 
             {
@@ -119,15 +131,20 @@
                 "endDate":1672531199,
                 "cardRewardOperator":1,
                 "rewardType":1,
-                "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
-                "cardRewardBonus":{
-                    "totalBonus":10,
-                    "fixedDesc":""
-                },
                 "cardRewardLimitTypes":[
                     3
                 ],
                 "constraintPassLogics":[], 
+                "feedbackBonus":{
+                    "cashFeedbackBonus":{
+                        "cashFeedbackBonusType":2,
+                        "totalBonus":9,
+                        "title":"現金回饋",
+                        "returnBonusTitle":"折現金回饋",
+                        "cashReturnTitlePrefix":"現省",
+                        "cashReturnTitleSuffix":"元"
+                    }
+                },
                 "rewards":[
                     {
                         "order":0,
@@ -155,7 +172,12 @@
                         ]
                     }
                 ]
-            },
+            }
+            
+            ,
+
+
+
 
 
             {
@@ -169,15 +191,20 @@
                 "endDate":1672531199,
                 "cardRewardOperator":1,
                 "rewardType":1,
-                "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
-                "cardRewardBonus":{
-                    "totalBonus":3,
-                    "fixedDesc":""
-                },
                 "cardRewardLimitTypes":[
                     3
                 ],
                 "constraintPassLogics":[], 
+                "feedbackBonus":{
+                    "cashFeedbackBonus":{
+                        "cashFeedbackBonusType":1,
+                        "totalBonus":3,
+                        "title":"現金回饋",
+                        "returnBonusTitle":"%現金回饋",
+                        "cashReturnTitlePrefix":"現省",
+                        "cashReturnTitleSuffix":"元"
+                    }
+                },
                 "rewards":[
                     {
                         "order":0,

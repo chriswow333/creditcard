@@ -2,10 +2,8 @@ package redback
 
 import (
 	"context"
-	"errors"
 
 	feedbackM "example.com/creditcard/models/feedback"
-	"github.com/sirupsen/logrus"
 
 	feedbackComp "example.com/creditcard/components/feedback"
 
@@ -34,96 +32,97 @@ func (im *impl) GetFeedback(ctx context.Context) *feedbackM.Feedback {
 
 func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.FeedReturn, error) {
 
-	cash := int64(e.Cash)
+	return nil, nil
+	// 	cash := int64(e.Cash)
 
-	redReturn := &feedbackM.RedReturn{
-		RedbackTimes: im.Redback.Times,
-	}
+	// 	redReturn := &feedbackM.RedReturn{
+	// 		RedbackTimes: im.Redback.Times,
+	// 	}
 
-	feedReturn := &feedbackM.FeedReturn{
-		RedReturn: redReturn,
-	}
+	// 	feedReturn := &feedbackM.FeedReturn{
+	// 		RedReturn: redReturn,
+	// 	}
 
-	total := cash
+	// 	total := cash
 
-	// define first
-	redReturn.TotalCash = float64(total)
-	redReturn.CurrentCash = cash
+	// 	// define first
+	// 	redReturn.TotalCash = float64(total)
+	// 	redReturn.CurrentCash = cash
 
-	var actualUseCash int64 = 0
-	var actualRedBack int64 = 0
-	var feedReturnStatus feedbackM.FeedReturnStatus = feedbackM.NONE
+	// 	var actualUseCash int64 = 0
+	// 	var actualRedBack int64 = 0
+	// 	var feedReturnStatus feedbackM.FeedReturnStatus = feedbackM.NONE
 
-	if pass {
+	// 	if pass {
 
-		switch im.Redback.RedCalculateType {
-		case feedbackM.RED_TIMES:
+	// 		switch im.Redback.RedCalculateType {
+	// 		case feedbackM.RED_TIMES:
 
-			if im.Redback.Min == 0 && im.Redback.Max == 0 {
+	// 			if im.Redback.Min == 0 && im.Redback.Max == 0 {
 
-				actualUseCash = cash
-				actualRedBack = cash * im.Redback.Times
-				feedReturnStatus = feedbackM.ALL
+	// 				actualUseCash = cash
+	// 				actualRedBack = cash * im.Redback.Times
+	// 				feedReturnStatus = feedbackM.ALL
 
-			} else if im.Redback.Min == 0 && im.Redback.Max != 0 {
+	// 			} else if im.Redback.Min == 0 && im.Redback.Max != 0 {
 
-				if cash <= im.Redback.Max {
+	// 				if cash <= im.Redback.Max {
 
-					actualUseCash = cash
-					actualRedBack = cash * im.Redback.Times
-					feedReturnStatus = feedbackM.ALL
+	// 					actualUseCash = cash
+	// 					actualRedBack = cash * im.Redback.Times
+	// 					feedReturnStatus = feedbackM.ALL
 
-				} else {
+	// 				} else {
 
-					actualUseCash = im.Redback.Max
-					actualRedBack = im.Redback.Max * im.Redback.Times
-					feedReturnStatus = feedbackM.SOME
+	// 					actualUseCash = im.Redback.Max
+	// 					actualRedBack = im.Redback.Max * im.Redback.Times
+	// 					feedReturnStatus = feedbackM.SOME
 
-				}
+	// 				}
 
-			} else if im.Redback.Min != 0 && im.Redback.Max == 0 {
-				if cash >= im.Redback.Min {
+	// 			} else if im.Redback.Min != 0 && im.Redback.Max == 0 {
+	// 				if cash >= im.Redback.Min {
 
-					actualUseCash = cash
-					actualRedBack = cash * im.Redback.Times
-					feedReturnStatus = feedbackM.ALL
+	// 					actualUseCash = cash
+	// 					actualRedBack = cash * im.Redback.Times
+	// 					feedReturnStatus = feedbackM.ALL
 
-				}
-			} else {
-				if im.Redback.Min <= cash && cash <= im.Redback.Max {
-					actualUseCash = cash
-					actualRedBack = cash * im.Redback.Times
-					feedReturnStatus = feedbackM.ALL
-				} else if im.Redback.Max < cash {
-					actualUseCash = im.Redback.Max
-					actualRedBack = im.Redback.Max * im.Redback.Times
-					feedReturnStatus = feedbackM.SOME
+	// 				}
+	// 			} else {
+	// 				if im.Redback.Min <= cash && cash <= im.Redback.Max {
+	// 					actualUseCash = cash
+	// 					actualRedBack = cash * im.Redback.Times
+	// 					feedReturnStatus = feedbackM.ALL
+	// 				} else if im.Redback.Max < cash {
+	// 					actualUseCash = im.Redback.Max
+	// 					actualRedBack = im.Redback.Max * im.Redback.Times
+	// 					feedReturnStatus = feedbackM.SOME
 
-				}
-			}
+	// 				}
+	// 			}
 
-			break
+	// 			break
 
-		default:
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error("not found red calculate type")
-			return nil, errors.New("not found red calculate typ")
+	// 		default:
+	// 			logrus.WithFields(logrus.Fields{
+	// 				"": "",
+	// 			}).Error("not found red calculate type")
+	// 			return nil, errors.New("not found red calculate typ")
 
-		}
+	// 		}
 
-	}
+	// 	}
 
-	feedReturn.FeedReturnStatus = feedReturnStatus
-	if feedReturn.FeedReturnStatus == feedbackM.NONE {
-		redReturn.IsRedGet = false
-	} else {
-		redReturn.IsRedGet = true
-		redReturn.RedbackTimes = im.Redback.Times
-	}
+	// 	feedReturn.FeedReturnStatus = feedReturnStatus
+	// 	if feedReturn.FeedReturnStatus == feedbackM.NONE {
+	// 		redReturn.IsRedGet = false
+	// 	} else {
+	// 		redReturn.IsRedGet = true
+	// 		redReturn.RedbackTimes = im.Redback.Times
+	// 	}
 
-	feedReturn.RedReturn.ActualUseCash = actualUseCash
-	feedReturn.RedReturn.ActualRedback = float64(actualRedBack)
+	// 	feedReturn.RedReturn.ActualUseCash = actualUseCash
+	// 	feedReturn.RedReturn.ActualRedback = float64(actualRedBack)
 
-	return feedReturn, nil
+	// 	return feedReturn, nil
 }

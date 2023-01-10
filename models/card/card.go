@@ -1,6 +1,7 @@
 package card
 
 import (
+	feedbackM "example.com/creditcard/models/feedback"
 	"example.com/creditcard/models/reward"
 	rewardM "example.com/creditcard/models/reward"
 )
@@ -48,9 +49,9 @@ type CardReward struct {
 
 	CardRewardOperator CardRewardOperator `json:"cardRewardOperator,omitempty"` // (R0+(R1&(R2|R3)))
 	RewardType         reward.RewardType  `json:"rewardType,omitempty"`
-	CardRewardBonus    *CardRewardBonus   `json:"cardRewardBonus"` // show 9折優惠 or 10%回饋 等等
 
-	FeedbackDescID string `json:"feedbackDescID"`
+	FeedbackBonus *feedbackM.FeedbackBonus `json:"feedbackBonus"` // show 9折優惠 or 10%回饋 等等
+	// FeedbackDescID string `json:"feedbackDescID"`
 
 	CardRewardLimitTypes []CardRewardLimitType `json:"cardRewardLimitTypes"`
 
@@ -59,17 +60,13 @@ type CardReward struct {
 	Rewards []*rewardM.Reward `json:"rewards,omitempty"`
 }
 
-type CardRewardBonus struct {
-	TotalBonus float64 `json:"totalBonus"` // for percentage reward like ? / 10 %回饋
-
-}
-
 type CardRewardLimitType int32
 
 const (
 	QUANTITY CardRewardLimitType = iota + 1
 	DURATION
 	REGISTER
+	NEWONE
 )
 
 type OtherReward struct {

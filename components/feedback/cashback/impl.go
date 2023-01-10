@@ -3,10 +3,9 @@ package cashback
 import (
 	"context"
 	"errors"
-	"fmt"
-	"strconv"
 
 	eventM "example.com/creditcard/models/event"
+	"github.com/sirupsen/logrus"
 
 	feedbackM "example.com/creditcard/models/feedback"
 
@@ -33,108 +32,121 @@ func (im *impl) GetFeedback(ctx context.Context) *feedbackM.Feedback {
 
 // 計算回饋
 func (im *impl) Calculate(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.FeedReturn, error) {
+	logrus.Info("cashback.Calculate pass :", pass)
 
 	cash := int64(e.Cash)
-	cashReturn := &feedbackM.CashReturn{}
-
-	feedReturn := &feedbackM.FeedReturn{
-		CashReturn: cashReturn,
+	cashReturn := &feedbackM.CashReturn{
+		// TotalBonus: im.Cashback.Bonus,
+		Cash: cash,
 	}
 
-	// total := cost.Dollar.Total + cash // no increment for now
-	total := cash
+	// switch im.Cashback.CashCalculateType {
+	// case feedbackM.FIXED_CASH_RETURN:
+	// 	cashReturn.TotalBonus = im.Cashback.Fixed
+	// 	break
+	// case feedbackM.BONUS_MULTIPLY_CASH:
+	// 	cashReturn.TotalBonus = im.Cashback.Bonus
+	// 	break
+	// }
 
-	cashReturn.TotalCash = float64(total)
-	cashReturn.CurrentCash = cash
+	feedReturn := &feedbackM.FeedReturn{
+		// FeedbackType:  ,
+		CashReturn: cashReturn,
+	}
 
 	// 先定義一下
 	var actualUseCash int64 = 0
 	var actualCashReturn float64 = 0.0
-	var feedReturnStatus feedbackM.FeedReturnStatus = feedbackM.NONE
-	fmt.Println("pass " + strconv.FormatBool(pass))
+	var cashReturnStatus feedbackM.CashReturnStatus = feedbackM.NONE_RETURN_CASH
+	var cashReturnBonus float64 = 0.0
 
 	if pass {
 		// 取得可使用的回饋花費金額
 		switch im.Cashback.CashCalculateType {
 		case feedbackM.FIXED_CASH_RETURN:
-			actualUseCash, actualCashReturn, feedReturnStatus = im.takeFixedCashReturn(ctx, total)
+			actualUseCash, actualCashReturn, cashReturnStatus = im.takeFixedCashReturn(ctx, cash)
+
+			if cashReturnStatus != feedbackM.NONE_RETURN_CASH {
+				cashReturnBonus = im.Cashback.Fixed
+			}
 			break
 		case feedbackM.BONUS_MULTIPLY_CASH:
-			actualUseCash, actualCashReturn, feedReturnStatus = im.multiplyCashReturn(ctx, total)
+			actualUseCash, actualCashReturn, cashReturnStatus = im.multiplyCashReturn(ctx, cash)
+			if cashReturnStatus != feedbackM.NONE_RETURN_CASH {
+				cashReturnBonus = im.Cashback.Bonus
+			}
 			break
 		default:
 			return nil, errors.New("not found suitable im.Cashback.CashCalculateType")
-
 		}
 
 	}
 
-	feedReturn.FeedReturnStatus = feedReturnStatus
-	if feedReturnStatus == feedbackM.NONE {
-		cashReturn.IsCashbackGet = false
-	} else {
-		cashReturn.IsCashbackGet = true
-		cashReturn.CashbackBonus = (im.Cashback.Bonus) * 100
-	}
-
+	cashReturn.CashReturnBonus = cashReturnBonus
+	cashReturn.CashReturnStatus = cashReturnStatus
 	cashReturn.ActualUseCash = actualUseCash
 	cashReturn.ActualCashReturn = actualCashReturn
+
+	logrus.Info("cashback.Calculate cashReturn : ", cashReturn)
+	logrus.Info("cashback.Calculate feedReturn : ", feedReturn)
 
 	return feedReturn, nil
 }
 
-func (im *impl) takeFixedCashReturn(ctx context.Context, cash int64) (int64, float64, feedbackM.FeedReturnStatus) {
+func (im *impl) takeFixedCashReturn(ctx context.Context, cash int64) (int64, float64, feedbackM.CashReturnStatus) {
+
 	if im.Cashback.Min == 0 && im.Cashback.Max == 0 {
-		return cash, im.Cashback.Fixed, feedbackM.ALL
+		return cash, im.Cashback.Fixed, feedbackM.ALL_RETURN_CASH
 	} else if im.Cashback.Min == 0 && im.Cashback.Max != 0 {
 		if cash <= im.Cashback.Max {
-			return cash, im.Cashback.Fixed, feedbackM.ALL
+			return cash, im.Cashback.Fixed, feedbackM.ALL_RETURN_CASH
 		} else {
-			return int64(im.Cashback.Fixed), im.Cashback.Fixed, feedbackM.SOME
+			return int64(im.Cashback.Fixed), im.Cashback.Fixed, feedbackM.SOME_RETURN_CASH
 		}
 	} else if im.Cashback.Min != 0 && im.Cashback.Max == 0 {
 		if im.Cashback.Min <= cash {
-			return cash, im.Cashback.Fixed, feedbackM.ALL
+			return cash, im.Cashback.Fixed, feedbackM.ALL_RETURN_CASH
 		} else {
-			return 0, 0, feedbackM.NONE
+			return 0, 0, feedbackM.NONE_RETURN_CASH
 		}
 	} else {
 		if im.Cashback.Min <= cash && cash <= im.Cashback.Max {
-			return cash, im.Cashback.Fixed, feedbackM.ALL
+			return cash, im.Cashback.Fixed, feedbackM.ALL_RETURN_CASH
 		} else if cash < im.Cashback.Min {
-			return 0, 0, feedbackM.NONE
+			return 0, 0, feedbackM.NONE_RETURN_CASH
 		} else {
-			return int64(im.Cashback.Fixed), im.Cashback.Fixed, feedbackM.SOME
+			return int64(im.Cashback.Fixed), im.Cashback.Fixed, feedbackM.SOME_RETURN_CASH
 		}
-
 	}
 }
 
 // 實際可以用多少錢拿回饋, 回饋多少, 回饋是否全拿
-func (im *impl) multiplyCashReturn(ctx context.Context, cash int64) (int64, float64, feedbackM.FeedReturnStatus) {
+func (im *impl) multiplyCashReturn(ctx context.Context, cash int64) (int64, float64, feedbackM.CashReturnStatus) {
 
 	if im.Cashback.Min == 0 && im.Cashback.Max == 0 {
-		return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL
+		return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL_RETURN_CASH
 	} else if im.Cashback.Min == 0 && im.Cashback.Max != 0 {
 		if cash <= im.Cashback.Max {
-			return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL
+			return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL_RETURN_CASH
 		} else {
-			return cash, im.Cashback.Bonus * float64(im.Cashback.Max), feedbackM.SOME
+			return im.Cashback.Max, im.Cashback.Bonus * float64(im.Cashback.Max), feedbackM.SOME_RETURN_CASH
 		}
 	} else if im.Cashback.Min != 0 && im.Cashback.Max == 0 {
 		if im.Cashback.Min <= cash {
-			return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL
+			return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL_RETURN_CASH
 		} else {
-			return 0, 0, feedbackM.NONE
+			return 0, 0, feedbackM.NONE_RETURN_CASH
 		}
 	} else {
+
 		if im.Cashback.Min <= cash && cash <= im.Cashback.Max {
-			return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL
+			return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL_RETURN_CASH
 		} else if cash < im.Cashback.Min {
-			return 0, 0, feedbackM.NONE
+			return 0, 0, feedbackM.NONE_RETURN_CASH
 		} else {
-			return int64(im.Cashback.Bonus), im.Cashback.Bonus * float64(cash), feedbackM.SOME
+			return int64(im.Cashback.Bonus), im.Cashback.Bonus * float64(cash), feedbackM.SOME_RETURN_CASH
 		}
+
 	}
 
 }

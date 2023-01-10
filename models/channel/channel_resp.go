@@ -1,16 +1,12 @@
 package channel
 
-import (
-	"example.com/creditcard/models/task"
-)
+import "example.com/creditcard/models/task"
 
 type ChannelResp struct {
 	// ChannelOperatorType ChannelOperatorType `json:"ChannelOperatorType,omitempty"`
 	// ChannelMappingType ChannelMappingType `json:"ChannelMappingType,omitempty"`
 
 	ChannelType ChannelType `json:"channelType,omitempty"`
-
-	AllPass bool `json:"allPass"`
 
 	Tasks []*task.Task `json:"tasks,omitempty"`
 

@@ -18,7 +18,8 @@ type ChannelLabel int32
 
 const (
 	MICRO_PAYMENT = iota + 1 // 小額支付
-
+	OVERSEA                  // 海外
+	DOMESTIC
 )
 
 type ChannelType int32
@@ -57,7 +58,6 @@ type Channel struct {
 
 	Tasks []string `json:"tasks,omitempty"`
 
-	AllPass               bool           `json:"allPass"`
 	ExcludedChannelLabels []ChannelLabel `json:"excludedChannelLabels"`
 
 	Mobilepays        []string `json:"mobilepays,omitempty"`

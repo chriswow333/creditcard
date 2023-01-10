@@ -46,8 +46,6 @@ import (
 	rewardM "example.com/creditcard/models/reward"
 	"example.com/creditcard/models/task"
 
-	feedbackDescStore "example.com/creditcard/stores/feedback_desc"
-
 	amusementStore "example.com/creditcard/stores/amusement"
 	appstoreStore "example.com/creditcard/stores/appstore"
 	cinemaStore "example.com/creditcard/stores/cinema"
@@ -73,7 +71,7 @@ type impl struct {
 	channelService channel.Service
 	bankService    bank.Service
 
-	feedbackDescStore     feedbackDescStore.Store
+	// feedbackDescStore     feedbackDescStore.Store
 	mobilepayStore        mobilepayStore.Store
 	ecommerceStore        ecommerceStore.Store
 	amusementStore        amusementStore.Store
@@ -97,7 +95,7 @@ func New(
 	channelService channel.Service,
 	bankService bank.Service,
 
-	feedbackDescStore feedbackDescStore.Store,
+	// feedbackDescStore feedbackDescStore.Store,
 	mobilepayStore mobilepayStore.Store,
 	ecommerceStore ecommerceStore.Store,
 	amusementStore amusementStore.Store,
@@ -118,9 +116,9 @@ func New(
 
 ) Builder {
 	return &impl{
-		channelService:        channelService,
-		bankService:           bankService,
-		feedbackDescStore:     feedbackDescStore,
+		channelService: channelService,
+		bankService:    bankService,
+		// feedbackDescStore:     feedbackDescStore,
 		mobilepayStore:        mobilepayStore,
 		ecommerceStore:        ecommerceStore,
 		amusementStore:        amusementStore,
@@ -189,7 +187,7 @@ func (im *impl) BuildCardComponent(ctx context.Context, card *cardM.Card) (cardC
 
 	}
 
-	cardComponent := cardComp.New(card, rewardMapper, cardRewardOperatorMapper, im.bankService, im.feedbackDescStore)
+	cardComponent := cardComp.New(card, rewardMapper, cardRewardOperatorMapper, im.bankService)
 
 	return cardComponent, nil
 }
@@ -238,15 +236,15 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 			tasks = append(tasks, task)
 		}
 
-		channelComponent = taskComp.New(channel, tasks)
+		channelComponent = taskComp.New(channel, tasks, im.channelService)
 
 		break
 	case channelM.MobilepayType:
 		mobilepayIDs := channel.Mobilepays
 		mobilepays := []*channelM.Mobilepay{}
 
-		if channel.AllPass {
-			allMobilepays, err := im.mobilepayStore.GetAll(ctx)
+		for _, id := range mobilepayIDs {
+			mobilepay, err := im.mobilepayStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -255,20 +253,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-			mobilepays = allMobilepays
-		} else {
-			for _, id := range mobilepayIDs {
-				mobilepay, err := im.mobilepayStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"mobilepay get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				mobilepays = append(mobilepays, mobilepay)
-			}
+			mobilepays = append(mobilepays, mobilepay)
 		}
 
 		channelComponent = mobilepayComp.New(mobilepays, channel)
@@ -278,9 +263,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		ecommerceIDs := channel.Ecommerces
 		ecommerces := []*channelM.Ecommerce{}
 
-		if channel.AllPass {
-
-			allEcommerces, err := im.ecommerceStore.GetAll(ctx)
+		for _, id := range ecommerceIDs {
+			ecommerce, err := im.ecommerceStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -289,20 +273,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-			ecommerces = allEcommerces
-		} else {
-			for _, id := range ecommerceIDs {
-				ecommerce, err := im.ecommerceStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"mobilepay get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				ecommerces = append(ecommerces, ecommerce)
-			}
+			ecommerces = append(ecommerces, ecommerce)
 		}
 
 		channelComponent = ecommerceComp.New(ecommerces, channel)
@@ -312,9 +283,9 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		supermarketIDs := channel.Supermarkets
 		supermarkets := []*channelM.Supermarket{}
 
-		if channel.AllPass {
+		for _, id := range supermarketIDs {
+			supermarket, err := im.supermarketStore.GetByID(ctx, id)
 
-			allSupermarkets, err := im.supermarketStore.GetAll(ctx)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -323,22 +294,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-			supermarkets = allSupermarkets
-
-		} else {
-			for _, id := range supermarketIDs {
-				supermarket, err := im.supermarketStore.GetByID(ctx, id)
-
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"supermarket get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				supermarkets = append(supermarkets, supermarket)
-			}
+			supermarkets = append(supermarkets, supermarket)
 		}
 
 		channelComponent = supermarketComp.New(supermarkets, channel)
@@ -348,9 +304,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		onlinegameIDs := channel.Onlinegames
 		onlinegames := []*channelM.Onlinegame{}
 
-		if channel.AllPass {
-
-			allOnlinegames, err := im.onlinegameStore.GetAll(ctx)
+		for _, id := range onlinegameIDs {
+			onlinegame, err := im.onlinegameStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -359,22 +314,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-			onlinegames = allOnlinegames
-
-		} else {
-			for _, id := range onlinegameIDs {
-				onlinegame, err := im.onlinegameStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"onlinegamge get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				onlinegames = append(onlinegames, onlinegame)
-			}
-
+			onlinegames = append(onlinegames, onlinegame)
 		}
 
 		channelComponent = onlinegameComp.New(onlinegames, channel)
@@ -385,9 +325,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		streamingIDs := channel.Streamings
 		streamings := []*channelM.Streaming{}
 
-		if channel.AllPass {
-
-			allStreamings, err := im.streamingStore.GetAll(ctx)
+		for _, id := range streamingIDs {
+			steraming, err := im.streamingStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -396,22 +335,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-
-			streamings = allStreamings
-
-		} else {
-			for _, id := range streamingIDs {
-				steraming, err := im.streamingStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"streaming get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				streamings = append(streamings, steraming)
-			}
+			streamings = append(streamings, steraming)
 		}
 
 		channelComponent = streamingComp.New(streamings, channel)
@@ -421,9 +345,9 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		foodIDs := channel.Foods
 		foods := []*channelM.Food{}
 
-		if channel.AllPass {
+		for _, id := range foodIDs {
 
-			allFoods, err := im.foodStore.GetAll(ctx)
+			food, err := im.foodStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -433,34 +357,20 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				return nil, err
 			}
 
-			foods = allFoods
-
-		} else {
-			for _, id := range foodIDs {
-
-				food, err := im.foodStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"food get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-
-				foods = append(foods, food)
-			}
+			foods = append(foods, food)
 		}
 
 		channelComponent = foodComp.New(foods, channel)
+
 		break
+
 	case channelM.TransportationType:
 
 		transportationIDs := channel.Transportations
 		transportations := []*channelM.Transportation{}
 
-		if channel.AllPass {
-			allTransportations, err := im.transportationStore.GetAll(ctx)
+		for _, id := range transportationIDs {
+			transportation, err := im.transportationStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -469,23 +379,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-
-			transportations = allTransportations
-		} else {
-
-			for _, id := range transportationIDs {
-				transportation, err := im.transportationStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"transportation get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				transportations = append(transportations, transportation)
-			}
-
+			transportations = append(transportations, transportation)
 		}
 
 		channelComponent = transportationComp.New(transportations, channel)
@@ -496,8 +390,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		deliveryIDs := channel.Deliveries
 		deliveries := []*channelM.Delivery{}
 
-		if channel.AllPass {
-			allDeliveries, err := im.deliveryStore.GetAll(ctx)
+		for _, id := range deliveryIDs {
+			delivery, err := im.deliveryStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -506,21 +400,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-			deliveries = allDeliveries
-		} else {
-			for _, id := range deliveryIDs {
-				delivery, err := im.deliveryStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"delivery get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				deliveries = append(deliveries, delivery)
-			}
-
+			deliveries = append(deliveries, delivery)
 		}
 
 		channelComponent = deliveryComp.New(deliveries, channel)
@@ -531,9 +411,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		travelIDs := channel.Travels
 		travels := []*channelM.Travel{}
 
-		if channel.AllPass {
-			allTravels, err := im.travelStore.GetAll(ctx)
-
+		for _, id := range travelIDs {
+			travel, err := im.travelStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -542,22 +421,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-
-			travels = allTravels
-
-		} else {
-			for _, id := range travelIDs {
-				travel, err := im.travelStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"travel get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				travels = append(travels, travel)
-			}
+			travels = append(travels, travel)
 		}
 
 		channelComponent = travelComp.New(travels, channel)
@@ -568,8 +432,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		insuranceIDs := channel.Insurances
 		insurances := []*channelM.Insurance{}
 
-		if channel.AllPass {
-			allInsurances, err := im.insuraceStore.GetAll(ctx)
+		for _, id := range insuranceIDs {
+			insurance, err := im.insuraceStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -578,22 +442,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-			insurances = allInsurances
-
-		} else {
-			for _, id := range insuranceIDs {
-				insurance, err := im.insuraceStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"insurance get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				insurances = append(insurances, insurance)
-			}
-
+			insurances = append(insurances, insurance)
 		}
 
 		channelComponent = insuranceComp.New(insurances, channel)
@@ -603,9 +452,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		mallIDs := channel.Malls
 		malls := []*channelM.Mall{}
 
-		if channel.AllPass {
-
-			allMalls, err := im.mallStore.GetAll(ctx)
+		for _, id := range mallIDs {
+			mall, err := im.mallStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -614,21 +462,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-			malls = allMalls
-
-		} else {
-			for _, id := range mallIDs {
-				mall, err := im.mallStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"mall get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				malls = append(malls, mall)
-			}
+			malls = append(malls, mall)
 		}
 
 		channelComponent = mallComp.New(malls, channel)
@@ -637,9 +471,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		conveniencestoreIDs := channel.Conveniencestores
 		conveniencestores := []*channelM.ConvenienceStore{}
 
-		if channel.AllPass {
-
-			allConveniencestores, err := im.conveniencestoreStore.GetAll(ctx)
+		for _, id := range conveniencestoreIDs {
+			conveniencestore, err := im.conveniencestoreStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -648,22 +481,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-
-			conveniencestores = allConveniencestores
-
-		} else {
-			for _, id := range conveniencestoreIDs {
-				conveniencestore, err := im.conveniencestoreStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"conveniencestore get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				conveniencestores = append(conveniencestores, conveniencestore)
-			}
+			conveniencestores = append(conveniencestores, conveniencestore)
 		}
 
 		channelComponent = convenienceStoreComp.New(conveniencestores, channel)
@@ -673,9 +491,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		sportIDs := channel.Sports
 		sports := []*channelM.Sport{}
 
-		if channel.AllPass {
-
-			allSports, err := im.sportStore.GetAll(ctx)
+		for _, id := range sportIDs {
+			sport, err := im.sportStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -684,21 +501,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-
-			sports = allSports
-		} else {
-			for _, id := range sportIDs {
-				sport, err := im.sportStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"sport get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				sports = append(sports, sport)
-			}
+			sports = append(sports, sport)
 		}
 
 		channelComponent = sportComp.New(sports, channel)
@@ -709,9 +512,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		appstoreIDs := channel.AppStores
 		appstores := []*channelM.AppStore{}
 
-		if channel.AllPass {
-
-			allAppstores, err := im.appstoreStore.GetAll(ctx)
+		for _, id := range appstoreIDs {
+			appstore, err := im.appstoreStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -720,24 +522,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-
-			appstores = allAppstores
-
-		} else {
-			for _, id := range appstoreIDs {
-				appstore, err := im.appstoreStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"appstore get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				appstores = append(appstores, appstore)
-			}
+			appstores = append(appstores, appstore)
 		}
-
 		channelComponent = appStoreComp.New(appstores, channel)
 		break
 
@@ -746,8 +532,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		hotelIDs := channel.Hotels
 		hotels := []*channelM.Hotel{}
 
-		if channel.AllPass {
-			allHotels, err := im.hotelStore.GetAll(ctx)
+		for _, id := range hotelIDs {
+			hotel, err := im.hotelStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -756,20 +542,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-			hotels = allHotels
-		} else {
-			for _, id := range hotelIDs {
-				hotel, err := im.hotelStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"hotel get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				hotels = append(hotels, hotel)
-			}
+			hotels = append(hotels, hotel)
 		}
 
 		channelComponent = hotelComp.New(hotels, channel)
@@ -779,9 +552,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		amusementIDs := channel.Amusements
 		amusements := []*channelM.Amusement{}
 
-		if channel.AllPass {
-
-			allAumsements, err := im.amusementStore.GetAll(ctx)
+		for _, id := range amusementIDs {
+			amusement, err := im.amusementStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -790,22 +562,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-
-			amusements = allAumsements
-
-		} else {
-			for _, id := range amusementIDs {
-				amusement, err := im.amusementStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"amusement get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				amusements = append(amusements, amusement)
-			}
+			amusements = append(amusements, amusement)
 		}
 
 		channelComponent = amusementComp.New(amusements, channel)
@@ -815,9 +572,8 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 		cinemaIDs := channel.Cinemas
 		cinemas := []*channelM.Cinema{}
 
-		if channel.AllPass {
-
-			allCinemas, err := im.cinemaStore.GetAll(ctx)
+		for _, id := range cinemaIDs {
+			cinema, err := im.cinemaStore.GetByID(ctx, id)
 			if err != nil {
 				logrus.WithFields(
 					logrus.Fields{
@@ -826,22 +582,7 @@ func (im *impl) getChannelComponent(ctx context.Context, channel *channelM.Chann
 				).Error(err)
 				return nil, err
 			}
-
-			cinemas = allCinemas
-
-		} else {
-			for _, id := range cinemaIDs {
-				cinema, err := im.cinemaStore.GetByID(ctx, id)
-				if err != nil {
-					logrus.WithFields(
-						logrus.Fields{
-							"cinema get error": err,
-						},
-					).Error(err)
-					return nil, err
-				}
-				cinemas = append(cinemas, cinema)
-			}
+			cinemas = append(cinemas, cinema)
 		}
 
 		channelComponent = cinemaComp.New(cinemas, channel)

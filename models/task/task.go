@@ -3,8 +3,10 @@ package task
 type TaskType int32
 
 const (
-	NONE    TaskType = iota + 1
-	WEEKDAY          // WEEKDAY duration
+	NONE          TaskType = iota + 1
+	WEEKDAY                // WEEKDAY duration
+	CHANNEL_LABEL          // 通路標籤
+	CHANNEL                // 通路
 )
 
 type Task struct {
@@ -21,9 +23,19 @@ type Task struct {
 }
 
 type TaskTypeModel struct {
-	WeekDayLimit *WeekDayLimit `json:"weekDayLimit,omitempty"`
+	WeekDayLimit      *WeekDayLimit      `json:"weekDayLimit,omitempty"`
+	ChannelLabelLimit *ChannelLabelLimit `json:"channelLabelLimit,omitempty"`
+	ChannelLimit      *ChannelLimit      `json:"channelLimit,omitempty"`
 }
 
 type WeekDayLimit struct {
 	WeekDays []int `json:"weekDays"`
+}
+
+type ChannelLabelLimit struct {
+	ChannelLabels []int32 `json:"channelLabels"`
+}
+
+type ChannelLimit struct {
+	Channels []int32 `json:"channels"`
 }

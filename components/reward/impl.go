@@ -62,76 +62,60 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 
 	switch im.rewardType {
 	case rewardM.CASH:
-		cashReturn, err := im.calculateCashReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
+		cashReturn, err := im.calculateCashReturn(ctx, e, im.reward.PayloadOperator, payloadEventResps)
 
 		if err != nil {
 			return nil, err
 		}
 
-		cashReturn.CurrentCash = int64(e.Cash)
-		cashReturn.TotalCash = e.Cash
-
-		if cashReturn.ActualUseCash == cashReturn.CurrentCash {
-			rewardEventResp.RewardEventJudgeType = rewardM.ALL
-		} else if cashReturn.ActualUseCash == 0 {
-			rewardEventResp.RewardEventJudgeType = rewardM.NONE
-		} else {
-			rewardEventResp.RewardEventJudgeType = rewardM.SOME
-		}
-
-		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
+		feedReturn := &feedbackM.FeedReturn{
 			CashReturn: cashReturn,
 		}
+
+		rewardEventResp.FeedReturn = feedReturn
+
 		break
 
 	case rewardM.POINT:
 
-		pointReturn, err := im.calculatePointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
+		pointReturn, err := im.calculatePointReturn(ctx, e, im.reward.PayloadOperator, payloadEventResps)
 
 		if err != nil {
 			return nil, err
 		}
 
-		pointReturn.CurrentCash = int64(e.Cash)
-		pointReturn.TotalCash = e.Cash
-
-		if pointReturn.ActualUseCash == pointReturn.CurrentCash {
-			rewardEventResp.RewardEventJudgeType = rewardM.ALL
-		} else if pointReturn.ActualUseCash == 0 {
-			rewardEventResp.RewardEventJudgeType = rewardM.NONE
-		} else {
-			rewardEventResp.RewardEventJudgeType = rewardM.SOME
-		}
-
-		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
+		feedReturn := &feedbackM.FeedReturn{
 			PointReturn: pointReturn,
 		}
-		break
 
-	case rewardM.RED:
-		redReturn, err := im.calculateRedPointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
-
-		if err != nil {
-			return nil, err
-		}
-
-		redReturn.CurrentCash = int64(e.Cash)
-
-		redReturn.TotalCash = e.Cash
-
-		if redReturn.ActualUseCash == redReturn.CurrentCash {
-			rewardEventResp.RewardEventJudgeType = rewardM.ALL
-		} else if redReturn.ActualUseCash == 0 {
-			rewardEventResp.RewardEventJudgeType = rewardM.NONE
-		} else {
-			rewardEventResp.RewardEventJudgeType = rewardM.SOME
-		}
-
-		rewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-			RedReturn: redReturn,
-		}
+		rewardEventResp.FeedReturn = feedReturn
 
 		break
+
+	// case rewardM.RED:
+	// 	redReturn, err := im.calculateRedPointReturn(ctx, im.reward.PayloadOperator, payloadEventResps)
+
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+
+	// 	redReturn.CurrentCash = int64(e.Cash)
+	// 	redReturn.TotalCash = e.Cash
+	// 	feedReturn := &feedbackM.FeedReturn{}
+
+	// 	if redReturn.ActualUseCash == redReturn.CurrentCash {
+	// 		rewardEventResp.RewardEventJudgeType = rewardM.ALL
+	// 		feedReturn.FeedReturnStatus = feedbackM.ALL
+	// 	} else if redReturn.ActualUseCash == 0 {
+	// 		rewardEventResp.RewardEventJudgeType = rewardM.NONE
+	// 		feedReturn.FeedReturnStatus = feedbackM.NONE
+	// 	} else {
+	// 		rewardEventResp.RewardEventJudgeType = rewardM.SOME
+	// 		feedReturn.FeedReturnStatus = feedbackM.SOME
+	// 	}
+	// 	rewardEventResp.FeedReturn = feedReturn
+
+	// 	break
 	default:
 		logrus.Error("not found reward type in reward component")
 		return nil, errors.New("not found reward type in reward component")
@@ -140,124 +124,148 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*rewardM.RewardEv
 	return rewardEventResp, nil
 }
 
-func (im *impl) calculateRedPointReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadEventResps []*payloadM.PayloadEventResp) (*feedbackM.RedReturn, error) {
+// func (im *impl) calculateRedPointReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadEventResps []*payloadM.PayloadEventResp) (*feedbackM.RedReturn, error) {
 
-	redReturn := &feedbackM.RedReturn{}
+// 	redReturn := &feedbackM.RedReturn{}
 
-	switch operator {
-	case rewardM.ADD:
+// 	switch operator {
+// 	case rewardM.ADD:
 
-		var totalCash float64 = 0.0
-		var currentCash int64 = 0
+// 		var totalCash float64 = 0.0
+// 		var currentCash int64 = 0
 
-		var isRedbackGet bool = false
-		var redbackTimes int64 = 0.0
+// 		var isRedbackGet bool = false
+// 		var redbackTimes int64 = 0.0
 
-		var actualUseCash int64 = 0
-		var actualRedBack float64 = 0.0
+// 		var actualUseCash int64 = 0
+// 		var actualRedBack float64 = 0.0
 
-		for _, p := range payloadEventResps {
+// 		for _, p := range payloadEventResps {
 
-			totalCash = p.FeedReturn.RedReturn.TotalCash
-			currentCash = p.FeedReturn.RedReturn.CurrentCash
+// 			totalCash = p.FeedReturn.RedReturn.TotalCash
+// 			currentCash = p.FeedReturn.RedReturn.CurrentCash
 
-			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
-				isRedbackGet = true
+// 			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
+// 				isRedbackGet = true
 
-				if actualUseCash < p.FeedReturn.RedReturn.ActualUseCash {
-					// get max actual use cash
-					actualUseCash = p.FeedReturn.RedReturn.ActualUseCash
-				}
+// 				if actualUseCash < p.FeedReturn.RedReturn.ActualUseCash {
+// 					// get max actual use cash
+// 					actualUseCash = p.FeedReturn.RedReturn.ActualUseCash
+// 				}
 
-				actualRedBack += p.FeedReturn.RedReturn.ActualRedback
-				redbackTimes += p.FeedReturn.RedReturn.RedbackTimes
-			}
+// 				actualRedBack += p.FeedReturn.RedReturn.ActualRedback
+// 				redbackTimes += p.FeedReturn.RedReturn.RedbackTimes
+// 			}
 
-		}
+// 		}
 
-		redReturn.IsRedGet = isRedbackGet
-		redReturn.ActualRedback = actualRedBack
-		redReturn.ActualUseCash = actualUseCash
-		redReturn.CurrentCash = currentCash
-		redReturn.TotalCash = totalCash
-		redReturn.RedbackTimes = redbackTimes
+// 		redReturn.IsRedGet = isRedbackGet
+// 		redReturn.ActualRedback = actualRedBack
+// 		redReturn.ActualUseCash = actualUseCash
+// 		redReturn.CurrentCash = currentCash
+// 		redReturn.TotalCash = totalCash
+// 		redReturn.RedbackTimes = redbackTimes
 
-		break
-	case rewardM.MAXONE:
+// 		break
+// 	case rewardM.MAXONE:
 
-		var maxBonus int64 = 0
+// 		var maxBonus int64 = 0
 
-		var atLeastOnePass = false
+// 		var atLeastOnePass = false
 
-		finalPayload := &payloadM.PayloadEventResp{}
-		for _, p := range payloadEventResps {
-			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
-				if maxBonus < p.FeedReturn.RedReturn.RedbackTimes {
-					finalPayload = p
-					maxBonus = p.FeedReturn.RedReturn.RedbackTimes
-				}
-				atLeastOnePass = true
-			}
-		}
+// 		finalPayload := &payloadM.PayloadEventResp{}
+// 		for _, p := range payloadEventResps {
+// 			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
+// 				if maxBonus < p.FeedReturn.RedReturn.RedbackTimes {
+// 					finalPayload = p
+// 					maxBonus = p.FeedReturn.RedReturn.RedbackTimes
+// 				}
+// 				atLeastOnePass = true
+// 			}
+// 		}
 
-		if atLeastOnePass {
-			redReturn.IsRedGet = finalPayload.FeedReturn.RedReturn.IsRedGet
-			redReturn.ActualRedback = finalPayload.FeedReturn.RedReturn.ActualRedback
-			redReturn.ActualUseCash = finalPayload.FeedReturn.RedReturn.ActualUseCash
-			redReturn.CurrentCash = finalPayload.FeedReturn.RedReturn.CurrentCash
-			redReturn.TotalCash = finalPayload.FeedReturn.RedReturn.TotalCash
-			redReturn.RedbackTimes = maxBonus
-		}
+// 		if atLeastOnePass {
+// 			redReturn.IsRedGet = finalPayload.FeedReturn.RedReturn.IsRedGet
+// 			redReturn.ActualRedback = finalPayload.FeedReturn.RedReturn.ActualRedback
+// 			redReturn.ActualUseCash = finalPayload.FeedReturn.RedReturn.ActualUseCash
+// 			redReturn.CurrentCash = finalPayload.FeedReturn.RedReturn.CurrentCash
+// 			redReturn.TotalCash = finalPayload.FeedReturn.RedReturn.TotalCash
+// 			redReturn.RedbackTimes = maxBonus
+// 		}
 
-		break
-	default:
+// 		break
+// 	default:
 
+// 	}
+
+// 	return redReturn, nil
+// }
+
+func (im *impl) calculatePointReturn(ctx context.Context, e *eventM.Event, operator rewardM.PayloadOperator, payloadEventResps []*payloadM.PayloadEventResp) (*feedbackM.PointReturn, error) {
+
+	pointReturn := &feedbackM.PointReturn{
+		Cash: e.Cash,
 	}
 
-	return redReturn, nil
-}
-
-func (im *impl) calculatePointReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadEventResps []*payloadM.PayloadEventResp) (*feedbackM.PointReturn, error) {
-
-	pointReturn := &feedbackM.PointReturn{}
-
 	switch operator {
 	case rewardM.ADD:
 
-		var totalCash float64 = 0.0
-		var currentCash int64 = 0
-
-		var isPointbackGet bool = false
-		var pointbackBonus float64 = 0.0
-
+		var pointReturnBonus float64 = 0.0
 		var actualUseCash int64 = 0
-		var actualPointBack float64 = 0.0
+		var actualPointReturn float64 = 0.0
+		var pointReturnStatus feedbackM.PointReturnStatus = feedbackM.NONE_RETURN_POINT
+		hasReturn := false
 
 		for _, p := range payloadEventResps {
 
-			totalCash = p.FeedReturn.PointReturn.TotalCash
-			currentCash = p.FeedReturn.PointReturn.CurrentCash
-
-			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
-				isPointbackGet = true
-
+			switch p.FeedReturn.PointReturn.PointReturnStatus {
+			case feedbackM.ALL_RETURN_POINT:
 				if actualUseCash < p.FeedReturn.PointReturn.ActualUseCash {
 					// get max actual use cash
 					actualUseCash = p.FeedReturn.PointReturn.ActualUseCash
 				}
 
-				actualPointBack += p.FeedReturn.PointReturn.ActualPointBack
-				pointbackBonus += p.FeedReturn.PointReturn.PointbackBonus
-			}
+				actualPointReturn += p.FeedReturn.PointReturn.ActualPointReturn
+				pointReturnBonus += p.FeedReturn.PointReturn.PointReturnBonus
 
+				if !hasReturn {
+					pointReturnStatus = feedbackM.ALL_RETURN_POINT
+				} else {
+					pointReturnStatus = feedbackM.SOME_RETURN_POINT
+				}
+
+				hasReturn = true
+				break
+			case feedbackM.SOME_RETURN_POINT:
+				hasReturn = true
+				if actualUseCash < p.FeedReturn.PointReturn.ActualUseCash {
+					// get max actual use cash
+					actualUseCash = p.FeedReturn.PointReturn.ActualUseCash
+				}
+
+				if actualUseCash < p.FeedReturn.PointReturn.ActualUseCash {
+					// get max actual use cash
+					actualUseCash = p.FeedReturn.PointReturn.ActualUseCash
+				}
+				actualPointReturn += p.FeedReturn.PointReturn.ActualPointReturn
+				pointReturnBonus += p.FeedReturn.PointReturn.PointReturnBonus
+
+				pointReturnStatus = feedbackM.SOME_RETURN_CASH
+
+				break
+			case feedbackM.NONE_RETURN_POINT:
+				hasReturn = true
+				if pointReturnStatus == feedbackM.ALL_RETURN_CASH {
+					pointReturnStatus = feedbackM.SOME_RETURN_CASH
+				}
+				break
+			}
 		}
 
-		pointReturn.IsPointbackGet = isPointbackGet
-		pointReturn.ActualPointBack = actualPointBack
+		pointReturn.ActualPointReturn = actualPointReturn
 		pointReturn.ActualUseCash = actualUseCash
-		pointReturn.CurrentCash = currentCash
-		pointReturn.TotalCash = totalCash
-		pointReturn.PointbackBonus = pointbackBonus
+		pointReturn.PointReturnBonus = pointReturnBonus
+		pointReturn.PointReturnStatus = pointReturnStatus
 
 		break
 	case rewardM.MAXONE:
@@ -270,73 +278,110 @@ func (im *impl) calculatePointReturn(ctx context.Context, operator rewardM.Paylo
 
 		for _, p := range payloadEventResps {
 
-			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
-				if maxBonus < p.FeedReturn.PointReturn.PointbackBonus {
+			if p.FeedReturn.PointReturn.PointReturnStatus == feedbackM.ALL_RETURN_POINT ||
+				p.FeedReturn.PointReturn.PointReturnStatus == feedbackM.SOME_RETURN_POINT {
+
+				if maxBonus <= p.FeedReturn.PointReturn.PointReturnBonus {
 					finalPayload = p
-					maxBonus = p.FeedReturn.PointReturn.PointbackBonus
+					maxBonus = p.FeedReturn.PointReturn.PointReturnBonus
 				}
+
 				atLeastOnePass = true
+
 			}
 		}
 
 		if atLeastOnePass {
-			pointReturn.IsPointbackGet = finalPayload.FeedReturn.PointReturn.IsPointbackGet
-			pointReturn.ActualPointBack = finalPayload.FeedReturn.PointReturn.ActualPointBack
+			pointReturn.ActualPointReturn = finalPayload.FeedReturn.PointReturn.ActualPointReturn
 			pointReturn.ActualUseCash = finalPayload.FeedReturn.PointReturn.ActualUseCash
-			pointReturn.CurrentCash = finalPayload.FeedReturn.PointReturn.CurrentCash
-			pointReturn.TotalCash = finalPayload.FeedReturn.PointReturn.TotalCash
-			pointReturn.PointbackBonus = maxBonus
+			pointReturn.PointReturnBonus = maxBonus
+			pointReturn.PointReturnStatus = finalPayload.FeedReturn.PointReturn.PointReturnStatus
 		}
 
 		break
 	default:
+		logrus.Error("rewardComponeont.calculatePointReturn no case")
 
 	}
+
+	logrus.Info("rewardComponent.calculatePointReturn ", pointReturn)
 
 	return pointReturn, nil
 }
 
-func (im *impl) calculateCashReturn(ctx context.Context, operator rewardM.PayloadOperator, payloadEventResps []*payloadM.PayloadEventResp) (*feedbackM.CashReturn, error) {
+func (im *impl) calculateCashReturn(ctx context.Context, e *eventM.Event, operator rewardM.PayloadOperator, payloadEventResps []*payloadM.PayloadEventResp) (*feedbackM.CashReturn, error) {
 
-	cashReturn := &feedbackM.CashReturn{}
+	logrus.Info("rewardComponent.calculateCashReturn")
+	cashReturn := &feedbackM.CashReturn{
+		Cash: e.Cash,
+	}
 
 	switch operator {
 	case rewardM.ADD:
 
-		var totalCash float64 = 0.0
-		var currentCash int64 = 0
-
-		var isCashbackGet bool = false
-		var cashbackBonus float64 = 0.0
+		var cashReturnBonus float64 = 0.0
 
 		var actualUseCash int64 = 0
 		var actualCashReturn float64 = 0.0
+		var cashReturnStatus feedbackM.CashReturnStatus = feedbackM.NONE_RETURN_CASH
+
+		hasReturn := false
 
 		for _, p := range payloadEventResps {
 
-			totalCash = p.FeedReturn.CashReturn.TotalCash
-			currentCash = p.FeedReturn.CashReturn.CurrentCash
-
-			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
-				isCashbackGet = true
-
+			switch p.FeedReturn.CashReturn.CashReturnStatus {
+			case feedbackM.ALL_RETURN_CASH:
 				if actualUseCash < p.FeedReturn.CashReturn.ActualUseCash {
 					// get max actual use cash
 					actualUseCash = p.FeedReturn.CashReturn.ActualUseCash
 				}
 
 				actualCashReturn += p.FeedReturn.CashReturn.ActualCashReturn
-				cashbackBonus += p.FeedReturn.CashReturn.CashbackBonus
+				cashReturnBonus += p.FeedReturn.CashReturn.CashReturnBonus
+
+				if !hasReturn {
+					cashReturnStatus = feedbackM.ALL_RETURN_CASH
+				} else {
+					cashReturnStatus = feedbackM.SOME_RETURN_CASH
+				}
+
+				hasReturn = true
+
+				break
+			case feedbackM.SOME_RETURN_CASH:
+				hasReturn = true
+				if actualUseCash < p.FeedReturn.CashReturn.ActualUseCash {
+					// get max actual use cash
+					actualUseCash = p.FeedReturn.CashReturn.ActualUseCash
+				}
+
+				if actualUseCash < p.FeedReturn.CashReturn.ActualUseCash {
+					// get max actual use cash
+					actualUseCash = p.FeedReturn.CashReturn.ActualUseCash
+				}
+				actualCashReturn += p.FeedReturn.CashReturn.ActualCashReturn
+				cashReturnBonus += p.FeedReturn.CashReturn.CashReturnBonus
+
+				cashReturnStatus = feedbackM.SOME_RETURN_CASH
+
+				break
+			case feedbackM.NONE_RETURN_CASH:
+
+				hasReturn = true
+				if cashReturnStatus == feedbackM.ALL_RETURN_CASH {
+					cashReturnStatus = feedbackM.SOME_RETURN_CASH
+				}
+
+				break
 			}
 
 		}
 
-		cashReturn.IsCashbackGet = isCashbackGet
+		logrus.Info("cashReturnStatus, ", cashReturnStatus)
+		cashReturn.CashReturnStatus = cashReturnStatus
 		cashReturn.ActualCashReturn = actualCashReturn
 		cashReturn.ActualUseCash = actualUseCash
-		cashReturn.CurrentCash = currentCash
-		cashReturn.TotalCash = totalCash
-		cashReturn.CashbackBonus = cashbackBonus
+		cashReturn.CashReturnBonus = cashReturnBonus
 
 		break
 	case rewardM.MAXONE:
@@ -346,30 +391,33 @@ func (im *impl) calculateCashReturn(ctx context.Context, operator rewardM.Payloa
 		var atLeastOnePass = false
 
 		finalPayload := &payloadM.PayloadEventResp{}
-
 		for _, p := range payloadEventResps {
 
-			if p.PayloadEventJudgeType == payloadM.ALL || p.PayloadEventJudgeType == payloadM.SOME {
-				if maxBonus < p.FeedReturn.CashReturn.CashbackBonus {
+			logrus.Info(p.FeedReturn.CashReturn.CashReturnStatus)
+			if p.FeedReturn.CashReturn.CashReturnStatus == feedbackM.ALL_RETURN_CASH ||
+				p.FeedReturn.CashReturn.CashReturnStatus == feedbackM.SOME_RETURN_CASH {
+
+				logrus.Info(p.FeedReturn.CashReturn.CashReturnBonus)
+				if maxBonus <= p.FeedReturn.CashReturn.CashReturnBonus {
 					finalPayload = p
-					maxBonus = p.FeedReturn.CashReturn.CashbackBonus
+					maxBonus = p.FeedReturn.CashReturn.CashReturnBonus
 				}
+
 				atLeastOnePass = true
+
 			}
 		}
 
 		if atLeastOnePass {
-			cashReturn.IsCashbackGet = finalPayload.FeedReturn.CashReturn.IsCashbackGet
 			cashReturn.ActualCashReturn = finalPayload.FeedReturn.CashReturn.ActualCashReturn
 			cashReturn.ActualUseCash = finalPayload.FeedReturn.CashReturn.ActualUseCash
-			cashReturn.CurrentCash = finalPayload.FeedReturn.CashReturn.CurrentCash
-			cashReturn.TotalCash = finalPayload.FeedReturn.CashReturn.TotalCash
-			cashReturn.CashbackBonus = maxBonus
+			cashReturn.CashReturnBonus = maxBonus
+			cashReturn.CashReturnStatus = finalPayload.FeedReturn.CashReturn.CashReturnStatus
 		}
 
 		break
 	default:
-
+		logrus.Error("rewardComponeont.calculateCashReturn no case")
 	}
 
 	return cashReturn, nil

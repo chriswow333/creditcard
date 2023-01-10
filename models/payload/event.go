@@ -16,8 +16,6 @@ const (
 type PayloadEventResp struct {
 	ID string `json:"id"`
 
-	PayloadEventJudgeType PayloadEventJudgeType `json:"payloadEventJudgeType,omitempty"`
-
 	FeedReturn *feedback.FeedReturn `json:"feedReturn,omitempty"`
 
 	ConstraintEventResp *channel.ChannelEventResp `json:"channelEventResp,omitempty"`

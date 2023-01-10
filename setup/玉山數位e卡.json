@@ -29,8 +29,703 @@
 },
 // a115a58e-3048-4f89-7432-9b7a13030bab
 
+
+{
+    "name":"每週四至東森購物旗下指定銷售通路",
+    "descs":[],
+    "cardID":"40d4a8f0-ee23-4be5-46df-54b96ff9de40",
+    "taskType":2,
+    "taskTypeModel":{
+        "weekDayLimit":{
+            "weekDays":[
+                4
+            ]
+        }
+    },
+    "defaultPass":false
+}
+
+
 {
     "cardRewards":[
+
+        {
+            "cardID":"40d4a8f0-ee23-4be5-46df-54b96ff9de40",
+            "title":"東森購物 - 最高享10%回饋",
+            "descs":[
+                "【東森購物活動】",
+                "2022/10/1~2022/12/31每週四使用玉山數位e卡(不限輕時尚版或寵生活版)至東森購物旗下指定銷售通路消費，最高享10%現金回饋。",
+                "本活動之適用範圍為東森購物旗下指定銷售通路，包含東森 / 森森購物網、東森APP行動購物、型錄、電視購物頻道與中華電信MOD頻道)，但不包含購買旅遊、保險、生前契約、禮券、贈品、公關、簽證、兵險、機場稅、燃油附加費等商品或服務。",
+                "本活動最高10%現金回饋，包含【消費e起GO】基本回饋0.5%，每期回饋金額無上限、【東森購物專屬活動】消費加碼9.5%，每日曆月每歸戶回饋上限350元。",
+                "【東森購物專屬活動】消費加碼9.5%加碼回饋方式：2022/10/1~10/31符合資格及活動門檻者，回饋金將於2022/11/15起依顧客帳單關帳時間陸續回饋至信用卡帳單；於2022/11/1~11/30符合資格及活動門檻者，回饋金將於2022/12/15起依顧客帳單關帳時間陸續回饋至信用卡帳單；於2022/12/1~12/31符合資格及活動門檻者，回饋金將於2023/1/15起依顧客帳單關帳時間陸續回饋至信用卡帳單。",
+                "新臺幣回饋金恕無法兌換現金、替換為其他物品或任何其他費用。參加人亦不得要求將優惠轉讓予其他人。",
+                "回饋金額以實際刷卡金額為主，交易取消時，符合活動回饋資格之交易將列入負項計算收取，關帳時，正卡歸戶下若無任何有效卡，將取消回饋。",
+                "若無註明則均以新臺幣計算。",
+                "玉山銀行保留活動修改、變更及終止之權利。"
+            ],
+            "startDate":1656633600,
+            "endDate":1672531199,
+            "cardRewardOperator":1,
+            "rewardType":1,
+            "cardRewardLimitTypes":[2],
+            "constraintPassLogics":[],
+            "feedbackBonus":{
+                "cashFeedbackBonus":{
+                    "cashCalculateType":2,
+                    "cashFeedbackBonusType":1,
+                    "totalBonus":10,
+                    "title":"現金回饋",
+                    "returnBonusTitle":"%現金回饋",
+                    "cashReturnTitlePrefix":"現省",
+                    "cashReturnTitleSuffix":"元"
+                }
+            },
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.005,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "a115a58e-3048-4f89-7432-9b7a13030bab"
+                                ]
+                            }
+                        },
+
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.095,
+                                    "min":0,
+                                    "max":3684.21
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":1,
+                                "channelMappingType":1,
+                                "innerChannels":[
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":4,
+                                        "channelMappingType":1,
+                                        "ecommerces":[
+                                            "9f7be288-2884-42ff-a68f-5609fba896b8",
+                                            "a0a2973a-37e8-48e1-af9c-64577a017411"
+                                        ]
+                                    },
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":2,
+                                        "channelMappingType":1,
+                                        "tasks":[
+                                            "ef8a1adc-5d97-41f1-44b3-3a2862a40566"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+
+                    ]
+                }
+            ]
+        }
+
+        ,
+
+        {
+            "cardID":"40d4a8f0-ee23-4be5-46df-54b96ff9de40",
+            "title":"悠遊付 - 最高享5%回饋",
+            "descs":[
+                "【悠遊付活動】",
+                "2022/9/15~2022/12/31使用玉山數位e卡(不限輕時尚版或寵生活版)綁定悠遊付消費，最高享5%現金回饋。",
+                "活動限新增一般消費。一般消費不包含之項目請見非一般消費公告與聲明。",
+                "本活動最高5%現金回饋，包含【消費e起GO】基本回饋0.5%，每期回饋金額無上限、【悠遊付專屬活動】消費加碼4.5%，每日曆月每歸戶回饋上限100元。",
+                "於2022/9/15~9/30、2022/10、2022/11、2022/12符合資格及活動門檻者，回饋金將分別於2022/10/15、2022/11/15、2022/12/15、2023/1/15起依顧客帳單關帳時間陸續回饋至信用卡帳單。",
+                "新臺幣回饋金恕無法兌換現金、替換為其他物品或任何其他費用。參加人亦不得要求將優惠轉讓予其他人。",
+                "回饋金額以實際刷卡金額為主，交易取消時，符合活動回饋資格之交易將列入負項計算收取，關帳時，正卡歸戶下若無任何有效卡，將取消回饋。",
+                "若無註明則均以新臺幣計算。",
+                "玉山銀行保留活動修改、變更及終止之權利。"
+            ],
+            "startDate":1656633600,
+            "endDate":1672531199,
+            "cardRewardOperator":1,
+            "rewardType":1,
+            "cardRewardLimitTypes":[2],
+            "constraintPassLogics":[],
+            "feedbackBonus":{
+                "cashFeedbackBonus":{
+                    "cashCalculateType":2,
+                    "cashFeedbackBonusType":1,
+                    "totalBonus":5,
+                    "title":"現金回饋",
+                    "returnBonusTitle":"%現金回饋",
+                    "cashReturnTitlePrefix":"現省",
+                    "cashReturnTitleSuffix":"元"
+                }
+            },
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.005,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "a115a58e-3048-4f89-7432-9b7a13030bab"
+                                ]
+                            }
+                        },
+
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.045,
+                                    "min":0,
+                                    "max":2222.22
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":3,
+                                "channelMappingType":1,
+                                "mobilepays":[
+                                    "762470e2-2a2a-4bcf-85dd-996dc41dad67"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+
+        {
+            "cardID":"40d4a8f0-ee23-4be5-46df-54b96ff9de40",
+            "title":"全支付-最高享50點全點回饋",
+            "descs":[
+                "【綁定全支付加碼回饋】",
+                "2022/9/1~2022/12/31使用玉山數位e卡綁定全支付單筆消費滿500元(含)以上，贈「全點50點」",
+                "本優惠採登錄參加，由正卡人於至玉山銀行官網登錄，且需持玉山數位e卡綁定全支付單筆消費滿500元(含)以上，始符合回饋資格，其他支付方式不適用。",
+                "活動以單筆刷卡消費金額計算，活動期間內每歸戶回饋上限50點全點點數，正附卡合併計算。",
+                "符合資格及活動門檻者，全點點數將統一於2023/2/28前統一發放至正卡人身分證統一編號所註冊之全支付App中。",
+                "回饋時須持有有效之玉山數位e卡，如持卡人信用卡(不分正附卡)遭強制停用、非流通卡、退貨致刷卡消費不符活動門檻、延滯各項帳款 (消費款、年費及各類利息費用等) 或違反信用卡相關條約者，玉山銀行得取消其首刷禮資格或保留追回回饋之權利。",
+                "點數恕無法兌換現金、替換為其他物品或任何其他費用。參加人亦不得要求將優惠轉讓予其他人。",
+                "若無註明則均以新臺幣計算。",
+                "玉山銀行及全支付保留活動修改、變更及終止之權利。"
+            ],
+            "startDate":1656633600,
+            "endDate":1672531199,
+            "cardRewardOperator":1,
+            "rewardType":2,
+            "cardRewardLimitTypes":[2,3],
+            "constraintPassLogics":[],
+            "feedbackBonus":{
+                "pointFeedbackBonus":{
+                    "pointCalculateType":1,
+                    "totalBonus":50,
+                    "title":"全點",
+                    "returnBonusTitle":"點全點",
+                    "pointReturnTitlePrefix":"獲得",
+                    "pointReturnTitleSuffix":"全點"
+                }
+            },
+
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "pointback":{
+                                    "pointCalculateType":1,
+                                    "fixed":50,
+                                    "min":500,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":3,
+                                "channelMappingType":1,
+                                "mobilepays":[
+                                    "49b913ee-3cd5-4d47-bfe3-57c58e7df066"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+
+
+        {
+            "cardID":"40d4a8f0-ee23-4be5-46df-54b96ff9de40",
+            "title":"寵生活版 - 指定咖啡/寵物/居家消費最高享5%現金回饋",
+            "descs":[
+                "本優惠需持玉山數位ｅ卡-寵生活版，且需綁定e化帳單(Email電子帳單/簡訊帳單)始符合回饋資格。 舉例： (1)顧客於當期帳單計算期間內有於指定咖啡/寵物/居家通路消費且當期帳單為e化帳單方符合回饋資格，加碼之現金回饋將於次期帳單回饋。 (2)顧客於當期帳單計算期間內有於指定咖啡/寵物/居家通路消費但當期帳單非e化帳單則不符合回饋資格，無法於次期帳單獲得加碼回饋。",
+                "指定咖啡/寵物/居家通路消費最高5%現金回饋，包含【消費e起GO】基本回饋0.5%及【寵生活】指定咖啡/寵物/居家通路消費加碼4.5%。",
+                "指定咖啡/寵物/居家通路消費加碼4.5%回饋採正附卡合併計算，每期回饋上限250元，如加碼4.5%達回饋上限，則符合活動回饋資格之交易僅享【消費e起GO】基本回饋0.5%。",
+                "加碼回饋直接折抵次期帳單一般消費，每期現金回饋採四捨五入法計算至新臺幣元，限按沖銷順序直接折抵次月新增一般消費款且不可申請退回，亦不可兌換現金，正、附卡合併依歸戶回饋。",
+                "指定咖啡消費包含：cama(含官網線上購物、cama pay)、路易莎、星巴克(含線上儲值)。",
+                "指定寵物消費包含：東森寵物雲(含線上購物)、魚中魚、寵物公園、奧斯卡寵物、金王子寵物、寵物王國。",
+                "指定居家消費包含：IKEA(含線上購物)、特力屋、HOLA、迪卡儂(含線上購物)、全盈+PAY。",
+                "指定咖啡/寵物/居家通路僅限開立該店發票之門市，若於百貨內、車站內及大賣場內等門市皆不適用。",
+                "持玉山數位e卡綁定全盈+PAY於全家或其他非一般消費通路不享有指定居家消費4.5%加碼回饋。",
+                "指定咖啡/寵物/居家消費除特別標註其他付款方式適用外，回饋僅限實體消費並以玉山Wallet、Apple pay、Google pay、Hami pay、Garmin pay、Fitbit pay、Samsung Pay消費，若未使用上述指定之行動支付，或該指定通路無支援上述行動支付付款模式，則不符合回饋資格。",
+                "分期交易以該筆總金額計算回饋。",
+                "【新戶e起辦】新戶加碼活動排除【寵生活】咖啡/寵物/居家通路加碼之指定通路。",
+                "回饋金額以實際刷卡金額為主，交易取消時，符合活動回饋資格之交易將列入負項計算收取。",
+                "關帳時，正卡歸戶下若無任何有效卡，將取消當期回饋。",
+                "活動門檻限一般消費。一般消費不包含之項目請見非一般消費公告與聲明。",
+                "若無註明則均以新臺幣計算。",
+                "玉山銀行保留活動修改、變更及終止之權利。"
+            ],
+            "startDate":1656633600,
+            "endDate":1672531199,
+            "cardRewardOperator":1,
+            "rewardType":1,
+            "cardRewardLimitTypes":[],
+            "constraintPassLogics":[],
+            "feedbackBonus":{
+                "cashFeedbackBonus":{
+                    "cashCalculateType":2,
+                    "cashFeedbackBonusType":1,
+                    "totalBonus":5,
+                    "title":"現金回饋",
+                    "returnBonusTitle":"%現金回饋",
+                    "cashReturnTitlePrefix":"現省",
+                    "cashReturnTitleSuffix":"元"
+                }
+            },
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.005,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "a115a58e-3048-4f89-7432-9b7a13030bab"
+                                ]
+                            }
+                        },
+
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.045,
+                                    "min":0,
+                                    "max":55555.55
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":1,
+                                "channelMappingType":1,
+                                "innerChannels":[
+                                    {
+                                        "channelOperatorType":2,
+                                        "channelType":3,
+                                        "channelMappingType":1,
+                                        "mobilepays":[
+                                            "b5629d0f-732a-44f8-8e94-aed2cc3478d5",
+                                            "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+                                            "334c5079-8436-44dd-bc31-bf1a7769c604",
+                                            "5ac8a159-ee46-4baa-bf41-86d940e527b3",
+                                            "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                            "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                            "77073cfc-db16-4d30-b9ec-7a79012855ca"
+                                        ]
+
+                                    }, 
+                                    {
+                                        "channelOperatorType":2,
+                                        "channelType":1,
+                                        "channelMappingType":1, 
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":8,
+                                                "channelMappingType":1,
+                                                "foods":[
+                                                    "04264b92-d628-4f5e-a497-834c487f460f",
+                                                    "0a786d9e-c730-436c-bc8a-a273631649c9",
+                                                    "50ebe6af-db18-454a-b966-60dc8148b0d2"
+                                                ]
+                                            },
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":15,
+                                                "channelMappingType":1,
+                                                "conveniencestores":[
+                                                    "cbdf4efe-0943-4096-972f-b1f907175675",
+                                                    "080bb9cd-ac1b-4738-937b-40db1f4c9e90",
+                                                    "f59c1136-6223-4763-be91-28f7fc387c83",
+                                                    "0657776f-bbb5-43cc-a35d-b4ce06e9aff1",
+                                                    "879a1309-e57a-4d2c-8b54-bdfb7d0c689d",
+                                                    "4b34c066-abaf-42dd-a1db-a472af10d47f"
+                                                ]
+                                            },
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":5,
+                                                "channelMappingType":1,
+                                                "supermarkets":[
+                                                    "c9f2d581-9e3b-4d60-be5f-8f70e734c43b",
+                                                    "0d61920c-c40a-41f0-a3b3-91db51160fe2",
+                                                    "f730dcd9-d0ba-41bd-bac7-0e50973d81dc",
+                                                    "1947d739-516f-431e-bc27-545051aa5255"
+                                                ]
+                                            }
+                                        ]
+                                    }
+
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+
+        },
+
+        {
+            "cardID":"40d4a8f0-ee23-4be5-46df-54b96ff9de40",
+            "title":"輕時尚版 - 指定百貨/美妝消費最高享3％現金回饋",
+            "descs":[
+                "本優惠需持玉山數位ｅ卡-輕時尚版，且需綁定e化帳單(Email電子帳單/簡訊帳單)始符合回饋資格。 舉例： (1)顧客於當期帳單計算期間內有於指定百貨/美妝通路消費且當期帳單為e化帳單方符合回饋資格，加碼之現金回饋將於次期帳單回饋。 (2)顧客於當期帳單計算期間內有於指定百貨/美妝通路消費但當期帳單非e化帳單則不符合回饋資格，無法於次期帳單獲得加碼回饋。",
+                "指定百貨/美妝通路消費最高3%現金回饋，包含【消費e起GO】基本回饋0.5%及【輕時尚】指定百貨/美妝通路消費加碼2.5%。",
+                "指定百貨/美妝消費加碼2.5%回饋採正附卡合併計算，每期回饋上限250元，如【輕時尚】加碼2.5%達回饋上限，則符合活動回饋資格之交易僅享【消費e起GO】基本回饋0.5%。",
+                "加碼回饋直接折抵次期帳單一般消費，每期現金回饋採四捨五入法計算至新臺幣元，限按沖銷順序直接折抵次月新增一般消費款且不可申請退回，亦不可兌換現金，正、附卡合併依歸戶回饋。",
+                "指定百貨消費為指定百貨App之消費，包含：新光三越skm Pay、HAPPY GO Pay、101 Pay、環球購物中心GM Pay、微風Breeze Pay、京站Q Pay、誠品eslite Pay。",
+                "指定美妝消費包含：唐吉軻德、松本清、Tomod’s、日藥本舖、屈臣氏(含線上購物)、寶雅(含寶雅Pay)、康是美(含線上購物)，上述通路僅限開立該店發票之門市，若於百貨內、車站內及大賣場內等門市皆不適用。",
+                "指定百貨消費僅限指定之百貨App消費享有加碼回饋。",
+                "指定美妝消費除特別標註其他付款方式適用外，回饋僅限實體消費並以玉山Wallet、Apple pay、Google pay、Hami pay、Garmin pay、Fitbit pay、Samsung Pay消費，若未使用上述指定之行動支付，或該指定通路無支援上述行動支付付款模式，則不符合回饋資格。",
+                "分期交易以該筆總金額計算回饋。",
+                "【新戶e起辦】新戶加碼活動排除【輕時尚】百貨/美妝消費通路加碼之指定通路。",
+                "回饋金額以實際刷卡金額為主，交易取消時，符合活動回饋資格之交易將列入負項計算收取。",
+                "關帳時，正卡歸戶下若無任何有效卡，將取消當期回饋。",
+                "活動門檻限一般消費。一般消費不包含之項目請見非一般消費公告與聲明。",
+                "若無註明則均以新臺幣計算。",
+                "玉山銀行保留活動修改、變更及終止之權利。"
+            ],
+
+            "startDate":1656633600,
+            "endDate":1656633600,
+            "cardRewardOperator":1,
+            "rewardType":1,
+            "cardRewardLimitTypes":[],
+            "constraintPassLogics":[],
+            "feedbackBonus":{
+                "cashFeedbackBonus":{
+                    "cashCalculateType":2,
+                    "cashFeedbackBonusType":1,
+                    "totalBonus":3,
+                    "title":"現金回饋",
+                    "returnBonusTitle":"%現金回饋",
+                    "cashReturnTitlePrefix":"現省",
+                    "cashReturnTitleSuffix":"元"
+                }
+            },
+            "rewards":[
+                {
+                    "order":0,
+                    "payloadOperator":1,
+                    "payloads":[
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.005,
+                                    "min":0,
+                                    "max":0
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":1,
+                                "channelType":2,
+                                "channelMappingType":1,
+                                "tasks":[
+                                    "a115a58e-3048-4f89-7432-9b7a13030bab"
+                                ]
+                            }
+                        },
+
+
+                        {
+                            "feedback":{
+                                "cashback":{
+                                    "cashCalculateType":2,
+                                    "bonus":0.025,
+                                    "min":0,
+                                    "max":100000
+                                }
+                            },
+                            "channel":{
+                                "channelOperatorType":2,
+                                "channelType":1,
+                                "channelMappingType":1,
+                                "innerChannels":[
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":1,
+                                                "mobilepays":[
+                                                    "c9538a49-73e8-44d0-865b-7ebf38eeedfb"
+                                                ]
+                                            },
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":13,
+                                                "channelMappingType":1,
+                                                "malls":[
+                                                    "36a4ff91-88b7-463f-b259-baf1cd61857b",
+                                                    "f79484d1-7bec-4906-8cb3-f0eedb0ef798"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":1,
+                                                "mobilepays":[
+                                                    "9bcb1ac1-d19c-4eb2-a6e9-a3fca799cbbd"
+                                                ]
+                                            },
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":13,
+                                                "channelMappingType":1,
+                                                "malls":[
+                                                    "85709f45-bbda-405d-8c5a-63698042040f",
+                                                    "c82dcb29-4765-4a1f-9528-081cc7a897c3",
+                                                    "b66b9649-97b8-44de-b631-17890fde810a"
+                                                ]
+                                            }
+                                        ]
+                                    },
+
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":1,
+                                                "mobilepays":[
+                                                    "2f5e369d-3938-4dc5-a08d-05e92e68dd55"
+                                                ]
+                                            },
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":13,
+                                                "channelMappingType":1,
+                                                "malls":[
+                                                    "0ef725d2-ddc7-4524-9291-82a2d83cca84"
+                                                ]
+                                            }
+                                        ]
+                                    },
+
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":1,
+                                                "mobilepays":[
+                                                    "4f9d035b-51ed-4b65-b5c1-12937e337832"
+                                                ]
+                                            },
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":13,
+                                                "channelMappingType":1,
+                                                "malls":[
+                                                    "50dbde82-9597-40b8-a186-154fb4422027"
+                                                ]
+                                            }
+                                        ]
+                                    },
+
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":1,
+                                                "mobilepays":[
+                                                    "53aa6343-dfe2-469b-894c-b1cf3fb83e4f"
+                                                ]
+                                            },
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":13,
+                                                "channelMappingType":1,
+                                                "malls":[
+                                                    "e54d8ad1-f69a-400f-a3d4-f0a9faa1bd08"
+                                                ]
+                                            }
+                                        ]
+                                    },
+
+
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":1,
+                                                "mobilepays":[
+                                                    "ba36112e-3012-4169-97cc-84a7fd33d2ca"
+                                                ]
+                                            },
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":13,
+                                                "channelMappingType":1,
+                                                "malls":[
+                                                    "eebfe808-2c82-4c6c-a8cd-9a03e18fa015"
+                                                ]
+                                            }
+                                        ]
+                                    },
+
+
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":1,
+                                                "mobilepays":[
+                                                    "ba36112e-3012-4169-97cc-84a7fd33d2ca"
+                                                ]
+                                            },
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":13,
+                                                "channelMappingType":1,
+                                                "malls":[
+                                                    "8542d33a-70fa-48ef-b97a-5bbea019911c"
+                                                ]
+                                            }
+                                        ]
+                                    },
+
+
+                                    {
+                                        "channelOperatorType":1,
+                                        "channelType":1,
+                                        "channelMappingType":1,
+                                        "innerChannels":[
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":15,
+                                                "channelMappingType":1,
+                                                "conveniencestores":[
+                                                    "1b99dcfe-e7a6-4680-97a4-aaa13c17d0d6",
+                                                    "b5d44d68-4cfd-46d5-8834-4796e077a3c1",
+                                                    "6c94b326-5d8c-4273-82d7-6260b6f08c4d",
+                                                    "6da83738-dd4c-4e6c-9739-f2f9f3cca13d",
+                                                    "5cf40dc6-4d27-44ff-be97-b9b35419df42",
+                                                    "bfffaf22-a027-46b1-a1ff-8c3c7fefa04d",
+                                                    "cc018682-2476-4198-8be9-681db1bd476f"
+                                                ]
+                                            },
+
+                                            {
+                                                "channelOperatorType":2,
+                                                "channelType":3,
+                                                "channelMappingType":1,
+                                                "mobilepays":[
+                                                    "b5629d0f-732a-44f8-8e94-aed2cc3478d5",
+                                                    "ba4905a0-0cbe-4436-b483-edd66a5e6f99",
+                                                    "334c5079-8436-44dd-bc31-bf1a7769c604",
+                                                    "5ac8a159-ee46-4baa-bf41-86d940e527b3",
+                                                    "1a106863-d2f4-46ed-a46a-bd7402b09e9b",
+                                                    "0339f6ff-2735-4812-b14a-e313485f15b1",
+                                                    "77073cfc-db16-4d30-b9ec-7a79012855ca",
+                                                    "d03504c7-1af6-4d4e-a658-7488eb3362a8"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+
+        }
+
+
+        ,
+
         {
             "cardID":"40d4a8f0-ee23-4be5-46df-54b96ff9de40",
             "title":"綠色消費e起來",
@@ -41,14 +736,19 @@
             "endDate":1672531199,
             "cardRewardOperator":1,
             "rewardType":1,
-            "feedbackDescID":"d95fd61e-828a-4197-71f1-91c0ded778f5",
-            "cardRewardBonus":{
-                "totalBonus":10
-            },
-            "cardRewardLimitTypes":[
-                
-            ],
+            "cardRewardLimitTypes":[],
             "constraintPassLogics":[],
+            "feedbackBonus":{
+                "cashFeedbackBonus":{
+                    "cashCalculateType":2,
+                    "cashFeedbackBonusType":1,
+                    "totalBonus":10,
+                    "title":"現金回饋",
+                    "returnBonusTitle":"%現金回饋",
+                    "cashReturnTitlePrefix":"現省",
+                    "cashReturnTitleSuffix":"元"
+                }
+            },
             "rewards":[
                 {
                     "order":0,
@@ -106,7 +806,7 @@
                                                     "877033d4-fa76-4c3b-8769-b94b482e5220",
                                                     "6aaa675c-ed05-40a7-8eac-49f318e88f05",
                                                     "b8f766de-6b45-4936-ac48-839cb41a2c16",
-                                                    "60371408-67c6-4932-b813-807af6796315",
+                                                    "60371408-67c6-4932-b813-807af6796315"
                                                 ]
                                             },
 
@@ -149,5 +849,7 @@
                 }
             ]
         }
+
+
     ]
 }

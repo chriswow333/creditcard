@@ -4,12 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"go.uber.org/dig"
 
 	"example.com/creditcard/middlewares/apis"
 
-	feedbackM "example.com/creditcard/models/feedback"
 	feedbackDescSrc "example.com/creditcard/service/feedback_desc"
 )
 
@@ -34,40 +32,40 @@ func NewFeedbackDescHandler(
 }
 
 func (h *feedbackDescHandler) create(ctx *gin.Context) {
-	var feedbackDescModel feedbackM.FeedbackDesc
+	// var feedbackDescModel feedbackM.FeedbackDesc
 
-	ctx.BindJSON(&feedbackDescModel)
+	// ctx.BindJSON(&feedbackDescModel)
 
-	if err := h.feedbackDescSrc.Create(ctx, &feedbackDescModel); err != nil {
-		logrus.Error(err)
-		ctx.JSON(http.StatusInternalServerError, err)
-		return
-	}
+	// if err := h.feedbackDescSrc.Create(ctx, &feedbackDescModel); err != nil {
+	// 	logrus.Error(err)
+	// 	ctx.JSON(http.StatusInternalServerError, err)
+	// 	return
+	// }
 
-	ctx.JSON(http.StatusOK, gin.H{"data": "ok"})
+	// ctx.JSON(http.StatusOK, gin.H{"data": "ok"})
 }
 
 func (h *feedbackDescHandler) getAll(ctx *gin.Context) {
 
-	resp, err := h.feedbackDescSrc.GetAll(ctx)
-	if err != nil {
-		logrus.Error(err)
-		ctx.JSON(http.StatusInternalServerError, err)
-		return
-	}
+	// resp, err := h.feedbackDescSrc.GetAll(ctx)
+	// if err != nil {
+	// 	logrus.Error(err)
+	// 	ctx.JSON(http.StatusInternalServerError, err)
+	// 	return
+	// }
 
-	ctx.JSON(http.StatusOK, resp)
+	// ctx.JSON(http.StatusOK, resp)
 }
 
 func (h *feedbackDescHandler) getByID(ctx *gin.Context) {
-	ID := ctx.Param("ID")
+	// ID := ctx.Param("ID")
 
-	resp, err := h.feedbackDescSrc.GetByID(ctx, ID)
-	if err != nil {
-		logrus.Error(err)
-		ctx.JSON(http.StatusInternalServerError, err)
-		return
-	}
+	// resp, err := h.feedbackDescSrc.GetByID(ctx, ID)
+	// if err != nil {
+	// 	logrus.Error(err)
+	// 	ctx.JSON(http.StatusInternalServerError, err)
+	// 	return
+	// }
 
-	ctx.JSON(http.StatusOK, resp)
+	// ctx.JSON(http.StatusOK, resp)
 }

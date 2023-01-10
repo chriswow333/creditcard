@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"example.com/creditcard/components/channel"
+	"github.com/sirupsen/logrus"
 
 	feedbackComp "example.com/creditcard/components/feedback"
 
@@ -49,20 +50,12 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.Payload
 
 	if constraintEventResp.Pass {
 		feedReturn, err = im.processFeedReturn(ctx, e, true)
+
 		if err != nil {
 			return nil, err
 		}
 
 		payloadEventResp.FeedReturn = feedReturn
-
-		switch feedReturn.FeedReturnStatus {
-		case feedbackM.ALL:
-			payloadEventResp.PayloadEventJudgeType = payloadM.ALL
-		case feedbackM.SOME:
-			payloadEventResp.PayloadEventJudgeType = payloadM.SOME
-		case feedbackM.NONE:
-			payloadEventResp.PayloadEventJudgeType = payloadM.NONE
-		}
 
 	} else {
 
@@ -74,12 +67,12 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.Payload
 
 		payloadEventResp.FeedReturn = feedReturn
 
-		payloadEventResp.PayloadEventJudgeType = payloadM.NONE
 	}
 	return payloadEventResp, nil
 }
 
 func (im *impl) processFeedReturn(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.FeedReturn, error) {
+	logrus.Info("payload.processFeedReturn")
 
 	// 計算回饋額
 	feedReturn, err := (*im.feedbackComponent).Calculate(ctx, e, pass)
@@ -87,5 +80,6 @@ func (im *impl) processFeedReturn(ctx context.Context, e *eventM.Event, pass boo
 		return nil, err
 	}
 
+	logrus.Info("payload.processFeedReturn : ", feedReturn)
 	return feedReturn, nil
 }
