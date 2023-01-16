@@ -2,6 +2,7 @@ package card
 
 import (
 	"context"
+	"runtime/debug"
 
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
@@ -30,9 +31,7 @@ func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 
 	tx, err := im.psql.Begin()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -51,10 +50,7 @@ func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 	}
 
 	if _, err := tx.Exec(INSERT_CARD_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Fatal(err)
-
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -74,9 +70,7 @@ func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
 	tx, err := im.psql.Begin()
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	defer tx.Rollback()
@@ -94,9 +88,7 @@ func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
 	}
 
 	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		})
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	tx.Commit()
@@ -124,9 +116,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
 	}
 
 	if err := im.psql.QueryRow(SELECT_STAT, ID).Scan(selector...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": err,
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 
 	}
@@ -142,9 +132,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 	cards := []*cardM.Card{}
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -164,9 +152,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 		}
 
 		if err := rows.Scan(selector...); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 
@@ -182,16 +168,16 @@ const SELECT_BY_BANKID_STAT = "SELECT \"id\", bank_id, \"name\", \"descs\", upda
 	" WHERE \"bank_id\"=$1"
 
 func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Card, error) {
+
 	cards := []*cardM.Card{}
 
 	conditions := []interface{}{
 		bankID,
 	}
+
 	rows, err := im.psql.Query(SELECT_BY_BANKID_STAT, conditions...)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -211,9 +197,7 @@ func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Card, 
 		}
 
 		if err := rows.Scan(selector...); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 

@@ -1,25 +1,91 @@
-version: "3.5"
+version: "3.8"
 
 services: 
-  server: 
+  backend: 
+    image: "appv1:latest"
+    container_name: "appv1"
+    networks: 
+      - "pincard_app"
     build: 
-      context: ./docker/golang
-      dockerfile: Dockerfile
-    working_dir: /server
-    volumes: 
-      - .:/server
+      context: .
+      dockerfile: "Dockerfile"
+      # platforms: 
+      #   - "linux/amd64"
+      #   - "linux/arm64"
+      # target: dev
+
+    working_dir: "/server"
+    # volumes: 
+    #   - "/Users/chrisyu/test_project/appv1_app:/server"
     ports:
-      - "5000:5000"
-    depends_on: 
-      - db
-    entrypoint: go run main.go
-    restart: always
-  db:
-    image: postgres:12.4-alpine
-    ports:
-      - "5432:5432"
+      - "8080:8080"
     environment: 
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=z20339
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    restart: always
+      DOCKER_DEFAULT_PLATFORM: "linux/amd64"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "z20339"
+      POSTGRES_HOST: "host.docker.internal"
+      POSTGRES_PORT: "5432"
+  
+
+    # entrypoint: ./appv1
+    command: "./appv1"
+    logging: 
+      driver: "json-file" # json-file or none or local
+      options: 
+        max-size: "1k"
+        max-file: "3"
+        mode: "non-blocking"
+        compress: "true"
+
+  
+networks:
+  pincard_app: {}
+  # pincard_app:
+  #   name: pincard_app
+
+# volumes:
+#   .:
+#     external: true
+
+# 在Docker環境中，可以利用<容器ID或名稱>.<網路介面名稱>
+
+
+
+
+
+      # options: 
+      #   syslog-address: "tcp://192.168.0.42:123"
+
+  # pincard_app: 
+  #   driver: bridge
+  #   ipam: 
+  #     driver: default
+  #     config: 
+  #       - subnet: 172.28.0.0/16
+  #         gateway: 172.28.0.1
+  
+  # frontend: 
+  #   driver: custom-driver-1
+  # backend: 
+  #   driver: custom-driver-2
+  #   driver_opts: 
+  #     foo: "1"
+  #     bar: "2" 
+
+
+    # ports:
+    #   - "8080:8080"
+    # command: ./appv1
+#    depends_on: 
+#      - db
+#    entrypoint: go run main.go
+    # restart: always
+#  db:
+#    image: postgres:12.4-alpine
+#    ports:
+#      - "5432:5432"
+#    environment: 
+#      - POSTGRES_USER=user
+#      - POSTGRES_PASSWORD=z20339
+#      - PGDATA=/var/lib/postgresql/data/pgdata
+#    restart: always

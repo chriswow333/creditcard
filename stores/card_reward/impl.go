@@ -2,6 +2,7 @@ package card_reward
 
 import (
 	"context"
+	"runtime/debug"
 
 	cardM "example.com/creditcard/models/card"
 	"github.com/jackc/pgx"
@@ -32,9 +33,7 @@ func (im *impl) Create(ctx context.Context, cardReward *cardM.CardReward) error 
 	defer tx.Rollback()
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"error": "create",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -52,9 +51,7 @@ func (im *impl) Create(ctx context.Context, cardReward *cardM.CardReward) error 
 		cardReward.FeedbackBonus,
 	}
 	if _, err := tx.Exec(INSERT_CARD_REWARD_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -75,9 +72,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*cardM.CardRe
 	}
 	rows, err := im.psql.Query(SELECT_BY_CARDID_STAT, conditions...)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -99,9 +94,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*cardM.CardRe
 		}
 
 		if err := rows.Scan(selector...); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 
@@ -136,7 +129,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.CardReward, erro
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 

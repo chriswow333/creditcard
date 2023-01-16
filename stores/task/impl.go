@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"runtime/debug"
 
 	taskM "example.com/creditcard/models/task"
 	"github.com/jackc/pgx"
@@ -27,6 +28,7 @@ const SELECT_BY_CARDID_STAT = "SELECT \"id\", \"name\", \"descs\", " +
 	" WHERE \"card_id\"=$1"
 
 func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*taskM.Task, error) {
+
 	tasks := []*taskM.Task{}
 
 	conditions := []interface{}{
@@ -34,9 +36,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*taskM.Task, 
 	}
 	rows, err := im.psql.Query(SELECT_BY_CARDID_STAT, conditions...)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -54,9 +54,7 @@ func (im *impl) GetByCardID(ctx context.Context, cardID string) ([]*taskM.Task, 
 		}
 
 		if err := rows.Scan(selector...); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 
@@ -86,9 +84,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*taskM.Task, error) {
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": err,
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -105,9 +101,7 @@ func (im *impl) Create(ctx context.Context, task *taskM.Task) error {
 	tx, err := im.psql.Begin()
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": err,
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	defer tx.Rollback()
@@ -122,9 +116,7 @@ func (im *impl) Create(ctx context.Context, task *taskM.Task) error {
 		task.DefaultPass,
 	}
 	if _, err := tx.Exec(INSERT_TASK_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		})
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 

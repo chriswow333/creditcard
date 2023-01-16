@@ -2,6 +2,7 @@ package onlinegame
 
 import (
 	"context"
+	"runtime/debug"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -27,9 +28,7 @@ const INSERT_STAT = "INSERT INTO onlinegame " +
 func (im *impl) Create(ctx context.Context, onlinegame *channel.Onlinegame) error {
 	tx, err := im.psql.Begin()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -42,10 +41,7 @@ func (im *impl) Create(ctx context.Context, onlinegame *channel.Onlinegame) erro
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Fatal(err)
-
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -63,9 +59,7 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *channel.Onlinegame) 
 	tx, err := im.psql.Begin()
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	defer tx.Rollback()
@@ -77,9 +71,7 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *channel.Onlinegame) 
 	}
 
 	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		})
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -91,12 +83,12 @@ const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM onlinegame "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Onlinegame, error) {
+
 	onlinegames := []*channel.Onlinegame{}
+
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -110,9 +102,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Onlinegame, error) {
 		}
 
 		if err := rows.Scan(selector...); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 
@@ -126,6 +116,7 @@ const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM onlinegame WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Onlinegame, error) {
+
 	onlinegame := &channel.Onlinegame{}
 
 	selector := []interface{}{
@@ -135,7 +126,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Onlinegame, er
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 

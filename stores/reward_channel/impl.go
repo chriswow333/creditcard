@@ -2,6 +2,7 @@ package reward_channel
 
 import (
 	"context"
+	"runtime/debug"
 
 	"example.com/creditcard/models/reward_channel"
 	"github.com/jackc/pgx"
@@ -29,9 +30,7 @@ func (im *impl) Create(ctx context.Context, rewardChannel *reward_channel.Reward
 	tx, err := im.psql.Begin()
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -46,9 +45,7 @@ func (im *impl) Create(ctx context.Context, rewardChannel *reward_channel.Reward
 		rewardChannel.ChannelType,
 	}
 	if _, err := tx.Exec(INSERT_REWARD_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		})
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -69,9 +66,7 @@ func (im *impl) GetByRewardID(ctx context.Context, cardRewardID string) ([]*rewa
 	rows, err := im.psql.Query(SELECT_BY_REWARD_ID_STAT, conditions...)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -88,10 +83,7 @@ func (im *impl) GetByRewardID(ctx context.Context, cardRewardID string) ([]*rewa
 			&rewardChannel.ChannelType,
 		}
 		if err := rows.Scan(selector...); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
-
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 

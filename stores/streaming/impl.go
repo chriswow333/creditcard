@@ -2,6 +2,7 @@ package streaming
 
 import (
 	"context"
+	"runtime/debug"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -25,11 +26,10 @@ const INSERT_STAT = "INSERT INTO streaming " +
 	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, streaming *channel.Streaming) error {
+
 	tx, err := im.psql.Begin()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -42,10 +42,7 @@ func (im *impl) Create(ctx context.Context, streaming *channel.Streaming) error 
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Fatal(err)
-
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -63,9 +60,7 @@ func (im *impl) UpdateByID(ctx context.Context, streaming *channel.Streaming) er
 	tx, err := im.psql.Begin()
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	defer tx.Rollback()
@@ -77,9 +72,7 @@ func (im *impl) UpdateByID(ctx context.Context, streaming *channel.Streaming) er
 	}
 
 	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		})
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -91,12 +84,12 @@ const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM streaming "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Streaming, error) {
+
 	streamings := []*channel.Streaming{}
+
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -110,9 +103,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Streaming, error) {
 		}
 
 		if err := rows.Scan(selector...); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 
@@ -126,6 +117,7 @@ const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM streaming WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Streaming, error) {
+
 	streaming := &channel.Streaming{}
 
 	selector := []interface{}{
@@ -135,7 +127,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Streaming, err
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 

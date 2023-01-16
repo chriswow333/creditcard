@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"context"
+	"runtime/debug"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -25,11 +26,10 @@ const INSERT_DELIVERY_STAT = "INSERT INTO delivery " +
 	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, delivery *channel.Delivery) error {
+
 	tx, err := im.psql.Begin()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -42,10 +42,7 @@ func (im *impl) Create(ctx context.Context, delivery *channel.Delivery) error {
 	}
 
 	if _, err := tx.Exec(INSERT_DELIVERY_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Fatal(err)
-
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -60,12 +57,11 @@ const UPDATE_BY_ID_STAT = "UPDATE delivery SET " +
 	" where \"id\" = $3"
 
 func (im *impl) UpdateByID(ctx context.Context, delivery *channel.Delivery) error {
+
 	tx, err := im.psql.Begin()
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	defer tx.Rollback()
@@ -77,9 +73,7 @@ func (im *impl) UpdateByID(ctx context.Context, delivery *channel.Delivery) erro
 	}
 
 	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		})
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -91,12 +85,12 @@ const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
 	" FROM delivery "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Delivery, error) {
+
 	deliverys := []*channel.Delivery{}
+
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -110,9 +104,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Delivery, error) {
 		}
 
 		if err := rows.Scan(selector...); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 
@@ -136,7 +128,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Delivery, erro
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 

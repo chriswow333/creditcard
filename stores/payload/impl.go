@@ -2,6 +2,7 @@ package payload
 
 import (
 	"context"
+	"runtime/debug"
 
 	payloadM "example.com/creditcard/models/payload"
 	"github.com/jackc/pgx"
@@ -25,12 +26,11 @@ const UPDATE_BY_ID_STAT = "UPDATE reward SET " +
 	" payload = $1 WHERE \"id\" = $2"
 
 func (im *impl) UpdateByID(ctx context.Context, rewardID string, payloads []*payloadM.Payload) error {
+
 	tx, err := im.psql.Begin()
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	defer tx.Rollback()
@@ -41,9 +41,7 @@ func (im *impl) UpdateByID(ctx context.Context, rewardID string, payloads []*pay
 	}
 
 	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		})
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
