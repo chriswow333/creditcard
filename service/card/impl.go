@@ -3,6 +3,7 @@ package card
 import (
 	"context"
 	"errors"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -73,16 +74,13 @@ func (im *impl) Create(ctx context.Context, card *cardM.Card) error {
 
 	id, err := uuid.NewV4()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Fatal(err)
-
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	card.ID = id.String()
 
 	if err := im.cardStore.Create(ctx, card); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -93,26 +91,20 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
 
 	card, err := im.cardStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
 	cardRewards, err := im.cardRewardStore.GetByCardID(ctx, card.ID)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
 	for _, cr := range cardRewards {
 		rewards, err := im.rewardStore.GetByCardRewardID(ctx, cr.ID)
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 
@@ -173,9 +165,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 		cardRewardID := cr.ID
 		rewardChannels, err := im.rewardChannelService.GetByRewardID(ctx, cardRewardID)
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 
@@ -233,6 +223,9 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 		cinemas := []*channelM.Cinema{}
 		cinemaMap := make(map[string]bool)
 
+		publicutilities := []*channelM.PublicUtility{}
+		publicutilitiesMap := make(map[string]bool)
+
 		channelResps := []*channelM.ChannelResp{}
 
 		for _, rc := range rewardChannels {
@@ -243,9 +236,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				task, err := im.channelService.GetTaskByID(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -257,9 +248,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 							allMobilepays, err := im.channelService.GetAllMobilepays(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -275,9 +264,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.EcommerceType):
 							allEcommerces, err := im.channelService.GetAllEcommerces(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -293,9 +280,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.SupermarketType):
 							allSupermarkets, err := im.channelService.GetAllSupermarkets(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -311,9 +296,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.OnlinegameType):
 							allOnlinegames, err := im.channelService.GetAllOnlinegames(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -331,9 +314,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 							allStreamings, err := im.channelService.GetAllStreamings(ctx)
 
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -349,9 +330,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.FoodType):
 							allFoods, err := im.channelService.GetAllFoods(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -366,9 +345,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.TransportationType):
 							allTransportations, err := im.channelService.GetAllTransportations(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -384,9 +361,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.TravelType):
 							allTravels, err := im.channelService.GetAllTravels(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -402,9 +377,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.DeliveryType):
 							allDeliveries, err := im.channelService.GetAllDeliverys(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -420,9 +393,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.InsuranceType):
 							allInurances, err := im.channelService.GetAllInsurances(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -438,9 +409,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.MallType):
 							allMalls, err := im.channelService.GetAllMalls(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -456,9 +425,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.SportType):
 							allSports, err := im.channelService.GetAllSports(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -474,9 +441,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.ConvenienceStoreType):
 							allConvenienceStores, err := im.channelService.GetAllConvenienceStores(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -492,9 +457,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.AppStoreType):
 							allAppStores, err := im.channelService.GetAllAppstores(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -510,9 +473,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 						case int32(channelM.HotelType):
 							allHotels, err := im.channelService.GetAllHotels(ctx)
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -530,9 +491,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 							allAmusements, err := im.channelService.GetAllAmusemnets(ctx)
 
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -550,9 +509,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 							allCinemas, err := im.channelService.GetAllCinemas(ctx)
 
 							if err != nil {
-								logrus.WithFields(logrus.Fields{
-									"": "",
-								}).Error(err)
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 								break
 							}
 
@@ -560,6 +517,23 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 								if _, ok := cinemaMap[c.ID]; !ok {
 									cinemaMap[c.ID] = true
 									cinemas = append(cinemas, c)
+								}
+							}
+
+							break
+
+						case int32(channelM.PublicUtilityType):
+							allPublicutilitiess, err := im.channelService.GetAllPublicUtilities(ctx)
+
+							if err != nil {
+								logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+								break
+							}
+
+							for _, p := range allPublicutilitiess {
+								if _, ok := publicutilitiesMap[p.ID]; !ok {
+									publicutilitiesMap[p.ID] = true
+									publicutilities = append(publicutilities, p)
 								}
 							}
 
@@ -580,9 +554,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				mobilepay, err := im.channelService.GetMobilepay(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -599,9 +571,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				ecommerce, err = im.channelService.GetEcommerce(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -616,9 +586,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				supermarket, err := im.channelService.GetSupermarket(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -633,9 +601,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				onlinegame, err := im.channelService.GetOnlinegame(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -650,9 +616,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				streaming, err := im.channelService.GetStreaming(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -668,9 +632,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 				food, err := im.channelService.GetFood(ctx, rc.ChannelID)
 
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -685,9 +647,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				transportation, err := im.channelService.GetTransportation(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -702,9 +662,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				travel, err := im.channelService.GetTravel(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -719,9 +677,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				delivery, err := im.channelService.GetDelivery(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -736,9 +692,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				insurance, err := im.channelService.GetInsurance(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -755,9 +709,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				mall, err = im.channelService.GetMall(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -772,9 +724,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				sport, err := im.channelService.GetSport(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -789,9 +739,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				convenienceStore, err := im.channelService.GetConvenienceStore(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -806,9 +754,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				appstore, err := im.channelService.GetAppstore(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -823,9 +769,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				hotel, err := im.channelService.GetHotel(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -840,9 +784,7 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				amusement, err := im.channelService.GetAmusement(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
@@ -857,15 +799,28 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 
 				cinema, err := im.channelService.GetCinema(ctx, rc.ChannelID)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"card.transCardRewardResp": "",
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					break
 				}
 
 				if _, ok := cinemaMap[cinema.ID]; !ok {
 					cinemaMap[cinema.ID] = true
 					cinemas = append(cinemas, cinema)
+				}
+
+				break
+
+			case int32(channelM.PublicUtilityType):
+
+				publicUtility, err := im.channelService.GetPublicUtility(ctx, rc.ChannelID)
+				if err != nil {
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+					break
+				}
+
+				if _, ok := publicutilitiesMap[publicUtility.ID]; !ok {
+					publicutilitiesMap[publicUtility.ID] = true
+					publicutilities = append(publicutilities, publicUtility)
 				}
 
 				break
@@ -1000,6 +955,13 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 			})
 		}
 
+		if len(publicutilities) > 0 {
+			channelResps = append(channelResps, &channelM.ChannelResp{
+				ChannelType:     channelM.PublicUtilityType,
+				PublicUtilities: publicutilities,
+			})
+		}
+
 		cardRewardResp.ChannelResps = channelResps
 
 		cardRewardResps = append(cardRewardResps, cardRewardResp)
@@ -1014,9 +976,7 @@ func (im *impl) GetRespByID(ctx context.Context, ID string) (*cardM.CardResp, er
 
 	card, err := im.cardStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -1045,9 +1005,7 @@ func (im *impl) GetRespByID(ctx context.Context, ID string) (*cardM.CardResp, er
 	cardRewardResps, err := im.transCardRewardResp(ctx, cardRewards)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -1058,7 +1016,7 @@ func (im *impl) GetRespByID(ctx context.Context, ID string) (*cardM.CardResp, er
 
 func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
 	if err := im.cardStore.UpdateByID(ctx, card); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	return nil
@@ -1067,9 +1025,7 @@ func (im *impl) UpdateByID(ctx context.Context, card *cardM.Card) error {
 func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 	cards, err := im.cardStore.GetAll(ctx)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -1079,9 +1035,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*cardM.Card, error) {
 func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Card, error) {
 	cards, err := im.cardStore.GetByBankID(ctx, bankID)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -1092,18 +1046,14 @@ func (im *impl) CreateCardReward(ctx context.Context, cardReward *cardM.CardRewa
 
 	id, err := uuid.NewV4()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Fatal(err)
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 
 		return err
 	}
 	cardReward.ID = id.String()
 
 	if err := im.cardRewardStore.Create(ctx, cardReward); err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return err
 	}
 
@@ -1112,9 +1062,7 @@ func (im *impl) CreateCardReward(ctx context.Context, cardReward *cardM.CardRewa
 
 		id, err := uuid.NewV4()
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"msg": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 			return err
 		}
 
@@ -1125,23 +1073,19 @@ func (im *impl) CreateCardReward(ctx context.Context, cardReward *cardM.CardRewa
 			pid, err := uuid.NewV4()
 
 			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"msg": "",
-				}).Fatal(err)
+				logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 				return err
 			}
 			p.ID = pid.String()
 		}
 
 		if err := im.rewardStore.Create(ctx, r); err != nil {
-			logrus.WithFields(logrus.Fields{
-				"msg": "",
-			}).Fatal(err)
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 			return err
 		}
 
 		if err := im.createRewardChannels(ctx, cardReward.CardID, cardReward.ID, r); err != nil {
-			logrus.Error(err)
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 			return err
 		}
 
@@ -1156,6 +1100,7 @@ func (im *impl) createRewardChannels(ctx context.Context, cardID, cardRewardID s
 
 	for _, p := range reward.Payloads {
 		if err := findAllChannelID(p.Channel, channelTypeMap); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 			return err
 		}
 	}
@@ -1166,10 +1111,7 @@ func (im *impl) createRewardChannels(ctx context.Context, cardID, cardRewardID s
 			id, err := uuid.NewV4()
 
 			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"msg": "",
-				}).Fatal(err)
-
+				logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 				return err
 			}
 
@@ -1184,9 +1126,7 @@ func (im *impl) createRewardChannels(ctx context.Context, cardID, cardRewardID s
 
 			if err := im.rewardChannelService.Create(ctx, rewardChannelM); err != nil {
 
-				logrus.WithFields(logrus.Fields{
-					"": "",
-				}).Error(err)
+				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 
 				return err
 			}
@@ -1408,10 +1348,20 @@ func findAllChannelID(channel *channelM.Channel, channelTypeMap map[channelM.Cha
 
 		break
 
+	case channelM.PublicUtilityType:
+
+		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
+			channelTypeMap[channel.ChannelType] = make(map[string]bool)
+		}
+
+		for _, p := range channel.PublicUtilities {
+			channelTypeMap[channel.ChannelType][p] = true
+		}
+
+		break
+
 	default:
-		logrus.WithFields(logrus.Fields{
-			"": "findAllChannelID",
-		}).Error("")
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		// return logrus.Error(err)
 		return errors.New("no suitable channelType")
 	}
@@ -1423,6 +1373,7 @@ func (im *impl) EvaluateConstraintLogic(ctx context.Context, cardRewardID string
 
 	cardReward, err := im.cardRewardStore.GetByID(ctx, cardRewardID)
 	if err != nil {
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return false, "internal error", err
 	}
 
@@ -1433,6 +1384,7 @@ func (im *impl) EvaluateConstraintLogic(ctx context.Context, cardRewardID string
 	for _, logic := range cardReward.ConstraintPassLogics {
 		pass, _, err := checkConstraintLogic(logic.Logic, constraintSet)
 		if err != nil {
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return false, "internal error", err
 		}
 

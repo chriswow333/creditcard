@@ -142,8 +142,8 @@ func NewPool(name string, maxWorkerSize, queueSize, initWorkerSize int, options 
 			for {
 				select {
 				case <-ticker.C:
-					fmt.Println("pool.ActiveWorker", float64(p.counter.ActiveWorker()), "name", name)
-					fmt.Println("pool.Worker", float64(p.GetSize()), "name", name)
+					// fmt.Println("pool.ActiveWorker", float64(p.counter.ActiveWorker()), "name", name)
+					// fmt.Println("pool.Worker", float64(p.GetSize()), "name", name)
 				case <-p.pauseChan:
 					return
 				}
@@ -168,7 +168,7 @@ func (p *Pool) ScheduleTimeout(timeout time.Duration, task func()) error {
 }
 
 func (p *Pool) schedule(task func(), timeout <-chan time.Time) (err error) {
-	defer fmt.Println("schedule.time", "name", p.name)
+	// defer fmt.Println("schedule.time", "name", p.name)
 
 	select {
 	case <-p.pauseChan:

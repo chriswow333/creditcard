@@ -11,4 +11,5 @@ type Store interface {
 	UpdateByID(ctx context.Context, appstore *channel.AppStore) error
 	GetAll(ctx context.Context) ([]*channel.AppStore, error)
 	GetByID(ctx context.Context, ID string) (*channel.AppStore, error)
+	FindLike(ctx context.Context, names []string) ([]*channel.AppStore, error)
 }

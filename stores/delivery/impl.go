@@ -3,6 +3,7 @@ package delivery
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -133,4 +134,38 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Delivery, erro
 	}
 
 	return delivery, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM delivery WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Delivery, error) {
+	deliveries := []*channel.Delivery{}
+
+	name := strings.Join(names, "|")
+
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		delivery := &channel.Delivery{}
+		selector := []interface{}{
+			&delivery.ID,
+			&delivery.Name,
+			&delivery.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		deliveries = append(deliveries, delivery)
+	}
+
+	return deliveries, nil
 }

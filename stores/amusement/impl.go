@@ -3,6 +3,7 @@ package amusement
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -130,4 +131,38 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Amusement, err
 	}
 
 	return amusement, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM amusement WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Amusement, error) {
+	amusements := []*channel.Amusement{}
+
+	name := strings.Join(names, "|")
+	logrus.Info(name)
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		amusement := &channel.Amusement{}
+		selector := []interface{}{
+			&amusement.ID,
+			&amusement.Name,
+			&amusement.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		amusements = append(amusements, amusement)
+	}
+
+	return amusements, nil
 }

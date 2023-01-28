@@ -1,54 +1,51 @@
-package mobilepay
+package publicutility
 
 import (
 	"context"
 
-	channelComp "example.com/creditcard/components/channel"
+	"example.com/creditcard/components/channel"
 	channelM "example.com/creditcard/models/channel"
 	eventM "example.com/creditcard/models/event"
 )
 
 type impl struct {
-	mobilepays []*channelM.Mobilepay
-	channel    *channelM.Channel
+	publicutilities []*channelM.PublicUtility
+	channel         *channelM.Channel
 }
 
 func New(
-
-	mobilepays []*channelM.Mobilepay,
+	publicutilities []*channelM.PublicUtility,
 	channel *channelM.Channel,
 
-) channelComp.Component {
+) channel.Component {
+
 	return &impl{
-		mobilepays: mobilepays,
-		channel:    channel,
+		publicutilities: publicutilities,
+		channel:         channel,
 	}
 }
 
 func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEventResp, error) {
 
 	channelEventResp := &channelM.ChannelEventResp{
-		ChannelType:         channelM.MobilepayType,
+		ChannelType:         channelM.PublicUtilityType,
 		ChannelOperatorType: im.channel.ChannelOperatorType,
 		ChannelMappingType:  im.channel.ChannelMappingType,
 	}
 
 	matches := []string{}
 	misses := []string{}
+	publicutilityMap := make(map[string]bool)
 
-	mobilepayMap := make(map[string]bool)
-
-	for _, mo := range e.Mobilepays {
-		mobilepayMap[mo] = true
-
+	for _, on := range e.Publicutilities {
+		publicutilityMap[on] = true
 	}
 
-	for _, mo := range im.mobilepays {
-
-		if _, ok := mobilepayMap[mo.ID]; ok {
-			matches = append(matches, mo.ID)
+	for _, p := range im.publicutilities {
+		if _, ok := publicutilityMap[p.ID]; ok {
+			matches = append(matches, p.ID)
 		} else {
-			misses = append(misses, mo.ID)
+			misses = append(misses, p.ID)
 		}
 	}
 
@@ -56,23 +53,18 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 	channelEventResp.Misses = misses
 
 	switch im.channel.ChannelOperatorType {
-
 	case channelM.OR:
-
 		if len(matches) > 0 {
 			channelEventResp.Pass = true
 		} else {
 			channelEventResp.Pass = false
 		}
-
 	case channelM.AND:
-
 		if len(misses) > 0 || len(matches) == 0 {
 			channelEventResp.Pass = false
 		} else {
 			channelEventResp.Pass = true
 		}
-
 	}
 
 	if im.channel.ChannelMappingType == channelM.MISMATCH {

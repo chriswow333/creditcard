@@ -1,29 +1,5 @@
 package feedback
 
-// 點數回饋
-
-type PointbackType int32
-
-const (
-	LINE_POINT PointbackType = iota + 1
-	CATHAY_POINT
-	PXPAY_POINT
-	// KUO_BROTHERS_POINT
-	// WOWPRIME_POINT
-	// OPEN_POINT
-	// YIDA_POINT
-)
-
-var POINTBACK_TYPE_NAME_MAPPER = map[PointbackType]string{
-	LINE_POINT:   "LINE POINTS",
-	CATHAY_POINT: "小數點",
-	PXPAY_POINT:  "全支付點數",
-	// KUO_BROTHERS_POINT: "",
-	// WOWPRIME_POINT:     "",
-	// OPEN_POINT:         "",
-	// YIDA_POINT:         "",
-}
-
 type PointCalculateType int32
 
 const (
@@ -32,8 +8,6 @@ const (
 )
 
 type Pointback struct {
-	PointbackType PointbackType `json:"pointbackType"`
-
 	PointCalculateType PointCalculateType `json:"pointCalculateType,omitempty"`
 
 	Fixed float64 `json:"fixed,omitempty"`
@@ -65,7 +39,6 @@ type PointReturn struct {
 type PointFeedbackBonus struct {
 	TotalBonus         float64            `json:"totalBonus"`
 	PointCalculateType PointCalculateType `json:"pointCalculateType"`
-	PointbackType      PointbackType      `json:"pointbackType"`
 
 	Title                  string `json:"title"`                  // ex. LINE POINTS
 	ReturnBonusTitle       string `json:"returnBonusTitle"`       // ex. 3%"現金回饋"

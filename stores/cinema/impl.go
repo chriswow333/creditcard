@@ -3,6 +3,7 @@ package cinema
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -133,4 +134,38 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Cinema, error)
 	}
 
 	return cinema, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM cinema WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Cinema, error) {
+	cinemas := []*channel.Cinema{}
+
+	name := strings.Join(names, "|")
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		cinema := &channel.Cinema{}
+		selector := []interface{}{
+			&cinema.ID,
+			&cinema.Name,
+			&cinema.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		cinemas = append(cinemas, cinema)
+	}
+
+	return cinemas, nil
 }

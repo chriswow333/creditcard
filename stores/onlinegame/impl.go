@@ -3,6 +3,7 @@ package onlinegame
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -131,4 +132,37 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Onlinegame, er
 	}
 
 	return onlinegame, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM onlinegame WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Onlinegame, error) {
+	onlinegames := []*channel.Onlinegame{}
+
+	name := strings.Join(names, "|")
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		onlinegame := &channel.Onlinegame{}
+		selector := []interface{}{
+			&onlinegame.ID,
+			&onlinegame.Name,
+			&onlinegame.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		onlinegames = append(onlinegames, onlinegame)
+	}
+
+	return onlinegames, nil
 }

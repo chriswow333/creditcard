@@ -17,9 +17,11 @@ const (
 type ChannelLabel int32
 
 const (
-	MICRO_PAYMENT = iota + 1 // 小額支付
-	OVERSEA                  // 海外
-	DOMESTIC
+	MICRO_PAYMENT       = iota + 1 // 小額支付
+	OVERSEA                        // 海外消費
+	GENERAL_CONSUMPTION            // 一般消費
+	TW_RESTAURANT                  // 全臺餐廳
+
 )
 
 type ChannelType int32
@@ -45,6 +47,7 @@ const (
 	HotelType
 	AmusementType
 	CinemaType
+	PublicUtilityType
 )
 
 type Channel struct {
@@ -77,4 +80,5 @@ type Channel struct {
 	Hotels            []string `json:"hotels,omitempty"`
 	Amusements        []string `json:"amusements,omitempty"`
 	Cinemas           []string `json:"cinemas,onmitempty"`
+	PublicUtilities   []string `json:"publicutilities,omitempty"`
 }

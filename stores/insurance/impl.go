@@ -3,6 +3,7 @@ package insurance
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -135,4 +136,38 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Insurance, err
 	}
 
 	return insurance, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM insurance WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Insurance, error) {
+	insurances := []*channel.Insurance{}
+
+	name := strings.Join(names, "|")
+
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		insurance := &channel.Insurance{}
+		selector := []interface{}{
+			&insurance.ID,
+			&insurance.Name,
+			&insurance.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		insurances = append(insurances, insurance)
+	}
+
+	return insurances, nil
 }

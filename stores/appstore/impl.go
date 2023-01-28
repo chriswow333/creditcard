@@ -3,6 +3,7 @@ package appstore
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -30,7 +31,7 @@ func (im *impl) Create(ctx context.Context, appstore *channel.AppStore) error {
 	tx, err := im.psql.Begin()
 
 	if err != nil {
-		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return err
 	}
 
@@ -43,7 +44,7 @@ func (im *impl) Create(ctx context.Context, appstore *channel.AppStore) error {
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
-		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return err
 	}
 
@@ -61,7 +62,7 @@ func (im *impl) UpdateByID(ctx context.Context, appstore *channel.AppStore) erro
 
 	tx, err := im.psql.Begin()
 	if err != nil {
-		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return err
 	}
 
@@ -74,7 +75,7 @@ func (im *impl) UpdateByID(ctx context.Context, appstore *channel.AppStore) erro
 	}
 
 	if _, err := tx.Exec(UPDATE_BY_ID_STAT, updater...); err != nil {
-		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return err
 	}
 
@@ -91,7 +92,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.AppStore, error) {
 
 	rows, err := im.psql.Query(SELECT_ALL_STAT)
 	if err != nil {
-		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return nil, err
 	}
 
@@ -105,7 +106,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.AppStore, error) {
 		}
 
 		if err := rows.Scan(selector...); err != nil {
-			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 			return nil, err
 		}
 
@@ -128,9 +129,43 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.AppStore, erro
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
-		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return nil, err
 	}
 
 	return appstore, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM appstore WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.AppStore, error) {
+	appstores := []*channel.AppStore{}
+
+	name := strings.Join(names, "|")
+
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		appstore := &channel.AppStore{}
+		selector := []interface{}{
+			&appstore.ID,
+			&appstore.Name,
+			&appstore.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		appstores = append(appstores, appstore)
+	}
+
+	return appstores, nil
 }

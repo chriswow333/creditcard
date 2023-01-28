@@ -3,6 +3,7 @@ package transportation
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -129,4 +130,38 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Transportation
 	}
 
 	return transportation, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM transportation WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Transportation, error) {
+	transportations := []*channel.Transportation{}
+
+	name := strings.Join(names, "|")
+
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		transportation := &channel.Transportation{}
+		selector := []interface{}{
+			&transportation.ID,
+			&transportation.Name,
+			&transportation.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		transportations = append(transportations, transportation)
+	}
+
+	return transportations, nil
 }

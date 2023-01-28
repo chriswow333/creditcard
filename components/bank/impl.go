@@ -2,6 +2,7 @@ package bank
 
 import (
 	"context"
+	"runtime/debug"
 
 	"github.com/sirupsen/logrus"
 
@@ -34,9 +35,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*eventM.Response,
 		_, err := (*r).Satisfy(ctx, e)
 
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return nil, err
 		}
 	}

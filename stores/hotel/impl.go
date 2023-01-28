@@ -3,6 +3,7 @@ package hotel
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -132,4 +133,38 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Hotel, error) 
 	}
 
 	return hotel, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM hotel WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Hotel, error) {
+	hotels := []*channel.Hotel{}
+
+	name := strings.Join(names, "|")
+
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		hotel := &channel.Hotel{}
+		selector := []interface{}{
+			&hotel.ID,
+			&hotel.Name,
+			&hotel.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		hotels = append(hotels, hotel)
+	}
+
+	return hotels, nil
 }

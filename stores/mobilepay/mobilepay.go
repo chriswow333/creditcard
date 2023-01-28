@@ -11,4 +11,5 @@ type Store interface {
 	UpdateByID(ctx context.Context, mobilepay *channel.Mobilepay) error
 	GetAll(ctx context.Context) ([]*channel.Mobilepay, error)
 	GetByID(ctx context.Context, ID string) (*channel.Mobilepay, error)
+	FindLike(ctx context.Context, names []string) ([]*channel.Mobilepay, error)
 }

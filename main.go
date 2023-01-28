@@ -1,6 +1,8 @@
 package main
 
 import (
+	"runtime/debug"
+
 	"example.com/creditcard/base/psql"
 	_ "example.com/creditcard/base/psql"
 	"go.uber.org/dig"
@@ -37,6 +39,7 @@ import (
 	ecommerceStore "example.com/creditcard/stores/ecommerce"
 
 	// feedbackDescStore "example.com/creditcard/stores/feedback_desc"
+	evaluatorModule "example.com/creditcard/modules/evaluator"
 	foodStore "example.com/creditcard/stores/food"
 	hotelStore "example.com/creditcard/stores/hotel"
 	insuranceStore "example.com/creditcard/stores/insurance"
@@ -44,6 +47,7 @@ import (
 	mobilepayStore "example.com/creditcard/stores/mobilepay"
 	onlinegameStore "example.com/creditcard/stores/onlinegame"
 	payloadStore "example.com/creditcard/stores/payload"
+	publicutilityStore "example.com/creditcard/stores/publicutility"
 	rewardStore "example.com/creditcard/stores/reward"
 	rewardChannelStore "example.com/creditcard/stores/reward_channel"
 	sportStore "example.com/creditcard/stores/sport"
@@ -52,8 +56,6 @@ import (
 	taskStore "example.com/creditcard/stores/task"
 	transportationStore "example.com/creditcard/stores/transportation"
 	travelStore "example.com/creditcard/stores/travel"
-
-	evaluatorModule "example.com/creditcard/modules/evaluator"
 )
 
 func BuildContainer() *dig.Container {
@@ -94,7 +96,7 @@ func BuildContainer() *dig.Container {
 	container.Provide(hotelStore.New)
 	container.Provide(amusementStore.New)
 	container.Provide(cinemaStore.New)
-	// container.Provide(feedbackDescStore.New)
+	container.Provide(publicutilityStore.New)
 
 	// builder
 	container.Provide(cardrewardBuilder.New)
@@ -155,6 +157,7 @@ func main() {
 
 		manners.ListenAndServe(":8080", router)
 	}); err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		panic(err)
 	}
 

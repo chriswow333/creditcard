@@ -2,7 +2,6 @@ package food
 
 import (
 	"context"
-	"fmt"
 
 	"example.com/creditcard/components/channel"
 	channelM "example.com/creditcard/models/channel"
@@ -68,9 +67,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 			misses = append(misses, fo.ID)
 		}
 	}
-
-	fmt.Println(matches)
-	fmt.Println(channelLabelMap)
 
 	channelEventResp.Matches = matches
 	channelEventResp.Misses = misses

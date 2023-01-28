@@ -63,10 +63,12 @@ type CardReward struct {
 type CardRewardLimitType int32
 
 const (
-	QUANTITY CardRewardLimitType = iota + 1
-	DURATION
-	REGISTER
-	NEWONE
+	QUANTITY CardRewardLimitType = iota + 1 // 限量
+	DURATION                                // 限時
+	REGISTER                                // 登入
+	NEWONE                                  // 新戶
+	TIMES                                   // 次數
+	CARD                                    // 卡片限定
 )
 
 type OtherReward struct {

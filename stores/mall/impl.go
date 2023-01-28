@@ -3,6 +3,7 @@ package mall
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -132,4 +133,38 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Mall, error) {
 	}
 
 	return mall, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM mall WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Mall, error) {
+	malls := []*channel.Mall{}
+
+	name := strings.Join(names, "|")
+
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		mall := &channel.Mall{}
+		selector := []interface{}{
+			&mall.ID,
+			&mall.Name,
+			&mall.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		malls = append(malls, mall)
+	}
+
+	return malls, nil
 }

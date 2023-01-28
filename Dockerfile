@@ -53,3 +53,8 @@ CMD ["./appv1"]
 # docker buildx build --platform linux/amd64 .
 
 # docker run --rm -it --add-host=host.docker.internal:host-gateway 
+
+# docker run --name postgres-test -v ~/test_project/postgres-data:/var/lib/postgresql/data -e POSTGRES_PASSWORD=z20339 -p 5432:5432 -d postgres
+
+# sudo docker run -e POSTGRES_PASSWORD=z20339 -v ~/pgdata:/var/lib/postgresql/data -p 5432:5432 -d postgres
+#  docker tag appv1 asia-east1-docker.pkg.dev/woven-woodland-373807/pincard-api/appv1

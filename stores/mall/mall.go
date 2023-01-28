@@ -11,4 +11,5 @@ type Store interface {
 	UpdateByID(ctx context.Context, mall *channel.Mall) error
 	GetAll(ctx context.Context) ([]*channel.Mall, error)
 	GetByID(ctx context.Context, ID string) (*channel.Mall, error)
+	FindLike(ctx context.Context, names []string) ([]*channel.Mall, error)
 }

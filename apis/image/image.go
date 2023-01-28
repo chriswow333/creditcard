@@ -1,7 +1,6 @@
 package image
 
 import (
-	"fmt"
 	"net/http"
 	"path/filepath"
 
@@ -29,7 +28,6 @@ func (h *imageHandler) downloadImage(ctx *gin.Context) {
 	imageName := ctx.Param("imageName")
 
 	targetPath := filepath.Join(DOWNLOADS_PATH, imageName)
-	fmt.Println(targetPath)
 	//This ckeck is for example, I not sure is it can prevent all possible filename attacks - will be much better if real filename will not come from user side. I not even tryed this code
 	// if !strings.HasPrefix(filepath.Clean(targetPath), DOWNLOADS_PATH) {
 	// 	ctx.String(403, "Look like you attacking me")

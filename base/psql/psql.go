@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx"
+	"github.com/sirupsen/logrus"
 )
 
 type Config struct {
@@ -33,7 +34,11 @@ func NewPsql() *pgx.ConnPool {
 	if password == "" {
 		password = "z20339"
 	}
+
 	host := os.Getenv("POSTGRES_HOST")
+
+	logrus.Info("host", host)
+
 	if host == "" {
 		host = "127.0.0.1"
 	}

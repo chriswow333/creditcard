@@ -2,6 +2,7 @@ package reward
 
 import (
 	"net/http"
+	"runtime/debug"
 
 	"go.uber.org/dig"
 
@@ -39,7 +40,7 @@ func (h *rewardHandler) create(ctx *gin.Context) {
 	ctx.BindJSON(&rewardModel)
 
 	if err := h.rewardSrc.Create(ctx, &rewardModel); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -53,7 +54,7 @@ func (h *rewardHandler) updateByID(ctx *gin.Context) {
 
 	ctx.BindJSON(&rewardModel)
 	if err := h.rewardSrc.UpdateByID(ctx, &rewardModel); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}

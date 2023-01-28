@@ -3,6 +3,7 @@ package sport
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -128,4 +129,37 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Sport, error) 
 	}
 
 	return sport, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM sport WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Sport, error) {
+	sports := []*channel.Sport{}
+
+	name := strings.Join(names, "|")
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		sport := &channel.Sport{}
+		selector := []interface{}{
+			&sport.ID,
+			&sport.Name,
+			&sport.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		sports = append(sports, sport)
+	}
+
+	return sports, nil
 }

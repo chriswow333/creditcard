@@ -3,6 +3,7 @@ package conveniencestore
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"example.com/creditcard/models/channel"
 	"github.com/jackc/pgx"
@@ -131,4 +132,38 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.ConvenienceSto
 	}
 
 	return convenienceStore, nil
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+	" FROM conveniencestore WHERE \"name\" ~* $1"
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.ConvenienceStore, error) {
+	conveniencestores := []*channel.ConvenienceStore{}
+
+	name := strings.Join(names, "|")
+
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, name)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		conveniencestore := &channel.ConvenienceStore{}
+		selector := []interface{}{
+			&conveniencestore.ID,
+			&conveniencestore.Name,
+			&conveniencestore.ChannelLabels,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+			return nil, err
+		}
+
+		conveniencestores = append(conveniencestores, conveniencestore)
+	}
+
+	return conveniencestores, nil
 }

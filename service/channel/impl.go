@@ -2,6 +2,7 @@ package channel
 
 import (
 	"context"
+	"runtime/debug"
 
 	"example.com/creditcard/models/channel"
 	"example.com/creditcard/models/task"
@@ -17,6 +18,7 @@ import (
 	mallStore "example.com/creditcard/stores/mall"
 	mobilepayStore "example.com/creditcard/stores/mobilepay"
 	onlinegameStore "example.com/creditcard/stores/onlinegame"
+	publicUtilityStore "example.com/creditcard/stores/publicutility"
 	sportStore "example.com/creditcard/stores/sport"
 	streamingStore "example.com/creditcard/stores/streaming"
 	supermarketStore "example.com/creditcard/stores/supermarket"
@@ -53,6 +55,8 @@ type impl struct {
 	amusementStore amusementStore.Store
 
 	cinemaStore cinemaStore.Store
+
+	publicUtilityStore publicUtilityStore.Store
 }
 
 func New(
@@ -74,6 +78,7 @@ func New(
 	hotelStore hotelStore.Store,
 	amusementStore amusementStore.Store,
 	cinemaStore cinemaStore.Store,
+	publicUtilityStore publicUtilityStore.Store,
 ) Service {
 	return &impl{
 		taskStore:             taskStore,
@@ -94,6 +99,7 @@ func New(
 		hotelStore:            hotelStore,
 		amusementStore:        amusementStore,
 		cinemaStore:           cinemaStore,
+		publicUtilityStore:    publicUtilityStore,
 	}
 }
 
@@ -101,7 +107,7 @@ func (im *impl) GetTaskByID(ctx context.Context, ID string) (*task.Task, error) 
 
 	task, err := im.taskStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -113,7 +119,7 @@ func (im *impl) GetTasksByCardID(ctx context.Context, cardID string) ([]*task.Ta
 	tasks, err := im.taskStore.GetByCardID(ctx, cardID)
 
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -124,17 +130,14 @@ func (im *impl) CreateTask(ctx context.Context, task *task.Task) error {
 
 	id, err := uuid.NewV4()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Fatal(err)
-
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
 	task.ID = id.String()
 
 	if err := im.taskStore.Create(ctx, task); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	return nil
@@ -144,7 +147,7 @@ func (im *impl) GetAllEcommerces(ctx context.Context) ([]*channel.Ecommerce, err
 
 	ecommerces, err := im.ecommerceStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -155,7 +158,7 @@ func (im *impl) GetEcommerce(ctx context.Context, ID string) (*channel.Ecommerce
 
 	ecommerce, err := im.ecommerceStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.New().Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return ecommerce, nil
@@ -166,7 +169,7 @@ func (im *impl) GetAllDeliverys(ctx context.Context) ([]*channel.Delivery, error
 	deliveries, err := im.deliveryStore.GetAll(ctx)
 
 	if err != nil {
-		logrus.New().Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -176,7 +179,7 @@ func (im *impl) GetAllDeliverys(ctx context.Context) ([]*channel.Delivery, error
 func (im *impl) GetDelivery(ctx context.Context, ID string) (*channel.Delivery, error) {
 	delivery, err := im.deliveryStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return delivery, nil
@@ -186,7 +189,7 @@ func (im *impl) GetAllMobilepays(ctx context.Context) ([]*channel.Mobilepay, err
 	mobilepays, err := im.mobilepayStore.GetAll(ctx)
 
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -197,7 +200,7 @@ func (im *impl) GetMobilepay(ctx context.Context, ID string) (*channel.Mobilepay
 
 	mobilepay, err := im.mobilepayStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -208,7 +211,7 @@ func (im *impl) GetAllOnlinegames(ctx context.Context) ([]*channel.Onlinegame, e
 
 	onlinegames, err := im.onlinegameStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -218,7 +221,7 @@ func (im *impl) GetAllOnlinegames(ctx context.Context) ([]*channel.Onlinegame, e
 func (im *impl) GetOnlinegame(ctx context.Context, ID string) (*channel.Onlinegame, error) {
 	onlinegame, err := im.onlinegameStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return onlinegame, nil
@@ -228,7 +231,7 @@ func (im *impl) GetAllStreamings(ctx context.Context) ([]*channel.Streaming, err
 
 	streamings, err := im.streamingStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -239,7 +242,7 @@ func (im *impl) GetStreaming(ctx context.Context, ID string) (*channel.Streaming
 
 	streaming, err := im.streamingStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return streaming, nil
@@ -249,7 +252,7 @@ func (im *impl) GetAllSupermarkets(ctx context.Context) ([]*channel.Supermarket,
 
 	supermarkets, err := im.supermarketStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -259,7 +262,7 @@ func (im *impl) GetAllSupermarkets(ctx context.Context) ([]*channel.Supermarket,
 func (im *impl) GetSupermarket(ctx context.Context, ID string) (*channel.Supermarket, error) {
 	supermarket, err := im.supermarketStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return supermarket, nil
@@ -268,7 +271,7 @@ func (im *impl) GetSupermarket(ctx context.Context, ID string) (*channel.Superma
 func (im *impl) GetAllFoods(ctx context.Context) ([]*channel.Food, error) {
 	foods, err := im.foodStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -278,7 +281,7 @@ func (im *impl) GetAllFoods(ctx context.Context) ([]*channel.Food, error) {
 func (im *impl) GetFood(ctx context.Context, ID string) (*channel.Food, error) {
 	food, err := im.foodStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return food, nil
@@ -287,7 +290,7 @@ func (im *impl) GetFood(ctx context.Context, ID string) (*channel.Food, error) {
 func (im *impl) GetAllTransportations(ctx context.Context) ([]*channel.Transportation, error) {
 	transportations, err := im.transportationStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -297,7 +300,7 @@ func (im *impl) GetAllTransportations(ctx context.Context) ([]*channel.Transport
 func (im *impl) GetTransportation(ctx context.Context, ID string) (*channel.Transportation, error) {
 	transportation, err := im.transportationStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return transportation, nil
@@ -306,7 +309,7 @@ func (im *impl) GetTransportation(ctx context.Context, ID string) (*channel.Tran
 func (im *impl) GetAllTravels(ctx context.Context) ([]*channel.Travel, error) {
 	travels, err := im.travelStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -316,7 +319,7 @@ func (im *impl) GetAllTravels(ctx context.Context) ([]*channel.Travel, error) {
 func (im *impl) GetTravel(ctx context.Context, ID string) (*channel.Travel, error) {
 	travel, err := im.travelStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return travel, nil
@@ -326,7 +329,7 @@ func (im *impl) GetAllInsurances(ctx context.Context) ([]*channel.Insurance, err
 
 	insurance, err := im.insuranceStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -335,7 +338,7 @@ func (im *impl) GetAllInsurances(ctx context.Context) ([]*channel.Insurance, err
 func (im *impl) GetInsurance(ctx context.Context, ID string) (*channel.Insurance, error) {
 	travel, err := im.insuranceStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return travel, nil
@@ -346,7 +349,7 @@ func (im *impl) GetAllSports(ctx context.Context) ([]*channel.Sport, error) {
 
 	sports, err := im.sportStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -357,7 +360,7 @@ func (im *impl) GetSport(ctx context.Context, ID string) (*channel.Sport, error)
 
 	sport, err := im.sportStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -368,7 +371,7 @@ func (im *impl) GetAllConvenienceStores(ctx context.Context) ([]*channel.Conveni
 
 	convenienceStores, err := im.convenienceStoreStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -378,7 +381,7 @@ func (im *impl) GetAllConvenienceStores(ctx context.Context) ([]*channel.Conveni
 func (im *impl) GetConvenienceStore(ctx context.Context, ID string) (*channel.ConvenienceStore, error) {
 	convenienceStore, err := im.convenienceStoreStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -388,7 +391,7 @@ func (im *impl) GetConvenienceStore(ctx context.Context, ID string) (*channel.Co
 func (im *impl) GetAllMalls(ctx context.Context) ([]*channel.Mall, error) {
 	malls, err := im.mallStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -398,7 +401,7 @@ func (im *impl) GetAllMalls(ctx context.Context) ([]*channel.Mall, error) {
 func (im *impl) GetMall(ctx context.Context, ID string) (*channel.Mall, error) {
 	mall, err := im.mallStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -408,7 +411,7 @@ func (im *impl) GetMall(ctx context.Context, ID string) (*channel.Mall, error) {
 func (im *impl) GetAllAppstores(ctx context.Context) ([]*channel.AppStore, error) {
 	appstoreStores, err := im.appStoreStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -418,7 +421,7 @@ func (im *impl) GetAllAppstores(ctx context.Context) ([]*channel.AppStore, error
 func (im *impl) GetAppstore(ctx context.Context, ID string) (*channel.AppStore, error) {
 	appStore, err := im.appStoreStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -428,7 +431,7 @@ func (im *impl) GetAppstore(ctx context.Context, ID string) (*channel.AppStore, 
 func (im *impl) GetAllHotels(ctx context.Context) ([]*channel.Hotel, error) {
 	hotelStores, err := im.hotelStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -438,7 +441,7 @@ func (im *impl) GetHotel(ctx context.Context, ID string) (*channel.Hotel, error)
 
 	hotelStore, err := im.hotelStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -448,7 +451,7 @@ func (im *impl) GetHotel(ctx context.Context, ID string) (*channel.Hotel, error)
 func (im *impl) GetAllAmusemnets(ctx context.Context) ([]*channel.Amusement, error) {
 	amusements, err := im.amusementStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -457,7 +460,7 @@ func (im *impl) GetAllAmusemnets(ctx context.Context) ([]*channel.Amusement, err
 func (im *impl) GetAmusement(ctx context.Context, ID string) (*channel.Amusement, error) {
 	amusement, err := im.amusementStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n [msg]%s \n %s", err, string(debug.Stack()))
 		return nil, err
 	}
 
@@ -467,7 +470,7 @@ func (im *impl) GetAmusement(ctx context.Context, ID string) (*channel.Amusement
 func (im *impl) GetAllCinemas(ctx context.Context) ([]*channel.Cinema, error) {
 	cinemas, err := im.cinemaStore.GetAll(ctx)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -477,9 +480,288 @@ func (im *impl) GetAllCinemas(ctx context.Context) ([]*channel.Cinema, error) {
 func (im *impl) GetCinema(ctx context.Context, ID string) (*channel.Cinema, error) {
 	cinema, err := im.cinemaStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
 	return cinema, nil
+}
+
+func (im *impl) GetAllPublicUtilities(ctx context.Context) ([]*channel.PublicUtility, error) {
+	publicUtilities, err := im.publicUtilityStore.GetAll(ctx)
+	if err != nil {
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		return nil, err
+	}
+
+	return publicUtilities, nil
+}
+
+func (im *impl) GetPublicUtility(ctx context.Context, ID string) (*channel.PublicUtility, error) {
+	publicUtility, err := im.publicUtilityStore.GetByID(ctx, ID)
+	if err != nil {
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		return nil, err
+	}
+
+	return publicUtility, nil
+}
+
+func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.ChannelResp, error) {
+
+	channelResps := []*channel.ChannelResp{}
+
+	amusements, err := im.amusementStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(amusements) != 0 {
+		amusementResp := &channel.ChannelResp{
+			ChannelType: channel.AmusementType,
+			Amusements:  amusements,
+		}
+		channelResps = append(channelResps, amusementResp)
+	}
+
+	appstores, err := im.appStoreStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(appstores) != 0 {
+		appstoreResp := &channel.ChannelResp{
+			ChannelType: channel.AppStoreType,
+			Appstores:   appstores,
+		}
+		channelResps = append(channelResps, appstoreResp)
+	}
+
+	cinemas, err := im.cinemaStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(cinemas) != 0 {
+		cinemaResp := &channel.ChannelResp{
+			ChannelType: channel.CinemaType,
+			Cinemas:     cinemas,
+		}
+		channelResps = append(channelResps, cinemaResp)
+	}
+
+	conveniencestores, err := im.convenienceStoreStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(conveniencestores) != 0 {
+		cinemaResp := &channel.ChannelResp{
+			ChannelType:       channel.ConvenienceStoreType,
+			ConvenienceStores: conveniencestores,
+		}
+		channelResps = append(channelResps, cinemaResp)
+	}
+
+	deliveries, err := im.deliveryStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(deliveries) != 0 {
+		deliveryResp := &channel.ChannelResp{
+			ChannelType: channel.DeliveryType,
+			Deliveries:  deliveries,
+		}
+		channelResps = append(channelResps, deliveryResp)
+	}
+
+	ecommerces, err := im.ecommerceStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(ecommerces) != 0 {
+		ecommerceResp := &channel.ChannelResp{
+			ChannelType: channel.EcommerceType,
+			Ecommerces:  ecommerces,
+		}
+		channelResps = append(channelResps, ecommerceResp)
+	}
+
+	foods, err := im.foodStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(foods) != 0 {
+		foodResp := &channel.ChannelResp{
+			ChannelType: channel.FoodType,
+			Foods:       foods,
+		}
+		channelResps = append(channelResps, foodResp)
+	}
+
+	hotels, err := im.foodStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(hotels) != 0 {
+		hotelResp := &channel.ChannelResp{
+			ChannelType: channel.HotelType,
+			Foods:       foods,
+		}
+		channelResps = append(channelResps, hotelResp)
+	}
+
+	insurances, err := im.insuranceStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(insurances) != 0 {
+		insuranceResp := &channel.ChannelResp{
+			ChannelType: channel.InsuranceType,
+			Insurances:  insurances,
+		}
+		channelResps = append(channelResps, insuranceResp)
+	}
+
+	malls, err := im.mallStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(malls) != 0 {
+		mallResp := &channel.ChannelResp{
+			ChannelType: channel.MallType,
+			Malls:       malls,
+		}
+		channelResps = append(channelResps, mallResp)
+	}
+
+	mobilepays, err := im.mobilepayStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(mobilepays) != 0 {
+		mobilepayResp := &channel.ChannelResp{
+			ChannelType: channel.MobilepayType,
+			Mobilepays:  mobilepays,
+		}
+		channelResps = append(channelResps, mobilepayResp)
+	}
+
+	onlinegames, err := im.onlinegameStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(onlinegames) != 0 {
+		onlinegameResp := &channel.ChannelResp{
+			ChannelType: channel.OnlinegameType,
+			Onlinegames: onlinegames,
+		}
+		channelResps = append(channelResps, onlinegameResp)
+	}
+
+	publicutilities, err := im.publicUtilityStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(publicutilities) != 0 {
+		publicutilityResp := &channel.ChannelResp{
+			ChannelType:     channel.PublicUtilityType,
+			PublicUtilities: publicutilities,
+		}
+		channelResps = append(channelResps, publicutilityResp)
+	}
+
+	sports, err := im.sportStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(sports) != 0 {
+		sportResp := &channel.ChannelResp{
+			ChannelType: channel.SportType,
+			Sports:      sports,
+		}
+		channelResps = append(channelResps, sportResp)
+	}
+
+	streamings, err := im.streamingStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(streamings) != 0 {
+		streamingResp := &channel.ChannelResp{
+			ChannelType: channel.StreamingType,
+			Streamings:  streamings,
+		}
+		channelResps = append(channelResps, streamingResp)
+	}
+
+	supermarkets, err := im.supermarketStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(supermarkets) != 0 {
+		supermarketResp := &channel.ChannelResp{
+			ChannelType:  channel.SupermarketType,
+			Supermarkets: supermarkets,
+		}
+		channelResps = append(channelResps, supermarketResp)
+	}
+
+	transportations, err := im.transportationStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(transportations) != 0 {
+		transportationResp := &channel.ChannelResp{
+			ChannelType:     channel.TransportationType,
+			Transportations: transportations,
+		}
+		channelResps = append(channelResps, transportationResp)
+	}
+
+	travels, err := im.travelStore.FindLike(ctx, names)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	if len(travels) != 0 {
+		travelResp := &channel.ChannelResp{
+			ChannelType: channel.TravelType,
+			Travels:     travels,
+		}
+		channelResps = append(channelResps, travelResp)
+	}
+
+	return channelResps, nil
 }

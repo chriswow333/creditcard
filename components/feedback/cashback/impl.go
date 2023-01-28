@@ -122,13 +122,16 @@ func (im *impl) takeFixedCashReturn(ctx context.Context, cash int64) (int64, flo
 
 // 實際可以用多少錢拿回饋, 回饋多少, 回饋是否全拿
 func (im *impl) multiplyCashReturn(ctx context.Context, cash int64) (int64, float64, feedbackM.CashReturnStatus) {
+	logrus.Info("multiplyCashReturn, ", im.Cashback.Min, im.Cashback.Max)
 
 	if im.Cashback.Min == 0 && im.Cashback.Max == 0 {
 		return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL_RETURN_CASH
 	} else if im.Cashback.Min == 0 && im.Cashback.Max != 0 {
 		if cash <= im.Cashback.Max {
+			// logrus.Info("hello under max", im.Cashback.Max, im.Cashback.Bonus*float64(im.Cashback.Max), feedbackM.SOME_RETURN_CASH)
 			return cash, im.Cashback.Bonus * float64(cash), feedbackM.ALL_RETURN_CASH
 		} else {
+			// logrus.Info("hello over max", im.Cashback.Max, im.Cashback.Bonus*float64(im.Cashback.Max), feedbackM.SOME_RETURN_CASH)
 			return im.Cashback.Max, im.Cashback.Bonus * float64(im.Cashback.Max), feedbackM.SOME_RETURN_CASH
 		}
 	} else if im.Cashback.Min != 0 && im.Cashback.Max == 0 {
@@ -144,7 +147,7 @@ func (im *impl) multiplyCashReturn(ctx context.Context, cash int64) (int64, floa
 		} else if cash < im.Cashback.Min {
 			return 0, 0, feedbackM.NONE_RETURN_CASH
 		} else {
-			return int64(im.Cashback.Bonus), im.Cashback.Bonus * float64(cash), feedbackM.SOME_RETURN_CASH
+			return int64(im.Cashback.Bonus), im.Cashback.Bonus * float64(im.Cashback.Max), feedbackM.SOME_RETURN_CASH
 		}
 
 	}

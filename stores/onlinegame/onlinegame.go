@@ -11,4 +11,5 @@ type Store interface {
 	UpdateByID(ctx context.Context, onlinegame *channel.Onlinegame) error
 	GetAll(ctx context.Context) ([]*channel.Onlinegame, error)
 	GetByID(ctx context.Context, ID string) (*channel.Onlinegame, error)
+	FindLike(ctx context.Context, names []string) ([]*channel.Onlinegame, error)
 }

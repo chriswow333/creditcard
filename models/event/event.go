@@ -52,6 +52,7 @@ type Event struct {
 	Hotels            []string `json:"hotels"`
 	Amusements        []string `json:"amusements"`
 	Cinemas           []string `json:"cinemas"`
+	Publicutilities   []string `json:"publicutilities"`
 }
 
 type Response struct {

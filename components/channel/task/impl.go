@@ -3,7 +3,7 @@ package customization
 import (
 	"context"
 	"errors"
-	"fmt"
+	"runtime/debug"
 	"time"
 
 	"example.com/creditcard/components/channel"
@@ -108,15 +108,11 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		channelEventResp.Pass = !channelEventResp.Pass
 	}
 
-	fmt.Println("task component")
-	fmt.Println(channelEventResp.Pass)
-
 	return channelEventResp, nil
 }
 
 func (im *impl) processNoneType(t *task.Task, eventTaskMap map[string]bool) bool {
 	if _, ok := eventTaskMap[t.ID]; ok {
-		fmt.Println("ok, t.ID : " + t.ID)
 		return true
 	} else if t.DefaultPass {
 		return true
@@ -244,6 +240,12 @@ func (im *impl) processChannel(e *eventM.Event, t *task.Task, taskMap map[string
 					return true
 				}
 				break
+
+			case int32(channelM.PublicUtilityType):
+				if len(e.Publicutilities) > 0 {
+					return true
+				}
+				break
 			}
 
 		}
@@ -271,9 +273,11 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			case int32(channelM.OVERSEA):
 				channelLabelMap[channelM.OVERSEA] = true
 				break
-			case int32(channelM.DOMESTIC):
-				channelLabelMap[channelM.DOMESTIC] = true
+			case int32(channelM.GENERAL_CONSUMPTION):
+				channelLabelMap[channelM.GENERAL_CONSUMPTION] = true
 				break
+			case int32(channelM.TW_RESTAURANT):
+				channelLabelMap[channelM.TW_RESTAURANT] = true
 			}
 		}
 
@@ -281,7 +285,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, m := range e.Mobilepays {
 				mobile, err := im.channelService.GetMobilepay(ctx, m)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.mobilepays ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -298,7 +302,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Ecommerces {
 				ecommerce, err := im.channelService.GetEcommerce(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.ecommerce ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -314,7 +318,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, s := range e.Supermarkets {
 				supermarket, err := im.channelService.GetSupermarket(ctx, s)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.supermarket ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 				for _, cl := range supermarket.ChannelLabels {
@@ -330,7 +334,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Onlinegames {
 				onlinegame, err := im.channelService.GetOnlinegame(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.onlinegame ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -347,7 +351,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Streamings {
 				streaming, err := im.channelService.GetStreaming(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.streaming ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -364,7 +368,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Foods {
 				food, err := im.channelService.GetFood(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.food ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -381,7 +385,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Transportations {
 				transportation, err := im.channelService.GetTransportation(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.transportation ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -398,7 +402,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Travels {
 				travel, err := im.channelService.GetTravel(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.travel ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -415,7 +419,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Deliveries {
 				delivery, err := im.channelService.GetDelivery(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.delivery ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -432,7 +436,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Insurances {
 				insurance, err := im.channelService.GetInsurance(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.insurance ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -449,7 +453,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Malls {
 				mall, err := im.channelService.GetMall(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.mall ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -466,7 +470,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Sports {
 				sport, err := im.channelService.GetSport(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.sport ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -483,7 +487,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Conveniencestores {
 				convenienceStore, err := im.channelService.GetConvenienceStore(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.conveniencestore ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -500,7 +504,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.AppStores {
 				appstore, err := im.channelService.GetAppstore(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.appstore ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -517,7 +521,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Hotels {
 				hotel, err := im.channelService.GetHotel(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.hotel ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -534,7 +538,7 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Amusements {
 				amusement, err := im.channelService.GetAmusement(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.amusement ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
@@ -551,11 +555,27 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 			for _, e := range e.Cinemas {
 				cinema, err := im.channelService.GetCinema(ctx, e)
 				if err != nil {
-					logrus.Error("taskComponent.processChannelLabel.cinema ", err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
 				}
 
 				for _, cl := range cinema.ChannelLabels {
+					if _, ok := channelLabelMap[cl]; ok {
+						return true
+					}
+				}
+			}
+		}
+
+		if len(e.Publicutilities) > 0 {
+			for _, e := range e.Publicutilities {
+				publicutility, err := im.channelService.GetPublicUtility(ctx, e)
+				if err != nil {
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+					continue
+				}
+
+				for _, cl := range publicutility.ChannelLabels {
 					if _, ok := channelLabelMap[cl]; ok {
 						return true
 					}

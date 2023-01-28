@@ -3,6 +3,7 @@ package evaluator
 import (
 	"context"
 	"errors"
+	"runtime/debug"
 	"sort"
 
 	uuid "github.com/nu7hatch/gouuid"
@@ -51,7 +52,7 @@ func New(
 
 	// init the card component
 	if err := im.UpdateAllComponents(context.Background()); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 	}
 
 	return im
@@ -59,19 +60,20 @@ func New(
 
 func (im *impl) UpdateAllComponents(ctx context.Context) error {
 	cards, err := im.cardService.GetAll(ctx)
+
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
 	for _, card := range cards {
-
+		logrus.Infof("get card id %s", card.ID)
 		if card.CardStatus != 1 {
 			continue
 		}
 
 		if err := im.UpdateComponentByCardID(ctx, card.ID); err != nil {
-			logrus.Error(err)
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 			return err
 		}
 	}
@@ -84,13 +86,13 @@ func (im *impl) UpdateComponentByCardID(ctx context.Context, cardID string) erro
 	card, err := im.cardService.GetByID(ctx, cardID)
 
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return err
 	}
 
 	cardCompnent, err := im.cardBuilder.BuildCardComponent(ctx, card)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return nil
 	}
 
@@ -108,10 +110,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 		id, err := uuid.NewV4()
 
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"msg": "",
-			}).Fatal(err)
-
+			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 			return nil, err
 		}
 
@@ -130,6 +129,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 
 			cardEventResp, err := im.evaluateCard(ctx, e, c.cardCompnent)
 			if err != nil {
+				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 				return nil, err
 			}
 
@@ -149,6 +149,7 @@ func (im *impl) Evaluate(ctx context.Context, e *eventM.Event) (*eventM.Response
 				cardEventResp, err := im.evaluateCard(ctx, e, c.cardCompnent)
 
 				if err != nil {
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					return nil, err
 				}
 

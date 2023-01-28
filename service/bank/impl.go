@@ -2,6 +2,7 @@ package bank
 
 import (
 	"context"
+	"runtime/debug"
 	"time"
 
 	bankM "example.com/creditcard/models/bank"
@@ -36,15 +37,13 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 
 	id, err := uuid.NewV4()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"msg": "",
-		}).Fatal(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	bank.ID = id.String()
 
 	if err := im.bankStore.Create(ctx, bank); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 
@@ -54,7 +53,7 @@ func (im *impl) Create(ctx context.Context, bank *bankM.Bank) error {
 func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
 
 	if err := im.bankStore.UpdateByID(ctx, bank); err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return err
 	}
 	return nil
@@ -63,9 +62,7 @@ func (im *impl) UpdateByID(ctx context.Context, bank *bankM.Bank) error {
 func (im *impl) GetByID(ctx context.Context, ID string) (*bankM.Bank, error) {
 	bank, err := im.bankStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -76,9 +73,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*bankM.Bank, error) {
 
 	banks, err := im.bankStore.GetAll(ctx)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"": "",
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return banks, nil

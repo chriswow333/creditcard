@@ -2,6 +2,7 @@ package reward_channel
 
 import (
 	"context"
+	"runtime/debug"
 
 	rewardChannelM "example.com/creditcard/models/reward_channel"
 	"example.com/creditcard/stores/reward_channel"
@@ -29,14 +30,12 @@ func (im *impl) Create(ctx context.Context, rewardChannels []*rewardChannelM.Rew
 	for _, rc := range rewardChannels {
 		id, err := uuid.NewV4()
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"": "",
-			}).Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return err
 		}
 		rc.ID = id.String()
 		if err := im.rewardChannelStore.Create(ctx, rc); err != nil {
-			logrus.Error(err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 			return err
 		}
 	}
@@ -48,7 +47,7 @@ func (im *impl) GetByRewardID(ctx context.Context, cardRewardID string) ([]*rewa
 
 	rewardConstraints, err := im.rewardChannelStore.GetByRewardID(ctx, cardRewardID)
 	if err != nil {
-		logrus.Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 	return rewardConstraints, nil

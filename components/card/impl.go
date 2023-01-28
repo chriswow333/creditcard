@@ -3,6 +3,7 @@ package card
 import (
 	"context"
 	"errors"
+	"runtime/debug"
 	"time"
 
 	"example.com/creditcard/components/reward"
@@ -48,9 +49,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 
 	bankVo, err := im.bankService.GetByID(ctx, im.card.BankID)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"not bankVo ": err,
-		}).Error(err)
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}
 
@@ -126,9 +125,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 			for _, rc := range rewardComps {
 				rewardEventResp, err := (*rc).Satisfy(ctx, e)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"card component": err,
-					}).Error(err)
+					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					return nil, err
 				}
 				rewardEventResps = append(rewardEventResps, rewardEventResp)
@@ -139,11 +136,7 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 			cardEventResp.CardRewardEventResps = append(cardEventResp.CardRewardEventResps, cardRewardEventResp)
 
 		} else {
-
-			logrus.WithFields(logrus.Fields{
-				"not found card reward ": err,
-			}).Error(err)
-
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		}
 	}
 
@@ -161,7 +154,7 @@ func (im *impl) calculateReturn(ctx context.Context, e *eventM.Event,
 
 		cashReturn := im.calculateCashFeedReturn(ctx, e, cr.CardRewardOperator, rewardEventResps)
 
-		logrus.Info(cashReturn)
+		logrus.Info("card reward cash ", cashReturn)
 		cardRewardEventResp.FeedReturn = &feedbackM.FeedReturn{
 			CashReturn: cashReturn,
 		}
@@ -403,7 +396,7 @@ func (im *impl) calculateCashFeedReturn(ctx context.Context, e *eventM.Event, ca
 
 	switch cardRewardOperator {
 	case cardM.ADD:
-
+		logrus.Info("is added")
 		for _, r := range rewardEventResps {
 			switch r.FeedReturn.CashReturn.CashReturnStatus {
 			case feedbackM.ALL_RETURN_CASH:
@@ -461,7 +454,7 @@ func (im *impl) calculateCashFeedReturn(ctx context.Context, e *eventM.Event, ca
 		break
 
 	case cardM.MAXONE:
-
+		logrus.Info("is maxone")
 		for _, r := range rewardEventResps {
 
 			if cashReturnBonus <= r.FeedReturn.CashReturn.CashReturnBonus {

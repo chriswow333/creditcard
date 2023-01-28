@@ -62,4 +62,9 @@ type Service interface {
 
 	GetAllCinemas(ctx context.Context) ([]*channel.Cinema, error)
 	GetCinema(ctx context.Context, ID string) (*channel.Cinema, error)
+
+	GetAllPublicUtilities(ctx context.Context) ([]*channel.PublicUtility, error)
+	GetPublicUtility(ctx context.Context, ID string) (*channel.PublicUtility, error)
+
+	FindLike(ctx context.Context, names []string) ([]*channel.ChannelResp, error)
 }

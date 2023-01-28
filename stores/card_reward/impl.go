@@ -51,7 +51,8 @@ func (im *impl) Create(ctx context.Context, cardReward *cardM.CardReward) error 
 		cardReward.FeedbackBonus,
 	}
 	if _, err := tx.Exec(INSERT_CARD_REWARD_STAT, updater...); err != nil {
-		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		logrus.Error(err)
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return err
 	}
 
