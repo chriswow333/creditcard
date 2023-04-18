@@ -14,10 +14,8 @@ type impl struct {
 }
 
 func New(
-
 	foods []*channelM.Food,
 	channel *channelM.Channel,
-
 ) channel.Component {
 	return &impl{
 		foods:   foods,

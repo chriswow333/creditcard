@@ -36,7 +36,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 	insuranceMap := make(map[string]bool)
 
 	for _, st := range e.Insurances {
-
 		insuranceMap[st] = true
 	}
 

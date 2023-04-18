@@ -283,7 +283,9 @@ func (im *impl) processChannelLabel(ctx context.Context, e *eventM.Event, t *tas
 
 		if len(e.Mobilepays) > 0 {
 			for _, m := range e.Mobilepays {
+
 				mobile, err := im.channelService.GetMobilepay(ctx, m)
+
 				if err != nil {
 					logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 					continue
