@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO streaming " +
-	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
+	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, streaming *channel.Streaming) error {
 
@@ -40,6 +40,7 @@ func (im *impl) Create(ctx context.Context, streaming *channel.Streaming) error 
 		streaming.ID,
 		streaming.Name,
 		streaming.ChannelLabels,
+		streaming.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,7 +56,8 @@ func (im *impl) Create(ctx context.Context, streaming *channel.Streaming) error 
 const UPDATE_BY_ID_STAT = "UPDATE streaming SET " +
 	" \"name\" = $1 " +
 	" \"channel_label\" = $2 " +
-	" where \"id\" = $3"
+	" \"image_path\" = $3 " +
+	" where \"id\" = $4"
 
 func (im *impl) UpdateByID(ctx context.Context, streaming *channel.Streaming) error {
 	tx, err := im.psql.Begin()
@@ -69,6 +71,7 @@ func (im *impl) UpdateByID(ctx context.Context, streaming *channel.Streaming) er
 	updater := []interface{}{
 		streaming.Name,
 		streaming.ChannelLabels,
+		streaming.ImagePath,
 		streaming.ID,
 	}
 
@@ -81,7 +84,7 @@ func (im *impl) UpdateByID(ctx context.Context, streaming *channel.Streaming) er
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
 	" FROM streaming "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Streaming, error) {
@@ -101,6 +104,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Streaming, error) {
 			&streaming.ID,
 			&streaming.Name,
 			&streaming.ChannelLabels,
+			&streaming.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -114,7 +118,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Streaming, error) {
 	return streamings, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
 	" FROM streaming WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Streaming, error) {
@@ -125,6 +129,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Streaming, err
 		&streaming.ID,
 		&streaming.Name,
 		&streaming.ChannelLabels,
+		&streaming.ImagePath,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
@@ -135,7 +140,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Streaming, err
 	return streaming, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
 	" FROM streaming WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Streaming, error) {
@@ -156,6 +161,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Stream
 			&streaming.ID,
 			&streaming.Name,
 			&streaming.ChannelLabels,
+			&streaming.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

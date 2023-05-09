@@ -67,6 +67,12 @@ func main() {
 		panic(err)
 	}
 
+	defer func() {
+		if err = client.Disconnect(context.TODO()); err != nil {
+			panic(err)
+		}
+	}()
+
 	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
 		panic(err)
 	}
@@ -93,12 +99,29 @@ func main() {
 		bson.D{{"fullName", "User 4"}, {"age", 28}},
 	}
 	// insert the bson object slice using InsertMany()
+
 	results, err := usersCollection.InsertMany(context.TODO(), users)
+
 	// check for errors in the insertion
 	if err != nil {
 		panic(err)
 	}
+
 	// display the ids of the newly inserted objects
 	fmt.Println(results.InsertedIDs)
 
+	filter := bson.D{{"age", 30}}
+
+	usersCollection.FindOne(context.TODO(), filter)
+
+	var result1 User
+	err = usersCollection.FindOne(context.TODO(), filter).Decode(&result1)
+
+	fmt.Println(result1)
+
+}
+
+type User struct {
+	FullName string `bson:"fullName"`
+	Age      int    `bson:"age"`
 }

@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO transportation " +
-	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
+	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, transportation *channel.Transportation) error {
 
@@ -40,6 +40,7 @@ func (im *impl) Create(ctx context.Context, transportation *channel.Transportati
 		transportation.ID,
 		transportation.Name,
 		transportation.ChannelLabels,
+		transportation.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_STAT, updater...); err != nil {
@@ -55,7 +56,8 @@ func (im *impl) Create(ctx context.Context, transportation *channel.Transportati
 const UPDATE_BY_ID_STAT = "UPDATE transportation SET " +
 	" \"name\" = $1 " +
 	" \"channel_label\" = $2 " +
-	" where \"id\" = $3"
+	" \"image_path\" = $3 " +
+	" where \"id\" = $4"
 
 func (im *impl) UpdateByID(ctx context.Context, transportation *channel.Transportation) error {
 	tx, err := im.psql.Begin()
@@ -69,6 +71,7 @@ func (im *impl) UpdateByID(ctx context.Context, transportation *channel.Transpor
 	updater := []interface{}{
 		transportation.Name,
 		transportation.ChannelLabels,
+		transportation.ImagePath,
 		transportation.ID,
 	}
 
@@ -81,7 +84,7 @@ func (im *impl) UpdateByID(ctx context.Context, transportation *channel.Transpor
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
 	" FROM transportation "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Transportation, error) {
@@ -99,6 +102,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Transportation, error) {
 			&transportation.ID,
 			&transportation.Name,
 			&transportation.ChannelLabels,
+			&transportation.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -112,7 +116,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Transportation, error) {
 	return transportations, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
 	" FROM transportation WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Transportation, error) {
@@ -122,6 +126,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Transportation
 		&transportation.ID,
 		&transportation.Name,
 		&transportation.ChannelLabels,
+		&transportation.ImagePath,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
@@ -132,7 +137,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Transportation
 	return transportation, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
 	" FROM transportation WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Transportation, error) {
@@ -153,6 +158,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Transp
 			&transportation.ID,
 			&transportation.Name,
 			&transportation.ChannelLabels,
+			&transportation.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {

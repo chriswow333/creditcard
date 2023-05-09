@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_ECOMMERCE_STAT = "INSERT INTO ecommerce " +
-	"(\"id\", \"name\", \"channel_label\") VALUES ($1, $2, $3)"
+	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, ecommerce *channel.Ecommerce) error {
 
@@ -40,6 +40,7 @@ func (im *impl) Create(ctx context.Context, ecommerce *channel.Ecommerce) error 
 		ecommerce.ID,
 		ecommerce.Name,
 		ecommerce.ChannelLabels,
+		ecommerce.ImagePath,
 	}
 
 	if _, err := tx.Exec(INSERT_ECOMMERCE_STAT, updater...); err != nil {
@@ -55,7 +56,8 @@ func (im *impl) Create(ctx context.Context, ecommerce *channel.Ecommerce) error 
 const UPDATE_BY_ID_STAT = "UPDATE ecommerce SET " +
 	" \"name\" = $1 " +
 	" \"channel_label\" = $2  " +
-	" where \"id\" = $3"
+	" \"image_path\" = $3  " +
+	" where \"id\" = $4"
 
 func (im *impl) UpdateByID(ctx context.Context, ecommerce *channel.Ecommerce) error {
 	tx, err := im.psql.Begin()
@@ -81,7 +83,7 @@ func (im *impl) UpdateByID(ctx context.Context, ecommerce *channel.Ecommerce) er
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
 	" FROM ecommerce "
 
 func (im *impl) GetAll(ctx context.Context) ([]*channel.Ecommerce, error) {
@@ -99,6 +101,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Ecommerce, error) {
 			&ecommerce.ID,
 			&ecommerce.Name,
 			&ecommerce.ChannelLabels,
+			&ecommerce.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
@@ -112,7 +115,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Ecommerce, error) {
 	return ecommerces, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
 	" FROM ecommerce WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Ecommerce, error) {
@@ -123,6 +126,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Ecommerce, err
 		&ecommerce.ID,
 		&ecommerce.Name,
 		&ecommerce.ChannelLabels,
+		&ecommerce.ImagePath,
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
@@ -133,7 +137,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Ecommerce, err
 	return ecommerce, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
 	" FROM ecommerce WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Ecommerce, error) {
@@ -154,6 +158,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Ecomme
 			&ecommerce.ID,
 			&ecommerce.Name,
 			&ecommerce.ChannelLabels,
+			&ecommerce.ImagePath,
 		}
 
 		if err := rows.Scan(selector...); err != nil {
