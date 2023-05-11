@@ -85,13 +85,13 @@ func (im *impl) UpdateByID(ctx context.Context, streaming *channel.Streaming) er
 }
 
 const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
-	" FROM streaming "
+	" FROM streaming limit $1 offset $2 "
 
-func (im *impl) GetAll(ctx context.Context) ([]*channel.Streaming, error) {
+func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Streaming, error) {
 
 	streamings := []*channel.Streaming{}
 
-	rows, err := im.psql.Query(SELECT_ALL_STAT)
+	rows, err := im.psql.Query(SELECT_ALL_STAT, limit, offset)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err

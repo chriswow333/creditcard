@@ -86,13 +86,13 @@ func (im *impl) UpdateByID(ctx context.Context, travel *channel.Travel) error {
 }
 
 const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
-	" FROM travel "
+	" FROM travel limit $1 offset $2 "
 
-func (im *impl) GetAll(ctx context.Context) ([]*channel.Travel, error) {
+func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Travel, error) {
 
 	travels := []*channel.Travel{}
 
-	rows, err := im.psql.Query(SELECT_ALL_STAT)
+	rows, err := im.psql.Query(SELECT_ALL_STAT, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err

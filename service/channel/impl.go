@@ -143,9 +143,9 @@ func (im *impl) CreateTask(ctx context.Context, task *task.Task) error {
 	return nil
 }
 
-func (im *impl) GetAllEcommerces(ctx context.Context) ([]*channel.Ecommerce, error) {
+func (im *impl) GetAllEcommerces(ctx context.Context, offset, limit int) ([]*channel.Ecommerce, error) {
 
-	ecommerces, err := im.ecommerceStore.GetAll(ctx)
+	ecommerces, err := im.ecommerceStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -164,9 +164,9 @@ func (im *impl) GetEcommerce(ctx context.Context, ID string) (*channel.Ecommerce
 	return ecommerce, nil
 }
 
-func (im *impl) GetAllDeliverys(ctx context.Context) ([]*channel.Delivery, error) {
+func (im *impl) GetAllDeliverys(ctx context.Context, offset, limit int) ([]*channel.Delivery, error) {
 
-	deliveries, err := im.deliveryStore.GetAll(ctx)
+	deliveries, err := im.deliveryStore.GetAll(ctx, offset, limit)
 
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
@@ -185,8 +185,8 @@ func (im *impl) GetDelivery(ctx context.Context, ID string) (*channel.Delivery, 
 	return delivery, nil
 }
 
-func (im *impl) GetAllMobilepays(ctx context.Context) ([]*channel.Mobilepay, error) {
-	mobilepays, err := im.mobilepayStore.GetAll(ctx)
+func (im *impl) GetAllMobilepays(ctx context.Context, offset, limit int) ([]*channel.Mobilepay, error) {
+	mobilepays, err := im.mobilepayStore.GetAll(ctx, offset, limit)
 
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
@@ -207,9 +207,9 @@ func (im *impl) GetMobilepay(ctx context.Context, ID string) (*channel.Mobilepay
 	return mobilepay, nil
 }
 
-func (im *impl) GetAllOnlinegames(ctx context.Context) ([]*channel.Onlinegame, error) {
+func (im *impl) GetAllOnlinegames(ctx context.Context, offset, limit int) ([]*channel.Onlinegame, error) {
 
-	onlinegames, err := im.onlinegameStore.GetAll(ctx)
+	onlinegames, err := im.onlinegameStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -227,9 +227,9 @@ func (im *impl) GetOnlinegame(ctx context.Context, ID string) (*channel.Onlinega
 	return onlinegame, nil
 }
 
-func (im *impl) GetAllStreamings(ctx context.Context) ([]*channel.Streaming, error) {
+func (im *impl) GetAllStreamings(ctx context.Context, offset, limit int) ([]*channel.Streaming, error) {
 
-	streamings, err := im.streamingStore.GetAll(ctx)
+	streamings, err := im.streamingStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -248,9 +248,9 @@ func (im *impl) GetStreaming(ctx context.Context, ID string) (*channel.Streaming
 	return streaming, nil
 }
 
-func (im *impl) GetAllSupermarkets(ctx context.Context) ([]*channel.Supermarket, error) {
+func (im *impl) GetAllSupermarkets(ctx context.Context, offset, limit int) ([]*channel.Supermarket, error) {
 
-	supermarkets, err := im.supermarketStore.GetAll(ctx)
+	supermarkets, err := im.supermarketStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -268,8 +268,8 @@ func (im *impl) GetSupermarket(ctx context.Context, ID string) (*channel.Superma
 	return supermarket, nil
 }
 
-func (im *impl) GetAllFoods(ctx context.Context) ([]*channel.Food, error) {
-	foods, err := im.foodStore.GetAll(ctx)
+func (im *impl) GetAllFoods(ctx context.Context, offset, limit int) ([]*channel.Food, error) {
+	foods, err := im.foodStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -287,8 +287,8 @@ func (im *impl) GetFood(ctx context.Context, ID string) (*channel.Food, error) {
 	return food, nil
 }
 
-func (im *impl) GetAllTransportations(ctx context.Context) ([]*channel.Transportation, error) {
-	transportations, err := im.transportationStore.GetAll(ctx)
+func (im *impl) GetAllTransportations(ctx context.Context, offset, limit int) ([]*channel.Transportation, error) {
+	transportations, err := im.transportationStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -306,8 +306,8 @@ func (im *impl) GetTransportation(ctx context.Context, ID string) (*channel.Tran
 	return transportation, nil
 }
 
-func (im *impl) GetAllTravels(ctx context.Context) ([]*channel.Travel, error) {
-	travels, err := im.travelStore.GetAll(ctx)
+func (im *impl) GetAllTravels(ctx context.Context, offset, limit int) ([]*channel.Travel, error) {
+	travels, err := im.travelStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -325,9 +325,9 @@ func (im *impl) GetTravel(ctx context.Context, ID string) (*channel.Travel, erro
 	return travel, nil
 }
 
-func (im *impl) GetAllInsurances(ctx context.Context) ([]*channel.Insurance, error) {
+func (im *impl) GetAllInsurances(ctx context.Context, offset, limit int) ([]*channel.Insurance, error) {
 
-	insurance, err := im.insuranceStore.GetAll(ctx)
+	insurance, err := im.insuranceStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -345,9 +345,9 @@ func (im *impl) GetInsurance(ctx context.Context, ID string) (*channel.Insurance
 
 }
 
-func (im *impl) GetAllSports(ctx context.Context) ([]*channel.Sport, error) {
+func (im *impl) GetAllSports(ctx context.Context, offset, limit int) ([]*channel.Sport, error) {
 
-	sports, err := im.sportStore.GetAll(ctx)
+	sports, err := im.sportStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -367,9 +367,9 @@ func (im *impl) GetSport(ctx context.Context, ID string) (*channel.Sport, error)
 	return sport, nil
 }
 
-func (im *impl) GetAllConvenienceStores(ctx context.Context) ([]*channel.ConvenienceStore, error) {
+func (im *impl) GetAllConvenienceStores(ctx context.Context, offset, limit int) ([]*channel.ConvenienceStore, error) {
 
-	convenienceStores, err := im.convenienceStoreStore.GetAll(ctx)
+	convenienceStores, err := im.convenienceStoreStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -388,8 +388,8 @@ func (im *impl) GetConvenienceStore(ctx context.Context, ID string) (*channel.Co
 	return convenienceStore, nil
 }
 
-func (im *impl) GetAllMalls(ctx context.Context) ([]*channel.Mall, error) {
-	malls, err := im.mallStore.GetAll(ctx)
+func (im *impl) GetAllMalls(ctx context.Context, offset, limit int) ([]*channel.Mall, error) {
+	malls, err := im.mallStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -408,8 +408,8 @@ func (im *impl) GetMall(ctx context.Context, ID string) (*channel.Mall, error) {
 	return mall, nil
 }
 
-func (im *impl) GetAllAppstores(ctx context.Context) ([]*channel.AppStore, error) {
-	appstoreStores, err := im.appStoreStore.GetAll(ctx)
+func (im *impl) GetAllAppstores(ctx context.Context, offset, limit int) ([]*channel.AppStore, error) {
+	appstoreStores, err := im.appStoreStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -428,8 +428,8 @@ func (im *impl) GetAppstore(ctx context.Context, ID string) (*channel.AppStore, 
 	return appStore, nil
 }
 
-func (im *impl) GetAllHotels(ctx context.Context) ([]*channel.Hotel, error) {
-	hotelStores, err := im.hotelStore.GetAll(ctx)
+func (im *impl) GetAllHotels(ctx context.Context, offset, limit int) ([]*channel.Hotel, error) {
+	hotelStores, err := im.hotelStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -448,8 +448,8 @@ func (im *impl) GetHotel(ctx context.Context, ID string) (*channel.Hotel, error)
 	return hotelStore, nil
 }
 
-func (im *impl) GetAllAmusemnets(ctx context.Context) ([]*channel.Amusement, error) {
-	amusements, err := im.amusementStore.GetAll(ctx)
+func (im *impl) GetAllAmusemnets(ctx context.Context, offset, limit int) ([]*channel.Amusement, error) {
+	amusements, err := im.amusementStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -467,8 +467,8 @@ func (im *impl) GetAmusement(ctx context.Context, ID string) (*channel.Amusement
 	return amusement, nil
 }
 
-func (im *impl) GetAllCinemas(ctx context.Context) ([]*channel.Cinema, error) {
-	cinemas, err := im.cinemaStore.GetAll(ctx)
+func (im *impl) GetAllCinemas(ctx context.Context, offset, limit int) ([]*channel.Cinema, error) {
+	cinemas, err := im.cinemaStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -487,8 +487,8 @@ func (im *impl) GetCinema(ctx context.Context, ID string) (*channel.Cinema, erro
 	return cinema, nil
 }
 
-func (im *impl) GetAllPublicUtilities(ctx context.Context) ([]*channel.PublicUtility, error) {
-	publicUtilities, err := im.publicUtilityStore.GetAll(ctx)
+func (im *impl) GetAllPublicUtilities(ctx context.Context, offset, limit int) ([]*channel.PublicUtility, error) {
+	publicUtilities, err := im.publicUtilityStore.GetAll(ctx, offset, limit)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err

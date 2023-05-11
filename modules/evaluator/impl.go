@@ -59,6 +59,7 @@ func New(
 }
 
 func (im *impl) UpdateAllComponents(ctx context.Context) error {
+
 	cards, err := im.cardService.GetAll(ctx)
 
 	if err != nil {
@@ -328,7 +329,6 @@ func (im *impl) sortMaxRewardReturnEvaluatedCardResults(ctx context.Context, e *
 
 				switch firstRewardType {
 				case rewardM.CASH:
-					logrus.Info("hell")
 					logrus.Info(maxCardRewardEventResps[0].FeedReturn)
 					logrus.Info(cardRewardEventResp.FeedReturn)
 
@@ -380,7 +380,6 @@ func (im *impl) sortMaxRewardReturnEvaluatedCardResults(ctx context.Context, e *
 					}
 					break
 				}
-
 				break
 			}
 		}

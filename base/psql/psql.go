@@ -37,8 +37,6 @@ func NewPsql() *pgx.ConnPool {
 
 	host := os.Getenv("POSTGRES_HOST")
 
-	logrus.Info("host", host)
-
 	if host == "" {
 		host = "127.0.0.1"
 	}
@@ -48,6 +46,8 @@ func NewPsql() *pgx.ConnPool {
 	}
 
 	portInt, err := strconv.ParseUint(port, 10, 64)
+
+	logrus.Info("postgres host:", host)
 
 	pgxConfig := pgx.ConnConfig{
 		Host:     host, //host.docker.internal

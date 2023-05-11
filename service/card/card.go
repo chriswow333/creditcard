@@ -20,4 +20,6 @@ type Service interface {
 
 	CreateCardReward(ctx context.Context, cardReward *cardM.CardReward) error
 	EvaluateConstraintLogic(ctx context.Context, cardID string, constraintIDs []string) (bool, string, error)
+
+	FindByLike(ctx context.Context, likes []string) ([]*cardM.Card, error)
 }

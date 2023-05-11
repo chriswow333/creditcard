@@ -2,6 +2,7 @@ package card
 
 import (
 	"net/http"
+	"runtime/debug"
 
 	"example.com/creditcard/middlewares/apis"
 	"example.com/creditcard/service/card"
@@ -9,6 +10,7 @@ import (
 	cardM "example.com/creditcard/models/card"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 
 	"go.uber.org/dig"
 )
@@ -41,6 +43,8 @@ func NewCardHandler(
 
 	apis.Handle(rg, http.MethodGet, "/bankID/:bankID", ch.getByBankID)
 	apis.Handle(rg, http.MethodPost, "/evaluateConstraintLogic/:ID", ch.evaluateConstraintLogic)
+
+	apis.Handle(rg, http.MethodPost, "/likecard", ch.findLikeName)
 
 }
 
@@ -157,4 +161,27 @@ func (h *cardHandler) evaluateConstraintLogic(ctx *gin.Context) {
 type ConstraintLogicResp struct {
 	Pass    bool   `json:"pass"`
 	Meesage string `json:"message"`
+}
+
+type LikeParam struct {
+	Likes []string `json:"likes"`
+}
+
+func (h *cardHandler) findLikeName(ctx *gin.Context) {
+
+	// name := ctx.Param("name")
+
+	var likeParam LikeParam
+	ctx.BindJSON(&likeParam)
+	logrus.Info(likeParam)
+
+	resp, err := h.cardSrc.FindByLike(ctx, likeParam.Likes)
+	if err != nil {
+		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, resp)
+
 }

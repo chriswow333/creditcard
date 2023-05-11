@@ -3,6 +3,7 @@ package channel
 import (
 	"net/http"
 	"runtime/debug"
+	"strconv"
 
 	"example.com/creditcard/middlewares/apis"
 	"example.com/creditcard/models/task"
@@ -134,7 +135,15 @@ func (h *channelHandler) createTask(ctx *gin.Context) {
 
 func (h *channelHandler) getEcommerces(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllEcommerces(ctx)
+	offset := ctx.Query("offset")
+	offsetInt, err := strconv.Atoi(offset)
+	if err != nil {
+		logrus.Error("[Error]{}", err)
+		ctx.JSON(http.StatusInternalServerError, "parameter error")
+		return
+	}
+
+	resp, err := h.channelService.GetAllEcommerces(ctx, offsetInt, 1000)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -160,7 +169,7 @@ func (h *channelHandler) getEcommerceByID(ctx *gin.Context) {
 
 func (h *channelHandler) getDeliveries(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllDeliverys(ctx)
+	resp, err := h.channelService.GetAllDeliverys(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -186,7 +195,7 @@ func (h *channelHandler) getDeliveryByID(ctx *gin.Context) {
 
 func (h *channelHandler) getMobilepays(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllMobilepays(ctx)
+	resp, err := h.channelService.GetAllMobilepays(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -212,7 +221,7 @@ func (h *channelHandler) getMobilepayByID(ctx *gin.Context) {
 
 func (h *channelHandler) getOnlinegames(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllOnlinegames(ctx)
+	resp, err := h.channelService.GetAllOnlinegames(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -238,7 +247,7 @@ func (h *channelHandler) getOnlinegameByID(ctx *gin.Context) {
 
 func (h *channelHandler) getStreamings(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllStreamings(ctx)
+	resp, err := h.channelService.GetAllStreamings(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -264,7 +273,7 @@ func (h *channelHandler) getStreamingByID(ctx *gin.Context) {
 
 func (h *channelHandler) getSupermarkets(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllSupermarkets(ctx)
+	resp, err := h.channelService.GetAllSupermarkets(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -290,7 +299,7 @@ func (h *channelHandler) getSupermarketByID(ctx *gin.Context) {
 
 func (h *channelHandler) getTransportations(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllTransportations(ctx)
+	resp, err := h.channelService.GetAllTransportations(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -316,7 +325,7 @@ func (h *channelHandler) getTransportationByID(ctx *gin.Context) {
 
 func (h *channelHandler) getFoods(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllFoods(ctx)
+	resp, err := h.channelService.GetAllFoods(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -342,7 +351,7 @@ func (h *channelHandler) getFoodByID(ctx *gin.Context) {
 
 func (h *channelHandler) getTravels(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllTravels(ctx)
+	resp, err := h.channelService.GetAllTravels(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -368,7 +377,7 @@ func (h *channelHandler) getTravelByID(ctx *gin.Context) {
 
 func (h *channelHandler) getInsurances(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllInsurances(ctx)
+	resp, err := h.channelService.GetAllInsurances(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -394,7 +403,7 @@ func (h *channelHandler) getInsuranceByID(ctx *gin.Context) {
 
 func (h *channelHandler) getSports(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllSports(ctx)
+	resp, err := h.channelService.GetAllSports(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -420,7 +429,7 @@ func (h *channelHandler) getSportByID(ctx *gin.Context) {
 
 func (h *channelHandler) getConvenienceStores(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllConvenienceStores(ctx)
+	resp, err := h.channelService.GetAllConvenienceStores(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -446,7 +455,7 @@ func (h *channelHandler) getConvenienceStoreByID(ctx *gin.Context) {
 
 func (h *channelHandler) getMalls(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllMalls(ctx)
+	resp, err := h.channelService.GetAllMalls(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -472,7 +481,7 @@ func (h *channelHandler) getMallByID(ctx *gin.Context) {
 
 func (h *channelHandler) getAppstores(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllAppstores(ctx)
+	resp, err := h.channelService.GetAllAppstores(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -498,7 +507,7 @@ func (h *channelHandler) getAppstoreByID(ctx *gin.Context) {
 
 func (h *channelHandler) getHotels(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllHotels(ctx)
+	resp, err := h.channelService.GetAllHotels(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -524,7 +533,7 @@ func (h *channelHandler) getHotelByID(ctx *gin.Context) {
 
 func (h *channelHandler) getAmusements(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllAmusemnets(ctx)
+	resp, err := h.channelService.GetAllAmusemnets(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -550,7 +559,7 @@ func (h *channelHandler) getAmusementlByID(ctx *gin.Context) {
 
 func (h *channelHandler) getCinemas(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllCinemas(ctx)
+	resp, err := h.channelService.GetAllCinemas(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -576,7 +585,7 @@ func (h *channelHandler) getCinemaByID(ctx *gin.Context) {
 
 func (h *channelHandler) getPublicUtilities(ctx *gin.Context) {
 
-	resp, err := h.channelService.GetAllPublicUtilities(ctx)
+	resp, err := h.channelService.GetAllPublicUtilities(ctx, 0, 10)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		ctx.JSON(http.StatusInternalServerError, err)

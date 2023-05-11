@@ -86,11 +86,13 @@ func (im *impl) UpdateByID(ctx context.Context, amusement *channel.Amusement) er
 }
 
 const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
-	" FROM amusement "
+	" FROM amusement limit $1 offset $2 "
 
-func (im *impl) GetAll(ctx context.Context) ([]*channel.Amusement, error) {
+func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Amusement, error) {
+
 	amusements := []*channel.Amusement{}
-	rows, err := im.psql.Query(SELECT_ALL_STAT)
+	rows, err := im.psql.Query(SELECT_ALL_STAT, limit, offset)
+
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
@@ -107,7 +109,7 @@ func (im *impl) GetAll(ctx context.Context) ([]*channel.Amusement, error) {
 		}
 
 		if err := rows.Scan(selector...); err != nil {
-			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+			logrus.Errorf("[PANIC] %s \n %s", err, debug.Stack())
 			return nil, err
 		}
 

@@ -84,11 +84,11 @@ func (im *impl) UpdateByID(ctx context.Context, food *channel.Food) error {
 }
 
 const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
-	" FROM food "
+	" FROM food limit $1 offset $2 "
 
-func (im *impl) GetAll(ctx context.Context) ([]*channel.Food, error) {
+func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Food, error) {
 	foods := []*channel.Food{}
-	rows, err := im.psql.Query(SELECT_ALL_STAT)
+	rows, err := im.psql.Query(SELECT_ALL_STAT, limit, offset)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err

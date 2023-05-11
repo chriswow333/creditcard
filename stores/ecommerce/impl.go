@@ -84,12 +84,15 @@ func (im *impl) UpdateByID(ctx context.Context, ecommerce *channel.Ecommerce) er
 }
 
 const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
-	" FROM ecommerce "
+	" FROM ecommerce limit $1 offset $2 "
 
-func (im *impl) GetAll(ctx context.Context) ([]*channel.Ecommerce, error) {
+func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Ecommerce, error) {
+
 	ecommerces := []*channel.Ecommerce{}
-	rows, err := im.psql.Query(SELECT_ALL_STAT)
+
+	rows, err := im.psql.Query(SELECT_ALL_STAT, limit, offset)
 	if err != nil {
+		logrus.Errorf("[PANIC] {}", err)
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
 	}

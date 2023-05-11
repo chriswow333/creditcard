@@ -3,6 +3,7 @@ package card
 import (
 	"context"
 	"runtime/debug"
+	"strings"
 
 	"github.com/jackc/pgx"
 	"github.com/sirupsen/logrus"
@@ -206,4 +207,46 @@ func (im *impl) GetByBankID(ctx context.Context, bankID string) ([]*cardM.Card, 
 
 	return cards, nil
 
+}
+
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", bank_id, \"name\", \"descs\", update_date, " +
+	" image_path, link_url, card_status, other_reward " +
+	" FROM card WHERE \"name\" ~* $1 limit 20"
+
+func (im *impl) FindByLike(ctx context.Context, likes []string) ([]*cardM.Card, error) {
+
+	cards := []*cardM.Card{}
+	like := strings.Join(likes, "|")
+
+	rows, err := im.psql.Query(SELECT_BY_LIKE_NAME_STAT, like)
+	if err != nil {
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
+		return nil, err
+	}
+
+	for rows.Next() {
+
+		card := &cardM.Card{}
+
+		selector := []interface{}{
+			&card.ID,
+			&card.BankID,
+			&card.Name,
+			&card.Descs,
+			&card.UpdateDate,
+			&card.ImagePath,
+			&card.LinkURL,
+			&card.CardStatus,
+			&card.OtherRewards,
+		}
+
+		if err := rows.Scan(selector...); err != nil {
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+			return nil, err
+		}
+
+		cards = append(cards, card)
+	}
+
+	return cards, nil
 }

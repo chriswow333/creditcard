@@ -87,13 +87,13 @@ func (im *impl) UpdateByID(ctx context.Context, appstore *channel.AppStore) erro
 }
 
 const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
-	" FROM appstore "
+	" FROM appstore limit $1 offset $2 "
 
-func (im *impl) GetAll(ctx context.Context) ([]*channel.AppStore, error) {
+func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.AppStore, error) {
 
 	appstores := []*channel.AppStore{}
 
-	rows, err := im.psql.Query(SELECT_ALL_STAT)
+	rows, err := im.psql.Query(SELECT_ALL_STAT, limit, offset)
 	if err != nil {
 		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return nil, err
