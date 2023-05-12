@@ -240,309 +240,6 @@ func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.Ca
 					break
 				}
 
-				// if task.TaskType == taskM.CHANNEL {
-
-				// 	for _, ch := range task.TaskTypeModel.ChannelLimit.Channels {
-				// 		switch ch {
-				// 		case int32(channelM.MobilepayType):
-
-				// 			allMobilepays, err := im.channelService.GetAllMobilepays(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, m := range allMobilepays {
-				// 				if _, ok := mobilepayMap[m.ID]; !ok {
-				// 					mobilepayMap[m.ID] = true
-				// 					mobilepays = append(mobilepays, m)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.EcommerceType):
-				// 			allEcommerces, err := im.channelService.GetAllEcommerces(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, e := range allEcommerces {
-				// 				if _, ok := ecommerceMap[e.ID]; !ok {
-				// 					ecommerceMap[e.ID] = true
-				// 					ecommerces = append(ecommerces, e)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.SupermarketType):
-				// 			allSupermarkets, err := im.channelService.GetAllSupermarkets(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, s := range allSupermarkets {
-				// 				if _, ok := supermarketMap[s.ID]; !ok {
-				// 					supermarketMap[s.ID] = true
-				// 					supermarkets = append(supermarkets, s)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.OnlinegameType):
-				// 			allOnlinegames, err := im.channelService.GetAllOnlinegames(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, o := range allOnlinegames {
-				// 				if _, ok := onlinegameMap[o.ID]; !ok {
-				// 					onlinegameMap[o.ID] = true
-				// 					onlinegames = append(onlinegames, o)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.StreamingType):
-
-				// 			allStreamings, err := im.channelService.GetAllStreamings(ctx)
-
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, s := range allStreamings {
-				// 				if _, ok := streamingMap[s.ID]; !ok {
-				// 					streamingMap[s.ID] = true
-				// 					streamings = append(streamings, s)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.FoodType):
-				// 			allFoods, err := im.channelService.GetAllFoods(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, f := range allFoods {
-				// 				if _, ok := foodMap[f.ID]; !ok {
-				// 					foodMap[f.ID] = true
-				// 					foods = append(foods, f)
-				// 				}
-				// 			}
-				// 			break
-
-				// 		case int32(channelM.TransportationType):
-				// 			allTransportations, err := im.channelService.GetAllTransportations(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, t := range allTransportations {
-				// 				if _, ok := transportationMap[t.ID]; !ok {
-				// 					transportationMap[t.ID] = true
-				// 					transportations = append(transportations, t)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.TravelType):
-				// 			allTravels, err := im.channelService.GetAllTravels(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, t := range allTravels {
-				// 				if _, ok := travelMap[t.ID]; !ok {
-				// 					travelMap[t.ID] = true
-				// 					travels = append(travels, t)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.DeliveryType):
-				// 			allDeliveries, err := im.channelService.GetAllDeliverys(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, d := range allDeliveries {
-				// 				if _, ok := deliveryMap[d.ID]; !ok {
-				// 					deliveryMap[d.ID] = true
-				// 					deliveries = append(deliveries, d)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.InsuranceType):
-				// 			allInurances, err := im.channelService.GetAllInsurances(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, i := range allInurances {
-				// 				if _, ok := insuranceMap[i.ID]; !ok {
-				// 					insuranceMap[i.ID] = true
-				// 					insurances = append(insurances, i)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.MallType):
-				// 			allMalls, err := im.channelService.GetAllMalls(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, m := range allMalls {
-				// 				if _, ok := mallMap[m.ID]; !ok {
-				// 					mallMap[m.ID] = true
-				// 					malls = append(malls, m)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.SportType):
-				// 			allSports, err := im.channelService.GetAllSports(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, s := range allSports {
-				// 				if _, ok := sportMap[s.ID]; !ok {
-				// 					sportMap[s.ID] = true
-				// 					sports = append(sports, s)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.ConvenienceStoreType):
-				// 			allConvenienceStores, err := im.channelService.GetAllConvenienceStores(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, c := range allConvenienceStores {
-				// 				if _, ok := convenienceStoreMap[c.ID]; !ok {
-				// 					convenienceStoreMap[c.ID] = true
-				// 					convenienceStores = append(convenienceStores, c)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.AppStoreType):
-				// 			allAppStores, err := im.channelService.GetAllAppstores(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, a := range allAppStores {
-				// 				if _, ok := appstoreMap[a.ID]; !ok {
-				// 					appstoreMap[a.ID] = true
-				// 					appstores = append(appstores, a)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.HotelType):
-				// 			allHotels, err := im.channelService.GetAllHotels(ctx)
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, h := range allHotels {
-				// 				if _, ok := hotelMap[h.ID]; !ok {
-				// 					hotelMap[h.ID] = true
-				// 					hotels = append(hotels, h)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.AmusementType):
-
-				// 			allAmusements, err := im.channelService.GetAllAmusemnets(ctx)
-
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, a := range allAmusements {
-				// 				if _, ok := amusementMap[a.ID]; !ok {
-				// 					amusementMap[a.ID] = true
-				// 					amusements = append(amusements, a)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.CinemaType):
-
-				// 			allCinemas, err := im.channelService.GetAllCinemas(ctx)
-
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, c := range allCinemas {
-				// 				if _, ok := cinemaMap[c.ID]; !ok {
-				// 					cinemaMap[c.ID] = true
-				// 					cinemas = append(cinemas, c)
-				// 				}
-				// 			}
-
-				// 			break
-
-				// 		case int32(channelM.PublicUtilityType):
-				// 			allPublicutilitiess, err := im.channelService.GetAllPublicUtilities(ctx)
-
-				// 			if err != nil {
-				// 				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-				// 				break
-				// 			}
-
-				// 			for _, p := range allPublicutilitiess {
-				// 				if _, ok := publicutilitiesMap[p.ID]; !ok {
-				// 					publicutilitiesMap[p.ID] = true
-				// 					publicutilities = append(publicutilities, p)
-				// 				}
-				// 			}
-
-				// 			break
-				// 		}
-
-				// 	}
-				// }
-
 				if _, ok := taskMap[task.ID]; !ok {
 					taskMap[task.ID] = true
 					tasks = append(tasks, task)
@@ -1088,9 +785,7 @@ func (im *impl) CreateCardReward(ctx context.Context, cardReward *cardM.CardRewa
 			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 			return err
 		}
-
 	}
-
 	return nil
 }
 
@@ -1099,6 +794,7 @@ func (im *impl) createRewardChannels(ctx context.Context, cardID, cardRewardID s
 	channelTypeMap := make(map[channelM.ChannelType]map[string]bool)
 
 	for _, p := range reward.Payloads {
+
 		if err := findAllChannelID(p.Channel, channelTypeMap); err != nil {
 			logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 			return err
@@ -1125,9 +821,7 @@ func (im *impl) createRewardChannels(ctx context.Context, cardID, cardRewardID s
 			}
 
 			if err := im.rewardChannelService.Create(ctx, rewardChannelM); err != nil {
-
-				logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
-
+				logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 				return err
 			}
 
@@ -1145,11 +839,13 @@ func findAllChannelID(channel *channelM.Channel, channelTypeMap map[channelM.Cha
 	}
 
 	switch channel.ChannelType {
+
 	case channelM.InnerChannelType:
 		for _, c := range channel.InnerChannels {
 			findAllChannelID(c, channelTypeMap)
 		}
 		break
+
 	case channelM.TaskType:
 
 		if _, ok := channelTypeMap[channel.ChannelType]; !ok {
@@ -1396,8 +1092,9 @@ func (im *impl) EvaluateConstraintLogic(ctx context.Context, cardRewardID string
 	return true, "", nil
 }
 
-func (im *impl) FindByLike(ctx context.Context, likes []string) ([]*cardM.Card, error) {
+func (im *impl) FindByLike(ctx context.Context, likes []string) ([]*cardM.CardResp, error) {
 
+	cardResps := []*cardM.CardResp{}
 	cards, err := im.cardStore.FindByLike(ctx, likes)
 	if err != nil {
 		logrus.Errorf("[PANIC] %s", err)
@@ -1405,7 +1102,33 @@ func (im *impl) FindByLike(ctx context.Context, likes []string) ([]*cardM.Card, 
 		return nil, err
 	}
 
-	return cards, nil
+	for _, card := range cards {
+
+		bank, err := im.bankService.GetByID(ctx, card.BankID)
+		if err != nil {
+			logrus.Errorf("[PANIC] %s", err)
+			logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+			return nil, err
+		}
+
+		updateDate := time.Unix(card.UpdateDate, 0).Format(DATE_FORMAT)
+
+		cardResp := &cardM.CardResp{
+			ID:         card.ID,
+			Name:       card.Name,
+			BankID:     card.BankID,
+			BankName:   bank.Name,
+			Descs:      card.Descs,
+			UpdateDate: updateDate,
+			CardStatus: card.CardStatus,
+			ImagePath:  card.ImagePath,
+			LinkURL:    card.LinkURL,
+		}
+
+		cardResps = append(cardResps, cardResp)
+	}
+
+	return cardResps, nil
 }
 
 /**

@@ -92,7 +92,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Trave
 
 	travels := []*channel.Travel{}
 
-	rows, err := im.psql.Query(SELECT_ALL_STAT, offset, limit)
+	rows, err := im.psql.Query(SELECT_ALL_STAT, limit, offset)
 	if err != nil {
 		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
 		return nil, err
