@@ -320,11 +320,7 @@ func (im *impl) sortMaxRewardReturnEvaluatedCardResults(ctx context.Context, e *
 
 	logrus.Info("evaluator.sortMaxRewardReturnEvaluatedCardResults")
 
-	cashCardEventResps := []*cardM.CardEventResp{}
-
-	pointCardEventResps := []*cardM.CardEventResp{}
-
-	allCardEventResps := []*cardM.CardEventResp{}
+	// cashCardEventResps := []*cardM.CardEventResp{}
 
 	// separate...
 	for _, cardEventResp := range cardEventResps {
@@ -333,39 +329,34 @@ func (im *impl) sortMaxRewardReturnEvaluatedCardResults(ctx context.Context, e *
 		maxCardRewardEventResps := []*cardM.CardRewardEventResp{}
 		firstRewardType := rewardM.CASH
 
-		for _, cardRewardEventResp := range cardEventResp.CardRewardEventResps {
+		rewardType := cardEventResp.CardRewardEventResps[0].RewardType
+		maxCardRewardEventResp := cardEventResp.CardRewardEventResps[0]
 
-			rewardType := cardRewardEventResp.RewardType
+		for _, cardRewardEventResp := range cardEventResp.CardRewardEventResps {
 
 			switch rewardType {
 			case rewardM.CASH:
 
 				if len(maxCardRewardEventResps) == 0 {
-					maxCardRewardEventResps = append(maxCardRewardEventResps, cardRewardEventResp)
+					maxCardRewardEventResp = cardRewardEventResp
 					firstRewardType = rewardM.CASH
 					break
 				}
 
 				switch firstRewardType {
 				case rewardM.CASH:
-					logrus.Info(maxCardRewardEventResps[0].FeedReturn)
-					logrus.Info(cardRewardEventResp.FeedReturn)
 
-					if maxCardRewardEventResps[0].FeedReturn.CashReturn.ActualCashReturn < cardRewardEventResp.FeedReturn.CashReturn.ActualCashReturn {
-						maxCardRewardEventResps = append([]*cardM.CardRewardEventResp{cardRewardEventResp}, maxCardRewardEventResps...)
+					if maxCardRewardEventResp.FeedReturn.CashReturn.ActualCashReturn < cardRewardEventResp.FeedReturn.CashReturn.ActualCashReturn {
+						maxCardRewardEventResp = cardRewardEventResp
 						firstRewardType = rewardM.CASH
-					} else {
-						maxCardRewardEventResps = append(maxCardRewardEventResps, cardRewardEventResp)
 					}
 					break
 
 				case rewardM.POINT:
 					// 這裡目前還是先用1:1 point & cash
-					if maxCardRewardEventResps[0].FeedReturn.PointReturn.ActualPointReturn < cardRewardEventResp.FeedReturn.CashReturn.ActualCashReturn {
-						maxCardRewardEventResps = append([]*cardM.CardRewardEventResp{cardRewardEventResp}, maxCardRewardEventResps...)
+					if maxCardRewardEventResp.FeedReturn.PointReturn.ActualPointReturn < cardRewardEventResp.FeedReturn.CashReturn.ActualCashReturn {
+						maxCardRewardEventResp = cardRewardEventResp
 						firstRewardType = rewardM.CASH
-					} else {
-						maxCardRewardEventResps = append(maxCardRewardEventResps, cardRewardEventResp)
 					}
 					break
 				}
@@ -374,74 +365,66 @@ func (im *impl) sortMaxRewardReturnEvaluatedCardResults(ctx context.Context, e *
 			case rewardM.POINT:
 
 				if len(maxCardRewardEventResps) == 0 {
-					maxCardRewardEventResps = append(maxCardRewardEventResps, cardRewardEventResp)
+					maxCardRewardEventResp = cardRewardEventResp
 					firstRewardType = rewardM.POINT
 					break
 				}
 
 				switch firstRewardType {
 				case rewardM.CASH:
-					if maxCardRewardEventResps[0].FeedReturn.CashReturn.ActualCashReturn < cardRewardEventResp.FeedReturn.PointReturn.ActualPointReturn {
-						maxCardRewardEventResps = append([]*cardM.CardRewardEventResp{cardRewardEventResp}, maxCardRewardEventResps...)
+					if maxCardRewardEventResp.FeedReturn.CashReturn.ActualCashReturn < cardRewardEventResp.FeedReturn.PointReturn.ActualPointReturn {
+						maxCardRewardEventResp = cardRewardEventResp
 						firstRewardType = rewardM.POINT
-					} else {
-						maxCardRewardEventResps = append(maxCardRewardEventResps, cardRewardEventResp)
 					}
 					break
 
 				case rewardM.POINT:
 					// 這裡目前還是先用1:1 point vs cash
-					if maxCardRewardEventResps[0].FeedReturn.PointReturn.ActualPointReturn < cardRewardEventResp.FeedReturn.PointReturn.ActualPointReturn {
-						maxCardRewardEventResps = append([]*cardM.CardRewardEventResp{cardRewardEventResp}, maxCardRewardEventResps...)
+					if maxCardRewardEventResp.FeedReturn.PointReturn.ActualPointReturn < cardRewardEventResp.FeedReturn.PointReturn.ActualPointReturn {
+						maxCardRewardEventResp = cardRewardEventResp
 						firstRewardType = rewardM.POINT
-					} else {
-						maxCardRewardEventResps = append(maxCardRewardEventResps, cardRewardEventResp)
 					}
 					break
 				}
 				break
 			}
-		}
 
+		}
+		cardEventResp.CardRewardEventResps = []*cardM.CardRewardEventResp{maxCardRewardEventResp}
 	}
 
 	// sorting...
 
-	sort.SliceStable(cashCardEventResps, func(i, j int) bool {
+	sort.SliceStable(cardEventResps, func(i, j int) bool {
 
-		firstRewardType := cashCardEventResps[i].CardRewardEventResps[0].RewardType
+		firstRewardType := cardEventResps[i].CardRewardEventResps[0].RewardType
 		firstActualReturn := 0.0
 
 		switch firstRewardType {
 		case rewardM.CASH:
-			firstActualReturn = cashCardEventResps[i].CardRewardEventResps[0].FeedReturn.CashReturn.ActualCashReturn
+			firstActualReturn = cardEventResps[i].CardRewardEventResps[0].FeedReturn.CashReturn.ActualCashReturn
 			break
 		case rewardM.POINT:
-			firstActualReturn = cashCardEventResps[i].CardRewardEventResps[0].FeedReturn.PointReturn.ActualPointReturn
+			firstActualReturn = cardEventResps[i].CardRewardEventResps[0].FeedReturn.PointReturn.ActualPointReturn
 			break
 		}
 
-		secondRewardType := cashCardEventResps[j].CardRewardEventResps[0].RewardType
+		secondRewardType := cardEventResps[j].CardRewardEventResps[0].RewardType
 		secondActualReturn := 0.0
 		switch secondRewardType {
 		case rewardM.CASH:
-			secondActualReturn = cashCardEventResps[j].CardRewardEventResps[0].FeedReturn.CashReturn.ActualCashReturn
+			secondActualReturn = cardEventResps[j].CardRewardEventResps[0].FeedReturn.CashReturn.ActualCashReturn
 			break
 		case rewardM.POINT:
-			secondActualReturn = cashCardEventResps[j].CardRewardEventResps[0].FeedReturn.PointReturn.ActualPointReturn
+			secondActualReturn = cardEventResps[j].CardRewardEventResps[0].FeedReturn.PointReturn.ActualPointReturn
 			break
 		}
 
 		return firstActualReturn > secondActualReturn
+
 	})
 
-	sort.SliceStable(pointCardEventResps, func(i, j int) bool {
-		return pointCardEventResps[i].CardRewardEventResps[0].FeedReturn.CashReturn.CashReturnBonus < pointCardEventResps[j].CardRewardEventResps[0].FeedReturn.CashReturn.CashReturnBonus
-	})
-
-	allCardEventResps = append(allCardEventResps, cardEventResps...)
-	allCardEventResps = append(allCardEventResps, pointCardEventResps...)
-	return allCardEventResps
+	return cardEventResps
 }
 
 func (im *impl) sortMaxRewardBonusEvaluatedCardResults(ctx context.Context, e *eventM.Event, cardEventResps []*cardM.CardEventResp) []*cardM.CardEventResp {
