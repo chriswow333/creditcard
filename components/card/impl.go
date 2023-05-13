@@ -95,7 +95,6 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 			ID:                 cr.ID,
 			CardRewardOperator: cr.CardRewardOperator,
 			RewardType:         cr.RewardType,
-			// CardRewardBonus:    cr.CardRewardBonus,
 
 			Title:                cr.Title,
 			Descs:                cr.Descs,
@@ -103,7 +102,6 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 			EndDate:              endDate,
 			CardRewardLimitTypes: cr.CardRewardLimitTypes,
 			FeedbackBonus:        cr.FeedbackBonus,
-			// FeedbackDesc:         feedbackDesc,
 		}
 
 		if rewardComps, ok := im.rewardMapper[cr.ID]; ok {

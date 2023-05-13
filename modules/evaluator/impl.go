@@ -3,6 +3,7 @@ package evaluator
 import (
 	"context"
 	"errors"
+	"fmt"
 	"runtime/debug"
 	"sort"
 
@@ -183,6 +184,7 @@ func (im *impl) sortEvaluatedCardResults(ctx context.Context, e *eventM.Event, c
 	logrus.Info("evaluator.sortEvaluatedCardResults, sortType: ", e.SortType)
 
 	trimCardEventResps := []*cardM.CardEventResp{}
+	fmt.Println(e.SortType)
 
 	switch e.SortType {
 	case eventM.NONE:
