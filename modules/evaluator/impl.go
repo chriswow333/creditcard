@@ -181,20 +181,37 @@ func (im *impl) evaluateCard(ctx context.Context, e *eventM.Event, cardComp card
 func (im *impl) sortEvaluatedCardResults(ctx context.Context, e *eventM.Event, cardEventResps []*cardM.CardEventResp) []*cardM.CardEventResp {
 
 	logrus.Info("evaluator.sortEvaluatedCardResults, sortType: ", e.SortType)
+
+	trimCardEventResps := []*cardM.CardEventResp{}
+
 	switch e.SortType {
 	case eventM.NONE:
-		return cardEventResps
+		trimCardEventResps = cardEventResps
+		break
 	case eventM.MATCH:
-		return im.sortMatchEvaluateCardResults(ctx, e, cardEventResps)
+		trimCardEventResps = im.sortMatchEvaluateCardResults(ctx, e, cardEventResps)
+		break
 	case event.MAX_REWARD_BONUS:
-		return im.sortMaxRewardBonusEvaluatedCardResults(ctx, e, cardEventResps)
+		trimCardEventResps = im.sortMaxRewardBonusEvaluatedCardResults(ctx, e, cardEventResps)
+		break
 	case event.MAX_REWARD_RETURN:
-		return im.sortMaxRewardReturnEvaluatedCardResults(ctx, e, cardEventResps)
+		trimCardEventResps = im.sortMaxRewardReturnEvaluatedCardResults(ctx, e, cardEventResps)
+		break
 	case event.MAX_REWARD_EXPECTED_BONUS:
-		return im.sortMaxRewardReturnExpectedCardResults(ctx, e, cardEventResps)
+		trimCardEventResps = im.sortMaxRewardReturnExpectedCardResults(ctx, e, cardEventResps)
+		break
 	default:
-		return cardEventResps
+		trimCardEventResps = cardEventResps
 	}
+
+	maxSize := 10
+
+	if len(trimCardEventResps) < maxSize {
+		maxSize = len(trimCardEventResps)
+	}
+
+	return trimCardEventResps[0:maxSize]
+
 }
 
 func (im *impl) sortMaxRewardReturnExpectedCardResults(ctx context.Context, e *eventM.Event, cardEventResps []*cardM.CardEventResp) []*cardM.CardEventResp {

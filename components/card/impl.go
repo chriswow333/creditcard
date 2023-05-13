@@ -13,7 +13,6 @@ import (
 	rewardM "example.com/creditcard/models/reward"
 	"example.com/creditcard/service/bank"
 	"github.com/sirupsen/logrus"
-	// feedbackDescStore "example.com/creditcard/stores/feedback_desc"
 )
 
 type impl struct {
@@ -21,7 +20,6 @@ type impl struct {
 	rewardMapper             map[string][]*reward.Component
 	cardRewardOperatorMapper map[rewardM.RewardType]cardM.CardRewardOperator
 	bankService              bank.Service
-	// feedbackDescStore        feedbackDescStore.Store
 }
 
 func New(
@@ -29,7 +27,6 @@ func New(
 	rewardMapper map[string][]*reward.Component,
 	cardRewardOperatorMapper map[rewardM.RewardType]cardM.CardRewardOperator,
 	bankService bank.Service,
-	// feedbackDescStore feedbackDescStore.Store,
 ) Component {
 
 	impl := &impl{
@@ -37,7 +34,6 @@ func New(
 		rewardMapper:             rewardMapper,
 		cardRewardOperatorMapper: cardRewardOperatorMapper,
 		bankService:              bankService,
-		// feedbackDescStore:        feedbackDescStore,
 	}
 
 	return impl
@@ -94,14 +90,6 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*cardM.CardEventR
 
 		startDate := time.Unix(cr.StartDate, 0).Format(DATE_FORMAT)
 		endDate := time.Unix(cr.EndDate, 0).Format(DATE_FORMAT)
-
-		// feedbackDesc, err := im.feedbackDescStore.GetByID(ctx, cr.FeedbackDescID)
-		// if err != nil {
-		// 	logrus.WithFields(logrus.Fields{
-		// 		"not found feedback ": err,
-		// 	}).Error(err)
-		// 	return nil, err
-		// }
 
 		cardRewardEventResp := &cardM.CardRewardEventResp{
 			ID:                 cr.ID,
@@ -169,109 +157,12 @@ func (im *impl) calculateReturn(ctx context.Context, e *eventM.Event,
 		}
 		break
 
-	// case rewardM.RED:
-
-	// 	redReturn := im.calculateRedFeedReturn(ctx, cr.CardRewardOperator, rewardEventResps)
-
-	// 	cardRewardEventResp.FeedReturn = &feedbackM.FeedReturn{
-	// 		FeedReturnStatus: feedbackM.ALL,
-	// 		RedReturn:        redReturn,
-	// 	}
-
-	// 	break
-
 	default:
 		return errors.New("no suitable reward type.")
-
 	}
 
 	return nil
 }
-
-// func (im *impl) calculateRedFeedReturn(ctx context.Context, cardRewardOperator cardM.CardRewardOperator, rewardEventResps []*rewardM.RewardEventResp) *feedbackM.RedReturn {
-
-// 	redReturn := &feedbackM.RedReturn{}
-
-// 	var totalCash float64 = 0.0
-// 	var currentCash int64 = 0
-
-// 	var isRedbackGet bool = false
-// 	var redbackTimes int64 = 0.0
-
-// 	var actualUseCash int64 = 0
-// 	var actualRedback float64 = 0.0
-
-// 	switch cardRewardOperator {
-// 	case cardM.ADD:
-
-// 		for _, r := range rewardEventResps {
-
-// 			if r.RewardEventJudgeType == rewardM.NONE {
-// 				continue
-// 			}
-
-// 			totalCash = r.FeedReturn.RedReturn.TotalCash
-// 			currentCash = r.FeedReturn.RedReturn.CurrentCash
-
-// 			if r.FeedReturn.RedReturn.IsRedGet {
-
-// 				isRedbackGet = true
-
-// 				if actualUseCash < r.FeedReturn.RedReturn.ActualUseCash {
-// 					// get max actual use cash
-// 					actualUseCash = r.FeedReturn.RedReturn.ActualUseCash
-// 				}
-// 				redbackTimes += r.FeedReturn.RedReturn.RedbackTimes
-// 				actualRedback += r.FeedReturn.RedReturn.ActualRedback
-
-// 			}
-
-// 		}
-
-// 		redReturn.IsRedGet = isRedbackGet
-// 		redReturn.ActualRedback = actualRedback
-// 		redReturn.ActualUseCash = actualUseCash
-// 		redReturn.CurrentCash = currentCash
-// 		redReturn.TotalCash = totalCash
-// 		redReturn.RedbackTimes = redbackTimes
-
-// 		break
-
-// 	case cardM.MAXONE:
-// 		for _, r := range rewardEventResps {
-// 			if r.FeedReturn.RedReturn.IsRedGet {
-// 				if redbackTimes <= r.FeedReturn.RedReturn.RedbackTimes {
-// 					isRedbackGet = true
-// 					redbackTimes = r.FeedReturn.RedReturn.RedbackTimes
-// 					actualUseCash = r.FeedReturn.RedReturn.ActualUseCash
-// 					actualRedback = r.FeedReturn.RedReturn.ActualRedback
-// 					currentCash = r.FeedReturn.RedReturn.CurrentCash
-// 					totalCash = r.FeedReturn.RedReturn.TotalCash
-// 				}
-// 			}
-// 		}
-
-// 		redReturn.IsRedGet = isRedbackGet
-// 		redReturn.ActualRedback = actualRedback
-// 		redReturn.ActualUseCash = actualUseCash
-// 		redReturn.CurrentCash = currentCash
-// 		redReturn.TotalCash = totalCash
-// 		redReturn.RedbackTimes = redbackTimes
-
-// 		break
-
-// 	default:
-// 		logrus.Error("calculatePointFeedReturn Error operator")
-
-// 		redReturn.IsRedGet = isRedbackGet
-// 		redReturn.ActualRedback = actualRedback
-// 		redReturn.ActualUseCash = actualUseCash
-// 		redReturn.CurrentCash = currentCash
-// 		redReturn.TotalCash = totalCash
-// 		redReturn.RedbackTimes = redbackTimes
-// 	}
-// 	return redReturn
-// }
 
 func (im *impl) calculatePointFeedReturn(ctx context.Context, e *eventM.Event,
 	cardRewardOperator cardM.CardRewardOperator, rewardEventResps []*rewardM.RewardEventResp) *feedbackM.PointReturn {
@@ -338,7 +229,7 @@ func (im *impl) calculatePointFeedReturn(ctx context.Context, e *eventM.Event,
 		}
 
 		pointReturn.ActualPointReturn = actualPointReturn
-		pointReturn.PointReturnBonus = pointReturnBonus
+		pointReturn.PointReturnBonus = pointReturnBonus * 100
 		pointReturn.ActualUseCash = actualUseCash
 		pointReturn.PointReturnStatus = pointReturnStatus
 
@@ -358,7 +249,7 @@ func (im *impl) calculatePointFeedReturn(ctx context.Context, e *eventM.Event,
 
 		pointReturn.ActualPointReturn = actualPointReturn
 		pointReturn.ActualUseCash = actualUseCash
-		pointReturn.PointReturnBonus = pointReturnBonus
+		pointReturn.PointReturnBonus = pointReturnBonus * 100
 		pointReturn.PointReturnStatus = pointReturnStatus
 
 		break
@@ -448,13 +339,12 @@ func (im *impl) calculateCashFeedReturn(ctx context.Context, e *eventM.Event, ca
 
 		cashReturn.ActualCashReturn = actualCashReturn
 		cashReturn.ActualUseCash = actualUseCash
-		cashReturn.CashReturnBonus = cashReturnBonus
+		cashReturn.CashReturnBonus = cashReturnBonus * 100
 		cashReturn.CashReturnStatus = cashReturnStatus
 
 		break
 
 	case cardM.MAXONE:
-		logrus.Info("is maxone")
 		for _, r := range rewardEventResps {
 
 			if cashReturnBonus <= r.FeedReturn.CashReturn.CashReturnBonus {
@@ -469,7 +359,7 @@ func (im *impl) calculateCashFeedReturn(ctx context.Context, e *eventM.Event, ca
 		cashReturn.ActualCashReturn = actualCashReturn
 		cashReturn.ActualUseCash = actualUseCash
 		cashReturn.CashReturnStatus = cashReturnStatus
-		cashReturn.CashReturnBonus = cashReturnBonus
+		cashReturn.CashReturnBonus = cashReturnBonus * 100
 		break
 
 	default:
