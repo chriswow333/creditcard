@@ -7,6 +7,8 @@ import (
 
 	"example.com/creditcard/components/channel"
 	channelM "example.com/creditcard/models/channel"
+	labelM "example.com/creditcard/models/label"
+
 	eventM "example.com/creditcard/models/event"
 	"example.com/creditcard/models/task"
 	channelSvc "example.com/creditcard/service/channel"
@@ -137,8 +139,32 @@ func (im *impl) processWeekDayType(e *eventM.Event, t *task.Task, taskMap map[st
 }
 
 // TODO 根據Label掃描所有的通路，並且確認有符合/無符合的通路掃出來做確認
+// 只要有一個錯，就回錯
 
 func (im *impl) processLabel(ctx context.Context, e *eventM.Event, t *task.Task, taskMap map[string]bool) bool {
 
-	return false
+	label := t.TaskTypeModel.Label
+	// match := label.Match
+	match := true
+
+	if label == nil {
+		return true
+	}
+
+	switch label.LabelType {
+	case labelM.ALL:
+		if label.Match {
+			return true
+		} else {
+			return false
+		}
+
+	case labelM.Channel:
+		// TODO for loop 所有 channel
+
+	default:
+		return false
+	}
+
+	return match
 }
