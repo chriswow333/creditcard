@@ -39,33 +39,6 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		foodMap[st] = true
 	}
 
-	channelLabels := im.channel.ExcludedChannelLabels
-	channelLabelMap := make(map[channelM.ChannelLabel]bool)
-
-	for _, label := range channelLabels {
-		channelLabelMap[label] = true
-	}
-
-	for _, fo := range im.foods {
-		if _, ok := foodMap[fo.ID]; ok {
-			matchExcludedLabel := false
-			for _, foLabel := range fo.ChannelLabels {
-				if _, ok := channelLabelMap[foLabel]; ok {
-					matchExcludedLabel = true
-					break
-				}
-			}
-			if matchExcludedLabel {
-				misses = append(misses, fo.ID)
-			} else {
-				matches = append(matches, fo.ID)
-			}
-
-		} else {
-			misses = append(misses, fo.ID)
-		}
-	}
-
 	channelEventResp.Matches = matches
 	channelEventResp.Misses = misses
 

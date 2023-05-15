@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO travel " +
-	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"label_types\", \"image_path\") VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, travel *channel.Travel) error {
 
@@ -39,7 +39,7 @@ func (im *impl) Create(ctx context.Context, travel *channel.Travel) error {
 	updater := []interface{}{
 		travel.ID,
 		travel.Name,
-		travel.ChannelLabels,
+		travel.LabelTypes,
 		travel.ImagePath,
 	}
 
@@ -55,7 +55,7 @@ func (im *impl) Create(ctx context.Context, travel *channel.Travel) error {
 
 const UPDATE_BY_ID_STAT = "UPDATE travel SET " +
 	" \"name\" = $1 " +
-	" \"channel_label\" = $2 " +
+	" \"label_types\" = $2 " +
 	" \"image_path\" = $3 " +
 	" where \"id\" = $4"
 
@@ -71,7 +71,7 @@ func (im *impl) UpdateByID(ctx context.Context, travel *channel.Travel) error {
 
 	updater := []interface{}{
 		travel.Name,
-		travel.ChannelLabels,
+		travel.LabelTypes,
 		travel.ImagePath,
 		travel.ID,
 	}
@@ -85,7 +85,7 @@ func (im *impl) UpdateByID(ctx context.Context, travel *channel.Travel) error {
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM travel limit $1 offset $2 "
 
 func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Travel, error) {
@@ -104,7 +104,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Trave
 		selector := []interface{}{
 			&travel.ID,
 			&travel.Name,
-			&travel.ChannelLabels,
+			&travel.LabelTypes,
 			&travel.ImagePath,
 		}
 
@@ -119,7 +119,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Trave
 	return travels, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM Travel WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Travel, error) {
@@ -129,7 +129,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Travel, error)
 	selector := []interface{}{
 		&travel.ID,
 		&travel.Name,
-		&travel.ChannelLabels,
+		&travel.LabelTypes,
 		&travel.ImagePath,
 	}
 
@@ -141,7 +141,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Travel, error)
 	return travel, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM travel WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Travel, error) {
@@ -161,7 +161,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Travel
 		selector := []interface{}{
 			&travel.ID,
 			&travel.Name,
-			&travel.ChannelLabels,
+			&travel.LabelTypes,
 			&travel.ImagePath,
 		}
 

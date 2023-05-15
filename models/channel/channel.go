@@ -14,16 +14,6 @@ const (
 	MISMATCH
 )
 
-type ChannelLabel int32
-
-const (
-	MICRO_PAYMENT       = iota + 1 // 小額支付
-	OVERSEA                        // 海外消費
-	GENERAL_CONSUMPTION            // 一般消費
-	TW_RESTAURANT                  // 全臺餐廳
-
-)
-
 type ChannelType int32
 
 const (
@@ -61,7 +51,8 @@ type Channel struct {
 
 	Tasks []string `json:"tasks,omitempty"`
 
-	ExcludedChannelLabels []ChannelLabel `json:"excludedChannelLabels"`
+	// ExcludedChannelLabels []ChannelLabel `json:"excludedChannelLabels"`
+	// IncludedChannelLabels []ChannelLabel `json:"includedChannelLabels"`
 
 	Mobilepays        []string `json:"mobilepays,omitempty"`
 	Ecommerces        []string `json:"ecommerces,omitempty"`

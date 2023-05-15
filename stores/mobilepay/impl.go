@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO mobilepay " +
-	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3)"
+	"(\"id\", \"name\", \"label_types\", \"image_path\") VALUES ($1, $2, $3)"
 
 func (im *impl) Create(ctx context.Context, mobilepay *channel.Mobilepay) error {
 
@@ -39,7 +39,7 @@ func (im *impl) Create(ctx context.Context, mobilepay *channel.Mobilepay) error 
 	updater := []interface{}{
 		mobilepay.ID,
 		mobilepay.Name,
-		mobilepay.ChannelLabels,
+		mobilepay.LabelTypes,
 		mobilepay.ImagePath,
 	}
 
@@ -55,7 +55,7 @@ func (im *impl) Create(ctx context.Context, mobilepay *channel.Mobilepay) error 
 
 const UPDATE_BY_ID_STAT = "UPDATE mobilepay SET " +
 	" \"name\" = $1 " +
-	" \"channel_label\" = $2 " +
+	" \"label_types\" = $2 " +
 	" \"image_path\" = $3 " +
 	" where \"id\" = $4"
 
@@ -71,7 +71,7 @@ func (im *impl) UpdateByID(ctx context.Context, mobilepay *channel.Mobilepay) er
 
 	updater := []interface{}{
 		mobilepay.Name,
-		mobilepay.ChannelLabels,
+		mobilepay.LabelTypes,
 		mobilepay.ImagePath,
 		mobilepay.ID,
 	}
@@ -85,7 +85,7 @@ func (im *impl) UpdateByID(ctx context.Context, mobilepay *channel.Mobilepay) er
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM mobilepay limit $1 offset $2 "
 
 func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Mobilepay, error) {
@@ -104,7 +104,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Mobil
 		selector := []interface{}{
 			&mobilepay.ID,
 			&mobilepay.Name,
-			&mobilepay.ChannelLabels,
+			&mobilepay.LabelTypes,
 			&mobilepay.ImagePath,
 		}
 
@@ -119,7 +119,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Mobil
 	return mobilepays, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM mobilepay WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Mobilepay, error) {
@@ -129,7 +129,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Mobilepay, err
 	selector := []interface{}{
 		&mobilepay.ID,
 		&mobilepay.Name,
-		&mobilepay.ChannelLabels,
+		&mobilepay.LabelTypes,
 		&mobilepay.ImagePath,
 	}
 
@@ -141,7 +141,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Mobilepay, err
 	return mobilepay, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM mobilepay WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Mobilepay, error) {
@@ -161,7 +161,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Mobile
 		selector := []interface{}{
 			&mobilepay.ID,
 			&mobilepay.Name,
-			&mobilepay.ChannelLabels,
+			&mobilepay.LabelTypes,
 			&mobilepay.ImagePath,
 		}
 

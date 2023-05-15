@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO amusement " +
-	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"label_types\", \"image_path\") VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, amusement *channel.Amusement) error {
 
@@ -40,7 +40,7 @@ func (im *impl) Create(ctx context.Context, amusement *channel.Amusement) error 
 	updater := []interface{}{
 		amusement.ID,
 		amusement.Name,
-		amusement.ChannelLabels,
+		amusement.LabelTypes,
 		amusement.ImagePath,
 	}
 
@@ -56,7 +56,7 @@ func (im *impl) Create(ctx context.Context, amusement *channel.Amusement) error 
 
 const UPDATE_BY_ID_STAT = "UPDATE amusement SET " +
 	" \"name\" = $1 " +
-	" \"channel_label\" = $2 " +
+	" \"label_types\" = $2 " +
 	" \"image_path\" = $3 " +
 	" where \"id\" = $4"
 
@@ -71,7 +71,7 @@ func (im *impl) UpdateByID(ctx context.Context, amusement *channel.Amusement) er
 
 	updater := []interface{}{
 		amusement.Name,
-		amusement.ChannelLabels,
+		amusement.LabelTypes,
 		amusement.ImagePath,
 		amusement.ID,
 	}
@@ -85,7 +85,7 @@ func (im *impl) UpdateByID(ctx context.Context, amusement *channel.Amusement) er
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM amusement limit $1 offset $2 "
 
 func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Amusement, error) {
@@ -104,7 +104,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Amuse
 		selector := []interface{}{
 			&amusement.ID,
 			&amusement.Name,
-			&amusement.ChannelLabels,
+			&amusement.LabelTypes,
 			&amusement.ImagePath,
 		}
 
@@ -119,7 +119,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Amuse
 	return amusements, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM amusement WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Amusement, error) {
@@ -128,7 +128,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Amusement, err
 	selector := []interface{}{
 		&amusement.ID,
 		&amusement.Name,
-		&amusement.ChannelLabels,
+		&amusement.LabelTypes,
 		&amusement.ImagePath,
 	}
 
@@ -140,7 +140,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Amusement, err
 	return amusement, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM amusement WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Amusement, error) {
@@ -160,7 +160,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Amusem
 		selector := []interface{}{
 			&amusement.ID,
 			&amusement.Name,
-			&amusement.ChannelLabels,
+			&amusement.LabelTypes,
 			&amusement.ImagePath,
 		}
 

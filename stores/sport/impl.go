@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO sport " +
-	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"label_types\", \"image_path\") VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, sport *channel.Sport) error {
 	tx, err := im.psql.Begin()
@@ -38,7 +38,7 @@ func (im *impl) Create(ctx context.Context, sport *channel.Sport) error {
 	updater := []interface{}{
 		sport.ID,
 		sport.Name,
-		sport.ChannelLabels,
+		sport.LabelTypes,
 		sport.ImagePath,
 	}
 
@@ -54,7 +54,7 @@ func (im *impl) Create(ctx context.Context, sport *channel.Sport) error {
 
 const UPDATE_BY_ID_STAT = "UPDATE sport SET " +
 	" \"name\" = $1 " +
-	" \"channel_label\" = $2 " +
+	" \"label_types\" = $2 " +
 	" \"image_path\" = $3 " +
 	" where \"id\" = $4"
 
@@ -69,7 +69,7 @@ func (im *impl) UpdateByID(ctx context.Context, sport *channel.Sport) error {
 
 	updater := []interface{}{
 		sport.Name,
-		sport.ChannelLabels,
+		sport.LabelTypes,
 		sport.ImagePath,
 		sport.ID,
 	}
@@ -83,7 +83,7 @@ func (im *impl) UpdateByID(ctx context.Context, sport *channel.Sport) error {
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM sport limit $1 offset $2 "
 
 func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Sport, error) {
@@ -100,7 +100,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Sport
 		selector := []interface{}{
 			&sport.ID,
 			&sport.Name,
-			&sport.ChannelLabels,
+			&sport.LabelTypes,
 			&sport.ImagePath,
 		}
 
@@ -115,7 +115,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Sport
 	return sports, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM sport WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Sport, error) {
@@ -124,7 +124,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Sport, error) 
 	selector := []interface{}{
 		&sport.ID,
 		&sport.Name,
-		&sport.ChannelLabels,
+		&sport.LabelTypes,
 		&sport.ImagePath,
 	}
 
@@ -136,7 +136,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Sport, error) 
 	return sport, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM sport WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Sport, error) {
@@ -155,7 +155,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Sport,
 		selector := []interface{}{
 			&sport.ID,
 			&sport.Name,
-			&sport.ChannelLabels,
+			&sport.LabelTypes,
 			&sport.ImagePath,
 		}
 

@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO onlinegame " +
-	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"label_types\", \"image_path\") VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, onlinegame *channel.Onlinegame) error {
 	tx, err := im.psql.Begin()
@@ -38,7 +38,7 @@ func (im *impl) Create(ctx context.Context, onlinegame *channel.Onlinegame) erro
 	updater := []interface{}{
 		onlinegame.ID,
 		onlinegame.Name,
-		onlinegame.ChannelLabels,
+		onlinegame.LabelTypes,
 		onlinegame.ImagePath,
 	}
 
@@ -54,7 +54,7 @@ func (im *impl) Create(ctx context.Context, onlinegame *channel.Onlinegame) erro
 
 const UPDATE_BY_ID_STAT = "UPDATE onlinegame SET " +
 	" \"name\" = $1 " +
-	" \"channel_label\" = $2 " +
+	" \"label_types\" = $2 " +
 	" \"image_path\" = $3 " +
 	" where \"id\" = $4"
 
@@ -69,7 +69,7 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *channel.Onlinegame) 
 
 	updater := []interface{}{
 		onlinegame.Name,
-		onlinegame.ChannelLabels,
+		onlinegame.LabelTypes,
 		onlinegame.ImagePath,
 		onlinegame.ID,
 	}
@@ -83,7 +83,7 @@ func (im *impl) UpdateByID(ctx context.Context, onlinegame *channel.Onlinegame) 
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM onlinegame limit $1 offset $2 "
 
 func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Onlinegame, error) {
@@ -102,7 +102,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Onlin
 		selector := []interface{}{
 			&onlinegame.ID,
 			&onlinegame.Name,
-			&onlinegame.ChannelLabels,
+			&onlinegame.LabelTypes,
 			&onlinegame.ImagePath,
 		}
 
@@ -117,7 +117,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Onlin
 	return onlinegames, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM onlinegame WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Onlinegame, error) {
@@ -127,7 +127,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Onlinegame, er
 	selector := []interface{}{
 		&onlinegame.ID,
 		&onlinegame.Name,
-		&onlinegame.ChannelLabels,
+		&onlinegame.LabelTypes,
 		&onlinegame.ImagePath,
 	}
 
@@ -139,7 +139,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.Onlinegame, er
 	return onlinegame, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM onlinegame WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Onlinegame, error) {
@@ -158,7 +158,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Online
 		selector := []interface{}{
 			&onlinegame.ID,
 			&onlinegame.Name,
-			&onlinegame.ChannelLabels,
+			&onlinegame.LabelTypes,
 			&onlinegame.ImagePath,
 		}
 

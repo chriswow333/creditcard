@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO appstore " +
-	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"label_types\", \"image_path\") VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, appstore *channel.AppStore) error {
 
@@ -40,7 +40,7 @@ func (im *impl) Create(ctx context.Context, appstore *channel.AppStore) error {
 	updater := []interface{}{
 		appstore.ID,
 		appstore.Name,
-		appstore.ChannelLabels,
+		appstore.LabelTypes,
 		appstore.ImagePath,
 	}
 
@@ -56,7 +56,7 @@ func (im *impl) Create(ctx context.Context, appstore *channel.AppStore) error {
 
 const UPDATE_BY_ID_STAT = "UPDATE appstore SET " +
 	" \"name\" = $1 " +
-	" \"channel_label\" = $2 " +
+	" \"label_types\" = $2 " +
 	" \"image_path\" = $3 " +
 	" where \"id\" = $4"
 
@@ -72,7 +72,7 @@ func (im *impl) UpdateByID(ctx context.Context, appstore *channel.AppStore) erro
 
 	updater := []interface{}{
 		appstore.Name,
-		appstore.ChannelLabels,
+		appstore.LabelTypes,
 		appstore.ImagePath,
 		appstore.ID,
 	}
@@ -86,7 +86,7 @@ func (im *impl) UpdateByID(ctx context.Context, appstore *channel.AppStore) erro
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM appstore limit $1 offset $2 "
 
 func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.AppStore, error) {
@@ -105,7 +105,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.AppSt
 		selector := []interface{}{
 			&appstore.ID,
 			&appstore.Name,
-			&appstore.ChannelLabels,
+			&appstore.LabelTypes,
 			&appstore.ImagePath,
 		}
 
@@ -120,7 +120,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.AppSt
 	return appstores, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM appstore WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.AppStore, error) {
@@ -129,7 +129,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.AppStore, erro
 	selector := []interface{}{
 		&appstore.ID,
 		&appstore.Name,
-		&appstore.ChannelLabels,
+		&appstore.LabelTypes,
 		&appstore.ImagePath,
 	}
 
@@ -141,7 +141,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.AppStore, erro
 	return appstore, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM appstore WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.AppStore, error) {
@@ -161,7 +161,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.AppSto
 		selector := []interface{}{
 			&appstore.ID,
 			&appstore.Name,
-			&appstore.ChannelLabels,
+			&appstore.LabelTypes,
 			&appstore.ImagePath,
 		}
 

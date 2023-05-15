@@ -1,8 +1,10 @@
 package channel
 
+import "example.com/creditcard/models/label"
+
 type AppStore struct {
-	ID            string         `json:"id"`
-	Name          string         `json:"name"`
-	ChannelLabels []ChannelLabel `json:"channelLabels"`
-	ImagePath     string         `json:"imagePath"`
+	ID         string            `json:"id"`
+	Name       string            `json:"name"`
+	LabelTypes []label.LabelType `json:"labelTypes"`
+	ImagePath  string            `json:"imagePath"`
 }

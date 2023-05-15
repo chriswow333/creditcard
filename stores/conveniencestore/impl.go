@@ -24,7 +24,7 @@ func New(psql *pgx.ConnPool) Store {
 }
 
 const INSERT_STAT = "INSERT INTO conveniencestore " +
-	"(\"id\", \"name\", \"channel_label\", \"image_path\") VALUES ($1, $2, $3, $4)"
+	"(\"id\", \"name\", \"label_types\", \"image_path\") VALUES ($1, $2, $3, $4)"
 
 func (im *impl) Create(ctx context.Context, convenienceStore *channel.ConvenienceStore) error {
 
@@ -39,7 +39,7 @@ func (im *impl) Create(ctx context.Context, convenienceStore *channel.Convenienc
 	updater := []interface{}{
 		convenienceStore.ID,
 		convenienceStore.Name,
-		convenienceStore.ChannelLabels,
+		convenienceStore.LabelTypes,
 		convenienceStore.ImagePath,
 	}
 
@@ -55,7 +55,7 @@ func (im *impl) Create(ctx context.Context, convenienceStore *channel.Convenienc
 
 const UPDATE_BY_ID_STAT = "UPDATE conveniencestore SET " +
 	" \"name\" = $1 " +
-	" \"channel_label\" = $2 " +
+	" \"label_types\" = $2 " +
 	" \"image_path\" = $3 " +
 	" where \"id\" = $4"
 
@@ -70,7 +70,7 @@ func (im *impl) UpdateByID(ctx context.Context, convenienceStore *channel.Conven
 
 	updater := []interface{}{
 		convenienceStore.Name,
-		convenienceStore.ChannelLabels,
+		convenienceStore.LabelTypes,
 		convenienceStore.ImagePath,
 		convenienceStore.ID,
 	}
@@ -84,7 +84,7 @@ func (im *impl) UpdateByID(ctx context.Context, convenienceStore *channel.Conven
 	return nil
 }
 
-const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_ALL_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM conveniencestore limit $1 offset $2 "
 
 func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.ConvenienceStore, error) {
@@ -103,7 +103,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Conve
 		selector := []interface{}{
 			&convenienceStore.ID,
 			&convenienceStore.Name,
-			&convenienceStore.ChannelLabels,
+			&convenienceStore.LabelTypes,
 			&convenienceStore.ImagePath,
 		}
 
@@ -118,7 +118,7 @@ func (im *impl) GetAll(ctx context.Context, offset, limit int) ([]*channel.Conve
 	return convenienceStores, nil
 }
 
-const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_ID_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM conveniencestore WHERE \"id\" = $1"
 
 func (im *impl) GetByID(ctx context.Context, ID string) (*channel.ConvenienceStore, error) {
@@ -127,7 +127,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.ConvenienceSto
 	selector := []interface{}{
 		&convenienceStore.ID,
 		&convenienceStore.Name,
-		&convenienceStore.ChannelLabels,
+		&convenienceStore.LabelTypes,
 		&convenienceStore.ImagePath,
 	}
 
@@ -139,7 +139,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*channel.ConvenienceSto
 	return convenienceStore, nil
 }
 
-const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"channel_label\", \"image_path\" " +
+const SELECT_BY_LIKE_NAME_STAT = "SELECT \"id\", \"name\", \"label_types\", \"image_path\" " +
 	" FROM conveniencestore WHERE \"name\" ~* $1"
 
 func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.ConvenienceStore, error) {
@@ -159,7 +159,7 @@ func (im *impl) FindLike(ctx context.Context, names []string) ([]*channel.Conven
 		selector := []interface{}{
 			&conveniencestore.ID,
 			&conveniencestore.Name,
-			&conveniencestore.ChannelLabels,
+			&conveniencestore.LabelTypes,
 			&conveniencestore.ImagePath,
 		}
 
