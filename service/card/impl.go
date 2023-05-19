@@ -116,33 +116,11 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*cardM.Card, error) {
 	return card, nil
 }
 
-// func (im *impl) getFeedbackDesc(ctx context.Context, feedbackID string) (*feedback.FeedbackDesc, error) {
-
-// 	feedbackDesc, err := im.feedbackDescStore.GetByID(ctx, feedbackID)
-
-// 	if err != nil {
-// 		logrus.WithFields(logrus.Fields{
-// 			"": "",
-// 		}).Error(err)
-// 		return nil, err
-// 	}
-
-// 	return feedbackDesc, nil
-// }
-
 func (im *impl) transCardRewardResp(ctx context.Context, cardRewards []*cardM.CardReward) ([]*cardM.CardRewardResp, error) {
 
 	cardRewardResps := []*cardM.CardRewardResp{}
 
 	for _, cr := range cardRewards {
-
-		// feedbackDesc, err := im.getFeedbackDesc(ctx, cr.FeedbackDescID)
-		// if err != nil {
-		// 	logrus.WithFields(logrus.Fields{
-		// 		"": "",
-		// 	}).Error(err)
-		// 	return nil, err
-		// }
 
 		startDate := time.Unix(cr.StartDate, 0).Format(DATE_FORMAT)
 		endDate := time.Unix(cr.EndDate, 0).Format(DATE_FORMAT)

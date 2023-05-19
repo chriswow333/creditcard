@@ -188,9 +188,7 @@ func (im *impl) BuildCardComponent(ctx context.Context, card *cardM.Card) (cardC
 				rewardComponents = append(rewardComponents, &rewardComponent)
 				rewardMapper[cr.ID] = rewardComponents
 			}
-
 		}
-
 	}
 
 	cardComponent := cardComp.New(card, rewardMapper, cardRewardOperatorMapper, im.bankService)

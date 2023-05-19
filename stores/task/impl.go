@@ -84,7 +84,7 @@ func (im *impl) GetByID(ctx context.Context, ID string) (*taskM.Task, error) {
 	}
 
 	if err := im.psql.QueryRow(SELECT_BY_ID_STAT, ID).Scan(selector...); err != nil {
-		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return nil, err
 	}
 

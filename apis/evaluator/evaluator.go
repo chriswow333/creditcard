@@ -38,6 +38,8 @@ func (h *evaluatorHandler) evaluate(ctx *gin.Context) {
 
 	ctx.Bind(&eventModel)
 
+	logrus.Info("/evaluate", eventModel)
+
 	resp, err := h.evaluatorModule.Evaluate(ctx, &eventModel)
 	if err != nil {
 		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))

@@ -70,6 +70,6 @@ type Channel struct {
 	AppStores         []string `json:"appstores,omitempty"`
 	Hotels            []string `json:"hotels,omitempty"`
 	Amusements        []string `json:"amusements,omitempty"`
-	Cinemas           []string `json:"cinemas,onmitempty"`
+	Cinemas           []string `json:"cinemas,omitempty"`
 	PublicUtilities   []string `json:"publicutilities,omitempty"`
 }

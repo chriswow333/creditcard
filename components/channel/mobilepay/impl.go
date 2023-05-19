@@ -6,6 +6,7 @@ import (
 	channelComp "example.com/creditcard/components/channel"
 	channelM "example.com/creditcard/models/channel"
 	eventM "example.com/creditcard/models/event"
+	"github.com/sirupsen/logrus"
 )
 
 type impl struct {
@@ -78,6 +79,8 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 	if im.channel.ChannelMappingType == channelM.MISMATCH {
 		channelEventResp.Pass = !channelEventResp.Pass
 	}
+
+	logrus.Info("mobilepayComponent.Judge ", channelEventResp)
 
 	return channelEventResp, nil
 }

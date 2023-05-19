@@ -48,6 +48,12 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.Payload
 
 	var feedReturn *feedbackM.FeedReturn
 
+	logrus.Info("payload.Satisfy ", constraintEventResp)
+	if len(constraintEventResp.ChannelEventResps) == 2 {
+		logrus.Info("payload.Satisfy ", constraintEventResp.ChannelEventResps[0])
+		logrus.Info("payload.Satisfy ", constraintEventResp.ChannelEventResps[1])
+	}
+
 	if constraintEventResp.Pass {
 		feedReturn, err = im.processFeedReturn(ctx, e, true)
 
@@ -68,11 +74,11 @@ func (im *impl) Satisfy(ctx context.Context, e *eventM.Event) (*payloadM.Payload
 		payloadEventResp.FeedReturn = feedReturn
 
 	}
+
 	return payloadEventResp, nil
 }
 
 func (im *impl) processFeedReturn(ctx context.Context, e *eventM.Event, pass bool) (*feedbackM.FeedReturn, error) {
-	logrus.Info("payload.processFeedReturn")
 
 	// 計算回饋額
 	feedReturn, err := (*im.feedbackComponent).Calculate(ctx, e, pass)

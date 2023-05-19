@@ -8,6 +8,7 @@ import (
 	"example.com/creditcard/components/channel"
 	channelM "example.com/creditcard/models/channel"
 	labelM "example.com/creditcard/models/label"
+	"github.com/sirupsen/logrus"
 
 	eventM "example.com/creditcard/models/event"
 	"example.com/creditcard/models/task"
@@ -109,20 +110,23 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 }
 
 func (im *impl) processNoneType(t *task.Task, eventTaskMap map[string]bool) bool {
+	var pass bool
 	if _, ok := eventTaskMap[t.ID]; ok {
-		return true
+		pass = true
 	} else if t.DefaultPass {
-		return true
+		pass = true
 	} else {
-		return false
+		pass = false
 	}
-
+	logrus.Info("processNoneType status: ", pass, " ", t)
+	return pass
 }
 
 func (im *impl) processWeekDayType(e *eventM.Event, t *task.Task, taskMap map[string]bool) bool {
 
+	var pass bool = false
 	if _, ok := taskMap[t.ID]; ok {
-		return true
+		pass = true
 	} else {
 		weekDay := time.Unix(e.EffectiveTime, 0).Weekday()
 
@@ -130,12 +134,14 @@ func (im *impl) processWeekDayType(e *eventM.Event, t *task.Task, taskMap map[st
 
 		for _, d := range weekdayLimit.WeekDays {
 			if d == int(weekDay) {
-				return true
+				pass = true
+				break
 			}
 		}
-		return false
 	}
 
+	logrus.Info("processWeekDayType status: ", pass, " ", t)
+	return pass
 }
 
 // TODO 根據Label掃描所有的通路，並且確認有符合/無符合的通路掃出來做確認
@@ -144,27 +150,69 @@ func (im *impl) processWeekDayType(e *eventM.Event, t *task.Task, taskMap map[st
 func (im *impl) processLabel(ctx context.Context, e *eventM.Event, t *task.Task, taskMap map[string]bool) bool {
 
 	label := t.TaskTypeModel.Label
-	// match := label.Match
-	match := true
-
-	if label == nil {
-		return true
-	}
-
+	var pass bool = false
 	switch label.LabelType {
 	case labelM.ALL:
 		if label.Match {
-			return true
-		} else {
-			return false
+			for _, id := range e.Tasks {
+				for _, tid := range im.tasks {
+					if id == tid.ID {
+						pass = true
+						break
+					}
+				}
+				if pass {
+					break
+				}
+			}
+			if !pass {
+				if len(e.Amusements) > 0 ||
+					len(e.AppStores) > 0 ||
+					len(e.Cinemas) > 0 ||
+					len(e.Conveniencestores) > 0 ||
+					len(e.Deliveries) > 0 ||
+					len(e.Ecommerces) > 0 ||
+					len(e.Foods) > 0 ||
+					len(e.Hotels) > 0 ||
+					len(e.Insurances) > 0 ||
+					len(e.Malls) > 0 ||
+					len(e.Onlinegames) > 0 ||
+					len(e.Publicutilities) > 0 ||
+					len(e.Sports) > 0 ||
+					len(e.Streamings) > 0 ||
+					len(e.Supermarkets) > 0 ||
+					len(e.Transportations) > 0 ||
+					len(e.Travels) > 0 {
+					pass = true
+				}
+			}
 		}
 
 	case labelM.Channel:
 		// TODO for loop 所有 channel
+		pass = false
+
+		break
+
+	case labelM.OVERSEA:
+		pass = im.processOversea(ctx, e, t)
 
 	default:
-		return false
+		pass = false
 	}
 
-	return match
+	logrus.Info("processLabel status: ", pass)
+	return pass
+}
+
+func (im *impl) processOversea(ctx context.Context, e *eventM.Event, t *task.Task) bool {
+
+	var pass bool = false
+	for _, eTaskID := range e.Tasks {
+		if eTaskID == t.ID {
+			pass = true
+			break
+		}
+	}
+	return pass
 }

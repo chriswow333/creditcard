@@ -6,6 +6,7 @@ import (
 	"example.com/creditcard/components/channel"
 	channelM "example.com/creditcard/models/channel"
 	eventM "example.com/creditcard/models/event"
+	"github.com/sirupsen/logrus"
 )
 
 type impl struct {
@@ -39,6 +40,15 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 		foodMap[st] = true
 	}
 
+	for _, fo := range im.foods {
+
+		if _, ok := foodMap[fo.ID]; ok {
+			matches = append(matches, fo.ID)
+		} else {
+			misses = append(misses, fo.ID)
+		}
+	}
+
 	channelEventResp.Matches = matches
 	channelEventResp.Misses = misses
 
@@ -60,6 +70,8 @@ func (im *impl) Judge(ctx context.Context, e *eventM.Event) (*channelM.ChannelEv
 	if im.channel.ChannelMappingType == channelM.MISMATCH {
 		channelEventResp.Pass = !channelEventResp.Pass
 	}
+
+	logrus.Info("foodComponent.Judge ", channelEventResp)
 
 	return channelEventResp, nil
 

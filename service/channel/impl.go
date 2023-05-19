@@ -107,7 +107,7 @@ func (im *impl) GetTaskByID(ctx context.Context, ID string) (*task.Task, error) 
 
 	task, err := im.taskStore.GetByID(ctx, ID)
 	if err != nil {
-		logrus.Errorf("[PANIC] \n%s", string(debug.Stack()))
+		logrus.Errorf("[PANIC] %s\n%s", err, string(debug.Stack()))
 		return nil, err
 	}
 

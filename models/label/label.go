@@ -5,6 +5,8 @@ type LabelType int32
 const (
 	ALL     = iota // 不分通路
 	Channel        // by 分通路別, 不適用貼label, 直接看channel type
+	OVERSEA        // 國外消費
+
 // 上述兩個不須向各通路做查詢
 
 // 實體通路
