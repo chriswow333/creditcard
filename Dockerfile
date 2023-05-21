@@ -1,6 +1,6 @@
 
 #Stage 1 - Install dependencies and build
-FROM --platform=linux/amd64 golang:1.17.6-alpine as builder
+FROM --platform=linux/amd64 golang:1.20.4-alpine as builder
 
 #RUN mkdir -p /app
 
