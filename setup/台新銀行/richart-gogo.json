@@ -1,0 +1,745 @@
+{
+  "bankID":"6ad57003-8e97-4634-a171-fcc94a4e2b38",
+  "name":"@GoGo悠遊御璽卡",
+  "imagePath":"card/richart-gogo.png",
+  "cardStatus":0,
+  "linkURL":"https://www.taishinbank.com.tw/TSB/personal/credit/intro/overview/cg021/card001/",
+  "descs":[
+      "精選網購、行動支付Go給力 最高3.8%！",
+      "旅遊平安險，出門有保障！",
+      "保費單筆滿NT$5,000最高分12期0利率",
+      "完成任務享2%加碼回饋(含＠GoGo卡片權益最高3.8％=最高享5.8%)",
+      "Richart 新戶首次辦理自動扣繳信用卡帳款享NT300元"
+  ],
+  "otherRewards":[
+
+      {
+          "title":"旅遊平安險，出門有保障！",
+          "descs":[
+            "活動期間: 2023/1/1~2023/12/31:",
+            "使用＠GoGo卡刷卡消費支付八成(含)以上之團費或全部公共交通費用，即可在旅遊期間享有：:",
+            "• 旅遊平安險：最高NT$2,000萬(保障包含國內、國外):",
+            "• 全球購物保障：最高NT$30萬:",
+            "• 高額旅遊不便險：包括班機延誤、行李延誤、行李遺失、劫機險等一系列保障，全程提供您個人更完善無虞的旅遊保障。:"
+            ]
+      },
+      {
+        "title":"保費單筆滿NT$5,000最高分12期0利率",
+        "descs":[
+          "登錄時間：2023/1/1-2023/12/31",
+          "活動內容：2023/12/31前登錄，自登錄日起至2023/12/31，使用@GoGo卡刷保費單筆滿NT$5,000，享每筆刷卡滿額分12期0利率優惠"
+          ]
+      },
+      {
+        "title":"新核卡首3期分期0利率",
+        "descs":[
+          "活動時間：2023/4/1~2023/6/30",
+          "活動內容：新申辦台新銀行信用卡且消費前設定卡片分期分3、6期成功者",
+          "自核卡日起3個月內每筆刷卡消費達NT$10,000以上(以交易日認定)，筆筆自動分期首三期0利率!",
+          "*自核卡第4個月起恢復分期利率10%",
+          "*卡片自動分期仍可享卡片權益回饋優惠",
+          "*2023/3/1起，分期0利率將不列入現金回饋、點數、里程數及廠商回饋計算，以各卡別公告為準。",
+          "*申請卡片自動分期(非0利率)則仍可享有上述回饋優惠，惟申請分3、6期首三月0利率不列入回饋，第四個月起恢復分期利率10%可開始享回饋。"
+        ]
+      },
+      {
+        "title":"Richart 新戶首次辦理自動扣繳信用卡帳款享NT300元",
+        "descs":[
+          "活動期間：2023/3/10~2023/12/31",
+          "活動內容：活動期間內，成功完成註冊Richart數位存款帳戶，於申請流程中之專屬代碼欄位內輸入【RC300】，首次登入使用Richart APP，並設定Richart帳戶自動扣繳台新信用卡帳款，即可獲得用戶禮NT$300。"
+        ]
+      },
+      {
+        "title":"出行禮賓服務(VISA國際組織優惠)",
+        "descs":[
+          "活動期間:2023/1/1~2023/12/31",
+          "活動內容:@GoGo卡持卡人，活動期間可於下列四項出行禮賓服務中任選一項享優惠價。每位持卡人優惠期間每人限4次出行禮賓服務使用次數",
+          "機場專車接送: 國際機場接送「台北至桃園」國際機場NT$630起",
+          "*須刷@GoGo卡購買國際線機票全額或國外團費總金額8成以上且付款成功",
+          "*實際接送金額需依肯驛國際公告之所在區域價格表計價",
+          "高鐵/台鐵接送: 全台高鐵／台鐵接送優惠價NT$329起",
+          "附駕包車: 2小時附駕包車服務優惠價NT$949起",
+          "自駕租車: 自駕租車平日優惠價NT$1,188起",
+          "*以上為VISA國際組織提供御璽卡持卡人之優惠，完整辦法請點下方活動詳情了解"
+        ]
+      }
+  ]
+}
+
+// 
+
+
+
+// ===========================================  Task  ============================================================================= // 
+
+
+// 6b94dd6c-7360-4596-4015-fea0e5000f14
+{
+  "name":"【一般消費 0.5%無上限】",
+  "descs":[],
+  "cardID":"cf44d20e-df5c-4092-72ba-ed70658c68ed",
+  "taskType":1,
+  "taskTypeModel":{
+  },
+  "defaultPass":true
+}
+
+
+// 0ae9d23b-c595-4db3-4935-7a47c6c12a76
+{
+  "name":"【完成任務即升級享精選網購、行動支付最高3.8%回饋！】",
+  "descs":[
+    "使用數位帳單(含電子或行動帳單)，並以Richart帳戶自動扣繳台新信用卡帳單"
+  ],
+  "cardID":"cf44d20e-df5c-4092-72ba-ed70658c68ed",
+  "taskType":1,
+  "taskTypeModel":{
+  },
+  "defaultPass":false
+}
+
+
+
+// d6031f05-2744-43d6-7dee-86edf7c23365
+{
+  "name":"完成任務享2%加碼回饋(含＠GoGo卡片權益最高3.8％=最高享5.8%)",
+  "descs":[
+    "活動名稱：Richart 利上加利，有GO美利",
+    "活動期間：2023/4/12~2023/9/28",
+    "活動對象：持有Richart新臺幣活期儲蓄存款帳戶與Richart外幣活期存款帳戶之本國自然人，以及有效@GoGo卡或FlyGo卡者",
+    "活動辦法：活動期間內當月完成指定任務*，享雙狗卡指定卡片(註1)消費不限通路加碼2%現金回饋(每月回饋上限NT$200)，如未完成指定任務條件，則以原台新銀行官網公告@GoGo卡或FlyGo卡權益為準",
+    "(註1)若客戶僅持@GoGo卡或FlyGo卡，將以持有卡片進行消費加碼；若同持@GoGo卡及FlyGo卡，將優先以@GoGo卡進行消費加碼，需完成第2筆「Richart美元三個月定存」達檻，FlyGo卡始可享消費加碼。",
+    "",
+    "【舉例】A持卡人同持雙狗卡，2023年4月以Richart帳戶自動扣繳台新信用卡帳單，並承作「Richart美元三個月4%」定期存款單筆USD$2,000且未提前解約，其@GoGo卡於2023/4/1~2023/9/30之刷卡交易享Richart加碼2%(含@GoGo卡片權益享最高5.8%回饋)；2023年5月再承作第2筆「Richart美元三個月4%」定期存款單筆USD$1,600且未提前解約，其FlyGo卡於2023/5/1~2023/9/30之刷卡交易再享Richart加碼2%(含FlyGo卡片權益享最高7%回饋)。",
+    "",
+    "《任務說明》需完成以下2項任務始符合信用卡消費加碼回饋資格。",
+    "",
+    "1.當月使用數位帳單(含電子或行動帳單，點我看詳情)，並以Richart帳戶自動扣繳台新信用卡帳單(點我立即申請)",
+    "",
+    "2.成功承作「Richart美元三個月4%」限時限額定期存款專案，單筆達USD$1,600(含)以上且未提前解約(點我立即搶*APP搶定，限以手機開啟)",
+    "",
+    " 《回饋說明》",
+    "",
+    "信用卡消費回饋將於次月月底前檢核成功完成指定任務之名單，並於檢核無誤後30個工作天內入帳至正卡持卡人Richart數位存款帳戶，若不同意回饋金入至Richart數位存款帳戶，則不符合回饋資格。回饋金僅正向入至正卡持卡人Richart數位存款帳戶，若有退款產生負向交易，將揭露於信用卡帳單。"
+  ],
+  "cardID":"cf44d20e-df5c-4092-72ba-ed70658c68ed",
+  "taskType":1,
+  "taskTypeModel":{
+  },
+  "defaultPass":false
+}
+
+
+
+// ===========================================  Card Reward  ============================================================================= // 
+
+{
+  "cardID":"cf44d20e-df5c-4092-72ba-ed70658c68ed",
+  "title":"精選網購、行動支付Go給力 最高3.8%！",
+  "descs":[
+    "活動期間：2023/4/1~2024/3/31結帳帳單",
+    "活動辦法：【精選消費 最高3.8%】",
+    "基本回饋0.5%無上限，完成任務即升級享精選網購、行動支付最高3.8%回饋！",
+    "★精選網購：蝦皮、momo、PChome、Yahoo、Amazon",
+    "★精選行動支付：LINE Pay、全支付、全盈+PAY、台新Pay",
+    "*精選消費最高3.8%包含〔(基本0.5%無上限)+(精選加碼3.3%，每期帳單回饋上限NT$1,000)〕",
+    "【一般消費 0.5%無上限】",
+    "",
+    "任務說明",
+    "使用數位帳單(含電子或行動帳單，點我看詳情)，並以Richart帳戶自動扣繳台新信用卡帳單(點我立即申請)",
+    "",
+    "*若未完成上述任務享基本回饋0.5%(不適用精選加碼回饋)",
+    "【行動支付適用據點】",
+    "★LINE Pay：拿回饋賺LINE POINTS，強檔活動看這裡",
+    "★全支付：全聯採購、路易莎喝咖啡享回饋(更多適用據點)",
+    "★全盈+PAY：全家、屈臣氏採買日用品也能拿回饋(更多適用據點)",
+    "★台新Pay：新光三越購物、台灣大車隊乘車筆筆享回饋(更多適用據點)",
+    "*行動支付適用據點依各業者網頁公告為準",
+    "",
+    "注意事項",
+    "",
+    "活動期間：2023/4/1~2024/3/31結帳帳單消費適用本活動辦法，倘「結帳日」適逢假日(含連續假期)，結帳日將可能提前或延後至最近一個工作日；前次權益(2022/4/1~2023/3/31結帳帳單)，請參考此處。",
+    "【舉例】A持卡人信用卡帳單結帳日每月7日，則2023/4月帳單包含2023/3/8~2023/4/7入帳消費，適用本權益消費回饋辦法。",
+    "",
+    " ",
+    "",
+    "【精選消費：完成任務升級享最高3.8% (未完成任務享0.5%)】",
+    "《精選消費定義》",
+    "",
+    "網購：蝦皮、momo、PChome、Yahoo、Amazon",
+    "行動支付：LINE Pay、全支付、全盈+PAY、台新Pay (係指台新APP電子錢包消費，適用於掃碼支付(掃描條碼/出示付款碼)交易，不含感應支付交易)。",
+    " ",
+    "",
+    "《精選消費之認定》",
+    "",
+    "台新銀行係依該通路已發生消費之交易說明比對，如通路之交易說明資訊更新，致持卡人未獲加碼回饋，請來電告知，台新銀行以個案方式辦理，將不另通知。若持卡人於甲購物網站瀏覽，惟於結帳時在甲網站之分支〔乙網站〕刷卡結帳，茲因〔乙網站〕非台新銀行系統得以判別之交易資訊，或上述加碼通路旗下商品之清算資料類別與台新銀行認列之清算資料不相同，但包含於上述加碼通路範疇內(非列舉不回饋項目者)，持卡人可來電台新銀行告知，台新銀行將以個案方式提供回饋予持卡人並揭露於次期信用卡帳單，該項回饋不溯及既往。除此之外，不符合加碼通路範疇者，不予以個案回饋。",
+    "",
+    "《任務說明》",
+    "",
+    "帳單結帳日3個工作天前成功設定使用【數位帳單(含電子或行動帳單)，並以Richart帳戶自動扣繳台新信用卡帳單】且持續使用未取消者，當期帳單精選消費享加碼回饋3.3%回饋，每期帳單精選加碼回饋上限NT$1,000。",
+    "*若未完成上述任務享基本回饋0.5%(不適用精選加碼回饋)",
+    "數位帳單：包含電子(Email)或行動(簡訊)帳單，點我看詳情。",
+    "Richart帳戶自動扣繳台新信用卡帳單，點我立即申請。",
+    "《回饋說明》",
+    "",
+    "精選消費最高3.8%，含〔基本0.5%無上限(詳注意事項3)+精選加碼3.3%(須完成任務)〕，其中〔精選加碼3.3%〕每期帳單回饋上限NT$1,000。若未完成任務或僅完成其中一項，精選消費享基本回饋0.5%(不適用精選加碼回饋)，並視同放棄加碼回饋資格，事後不得要求台新銀行補發或折換現金。",
+    "消費回饋採同品牌項下(含@GoGo悠遊卡/icash卡/虛擬卡)正附卡合併並以總消費金額計算(四捨五入計)回饋。",
+    "LINE Pay、全支付、全盈+PAY、台新Pay，如屬不回饋項目(詳注意事項4)將不提供回饋，惟全聯、便利商店(7-11、全家、萊爾富、OK超商)使用指定行動支付消費仍提供回饋，各商家可接受之支付方式及卡別，依各商家公告為準。",
+    " ",
+    "",
+    "【一般消費：0.5%無上限】",
+    "《一般消費定義》不回饋消費(詳注意事項4)以外之交易即為一般消費。",
+    "",
+    "《回饋說明》一般消費享基本0.5%回饋無上限，消費回饋採同品牌項下(含@GoGo悠遊卡/icash卡/虛擬卡)正附卡合併並以總消費金額計算(四捨五入計)回饋。",
+    "",
+    "",
+    "【不回饋消費項目】",
+    "歐盟地區實體商店交易(*註1)、境外投資平台交易(如eToro或相類似境外投資交易平台) 、特約商店分期付款交易及單筆消費分期0利率之交易(*註2)、電子支付儲值卡(如悠遊卡/icash卡)自動加值、Samsung Pay悠遊卡加值、全聯福利中心消費(惟綁定指定行動支付(全支付)消費仍享回饋，其他支付方式則不回饋)、便利商店(7-11/全家/萊爾富/OK超商等，惟綁定指定行動支付(LINE Pay、台新Pay、全盈+PAY、全支付)消費仍享回饋，其他支付方式則不回饋)、各項代扣繳費用(含水/電/瓦斯費、中華電信費、遠傳電信費、eTag自動儲值、學費等)、躉繳保費、投資型保費、三商美邦保費、彈性繳保費、藥安康藥局消費、臺北醫學大學附設醫院費用、各縣市路邊停車費、透過各繳費平台(包含但不限於線上支付/臨櫃繳款，如e-Bill全國繳費/i繳費/醫指付/電子化繳費稅處理平台(含台灣大哥大)/NCCC公務機關信用卡繳費平台/台新繳費中心(含台新繳費中心網頁/Richart Life APP/Richart APP/行動銀行等通路)等)繳納之各項費用、政府規費、違規罰鍰、透過「聯合信用卡處理中心」提供之信用卡小額支付特約商店之消費(如停車場/麥當勞等同性質連鎖速食店等)、預借現金及其手續費、預借現金分期金及其手續費、代償他行信用卡/現金卡/小額信貸等之金額、個人綜合所得稅、所得稅分期付款期金及其手續費、查核定稅(房屋稅/地價稅/牌照稅等)、燃料費、違約金、循環利息、基金交易及其手續費、信用卡年費及一般信用卡相關手續費(如掛失手續費/調閱簽單手續費等)。",
+    "",
+    "(*註1)歐盟地區實體商店交易",
+    "",
+    "歐盟地區實體商店係指營業場所、商業登記地址或營業執照於歐盟地區國家，包含奧地利、比利時、保加利亞、克羅埃西亞、賽普勒斯、捷克、丹麥、愛沙尼亞、芬蘭、法國、德國、希臘、匈牙利、愛爾蘭、義大利、拉脫維亞、立陶宛、盧森堡、馬爾他、荷蘭、波蘭、葡萄牙、羅馬尼亞、斯洛伐克、斯洛維尼亞、西班牙、瑞典、英國、冰島、列支敦斯登和挪威等；惟歐盟地區網站消費回饋維持不變。",
+    " ",
+    "",
+    "(*註2)特約商店分期付款交易及單筆消費分期0利率之交易",
+    "",
+    "■ 交易日2023/3/1 (含)起之〔特約商店分期付款交易及單筆消費分期0利率之交易〕將不提供消費回饋。",
+    "■ 交易日2023/2/28(含)前之〔特約商店分期付款交易及單筆消費分期0利率之交易〕適用本權益回饋辦法。",
+    "",
+    "【舉例1】A持卡人信用卡帳單結帳日每月7日，2023/2/28於〔486網購〕消費NT$30,000並分3期，分別於2023/3/2、2023/4/3、2023/5/3入帳期金NT$10,000，帳單分別揭露於2023/3/7適用前次權益(請參考此處)、2023/4/7及2023/5/7 適用本權益辦法享基本回饋0.5%。",
+    "",
+    "【舉例2】B持卡人信用卡帳單結帳日每月7日，2023/2/28於〔蝦皮〕消費NT$30,000並分3期，分別於2023/3/2、2023/4/3、2023/5/3入帳期金NT$10,000，帳單分別揭露於2023/3/7適用前次權益(請參考此處)、2023/4/7及2023/5/7 適用本權益辦法享最高3.8%(如未完成任務則享0.5%)。",
+    "",
+    "【舉例3】C持卡人信用卡帳單結帳日每月7日，2023/3/1於〔蝦皮〕消費NT$30,000並分3期，將不提供消費回饋。",
+    "",
+    "",
+    "【回饋方式】",
+    "(1)《如正卡人成功綁定Richart帳戶自動扣繳@GoGo卡帳單》",
+    "",
+    "消費回饋將於帳單結帳日之次一營業日入帳至正卡持卡人Richart帳戶，若不同意回饋金入至Richart帳戶，則不符合回饋資格。",
+    "回饋金僅正向入至正卡持卡人Richart帳戶，若有退款產生負向交易，將下帳至信用卡帳單。回饋金入帳時若Richart帳戶已取消或其他因素導致回饋失敗，回饋金將遞延至次期信用卡帳單回饋。",
+    "Richart帳戶限台新2888帳號開頭之帳戶，申辦Richart帳戶相關事項依Richart官網公告為主。",
+    "綁定本人Richart帳戶自動扣繳@GoGo卡帳單之規則與生效日，同現行台新自動扣繳之規範：申請手續將於30個工作天內完成，自台新審核生效後之次月將於信用卡帳單揭露自動轉帳扣繳成功之通知，未辦妥前，將視為不符合資格，信用卡帳單請自行繳納，以免產生循環信用利息或違約金。",
+    "(2)《如正卡持卡人未成功綁定Richart帳戶自動扣繳@GoGo卡帳單》",
+    "",
+    "消費回饋將入帳至正卡持卡人信用卡帳單折抵帳單新增消費(持卡人不得請求退還、折抵現金或更換其他商品)。",
+    "本活動回饋金入帳後，如客戶停卡致名下無任何一張台新信用卡，帳上剩餘之現金回饋即自動失效，台新將不另行通知持卡人。",
+    "持卡人於本活動回饋金額入帳前，若發生退款/遲繳/停卡或違反「台新銀行信用卡會員約定條款」之情事者，即自動喪失參加本活動之資格。",
+    "持卡人如因任何理由退還刷卡買受之貨品、服務或因簽帳爭議及其他原因而退還刷卡消費款項時，持卡人原先已取得之回饋金額，台新銀行得逕行調整扣回。",
+    "台新銀行保留調整、變更及同意持卡人參加本活動之權利。"
+  ],
+  "startDate":1680307200,
+  "endDate":1711929599,
+  "cardRewardOperator":2,
+  "rewardType":1,
+  "cardRewardLimitTypes":[],
+  "constraintPassLogics":[],
+  "feedbackBonus":{
+    "cashFeedbackBonus":{
+        "cashCalculateType":2,
+        "cashFeedbackBonusType":1,
+        "totalBonus":5.8,
+        "title":"現金回饋",
+        "returnBonusTitle":"%現金回饋",
+        "cashReturnTitlePrefix":"現省",
+        "cashReturnTitleSuffix":"元"
+    }
+  },
+  "rewards":[
+      {
+          "order":0,
+          "payloadOperator":1,
+          "payloads":[
+              {
+
+                "feedback":{
+                  "cashback":{
+                    "cashCalculateType": 2,
+                    "bonus":0.02,
+                    "min":0,
+                    "max":10000
+                  }
+                },
+                "channel":{
+                    "channelOperatorType":1,
+                    "channelType":2,
+                    "channelMappingType":1,
+                    "tasks":[
+                      "d6031f05-2744-43d6-7dee-86edf7c23365", // 完成任務享2%加碼回饋(含＠GoGo卡片權益最高3.8％=最高享5.8%)
+                      "0ae9d23b-c595-4db3-4935-7a47c6c12a76" // 完成任務即升級享精選網購、行動支付最高3.8%回饋！
+                    ]
+                }
+              },
+              {
+                  "feedback":{
+                      "cashback":{
+                        "cashCalculateType": 2,
+                        "bonus":0.005,
+                        "min":0,
+                        "max":0
+                      }
+                  },
+                  "channel":{
+                      "channelOperatorType":1,
+                      "channelType":2,
+                      "channelMappingType":1,
+                      "tasks":[
+                        "6b94dd6c-7360-4596-4015-fea0e5000f14" // 不限通路
+                      ]
+                  }
+              },
+              {
+                "feedback":{
+                  "cashback":{
+                    "cashCalculateType": 2,
+                    "bonus":0.033,
+                    "min":0,
+                    "max":30303
+                  }
+                },
+                "channel":{
+                    "channelOperatorType":1,
+                    "channelType":1,
+                    "channelMappingType":1,
+                    "innerChannels":[
+                      {
+                        "channelOperatorType":1,
+                        "channelType":2,
+                        "channelMappingType":1,
+                        "tasks":[
+                          "0ae9d23b-c595-4db3-4935-7a47c6c12a76" // 設定台【完成任務即升級享精選網購、行動支付最高3.8%回饋！】
+                        ]
+                      },
+                      {
+                        "channelOperatorType":2,
+                        "channelType":1,
+                        "channelMappingType":1,
+                        "innerChannels":[
+                          {
+                            "channelOperatorType":2,
+                            "channelType":4,
+                            "channelMappingType":1,
+                            "ecommerces":[
+                              "ad2e2c24-56b4-43bb-be64-1d7f8a432455", // 蝦皮購物
+                              "71cebd97-bdea-4bdb-921a-6ed48ef043f4", // MOMO
+                              "dc404a4d-a79e-4883-b84e-7009f4744260", // PCHOME
+                              "eaa922c9-053d-4d56-a7e0-cdfe78b2a11f", // Yahoo
+                              "f2e4b992-f43f-405c-b6f4-16c979f1f362"  // AMAZON
+
+                            ]
+                          },
+                          {
+                            "channelOperatorType":2,
+                            "channelType":3,
+                            "channelMappingType":1,
+                            "mobilepays":[
+                              "f10c7f91-9d06-46fe-ab06-4063c8556c9f", // LINE PAY
+                              "d1daae71-19dc-4eb7-8ea6-c9db1c03f99d", // 全盈+PAY
+                              "49b913ee-3cd5-4d47-bfe3-57c58e7df066", // 全支付
+                              "c7ee2ff6-b0ab-4526-a0fa-7a251a80cecf"  // 台新 PAY
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                }
+              }
+          ]
+      }
+  ]
+}
+
+
+// ===========================================  Card Reward  ============================================================================= // 
+
+// 76864e81-56bf-4703-6a41-aa0208ed3d43
+{
+  "name":"每週三 KKday 日韓旅遊商品單筆滿千享 9 折優惠，最高折抵TWD$200 元!",
+  "descs":[
+  ],
+  "cardID":"cf44d20e-df5c-4092-72ba-ed70658c68ed",
+  "taskType":2,
+  "taskTypeModel":{
+    "weekDayLimit":{
+      "weekDays":[3]
+    }
+  },
+  "defaultPass":false
+}
+
+
+{
+  "cardID":"cf44d20e-df5c-4092-72ba-ed70658c68ed",
+  "title":"指定品牌消費9折起(VISA國際組織優惠)",
+  "descs":[
+    "活動期間：2023/1/1~2023/12/31",
+    "活動內容：@GoGo卡享旅遊、購物、娛樂等優惠，更多商家優惠請詳閱VISA網站",
+    "",
+    "1 BIC Camera 2023/1/1-2023/11/30",
+    "BIC Camera消費最高享15%折扣!",
+    "",
+    "2 Don Quijote 唐吉訶德 2023/1/1-2023/11/30",
+    "於日本唐吉訶德消費最高享15%折扣",
+    "",
+    "3 Klook 2023/1/1-2023/6/30",
+    "享 Klook 限時限量最高 89 折優惠!",
+    "",
+    "4 KKday 2023/1/1-2023/9/30",
+    "每週三 KKday 日韓旅遊商品單筆滿千享 9 折優惠，最高折抵TWD$200 元!",
+    "",
+    "5 Hotels.com 2023/1/1-2023/12/31",
+    "凡於活動期間於Hotels.com線上訂房刷@GoGo卡，享92折優惠！",
+    "",
+    "6 SkiWebShop 2023/1/1-2023/9/30",
+    "SkiWebShop是歐洲最大的在線滑雪用品店，提供來自100 多個知名品牌的冬季運動商品，刷@GoGo卡享所有消費9折優惠!",
+    "",
+    "7 Shaya Pets 2023/1/1-2023/9/30",
+    "Shaya是一個致力於為寵物和人類創造高級必需品的奢侈品牌，刷@GoGo卡享所有消費85折優惠!",
+    "",
+    "8 Bambini Fashion 2023/1/1-2023/9/30",
+    "BAMBINIFASHION.COM為線上童裝購物平台，消費滿300美元享75折優惠!",
+    "",
+    "9 IHG 酒店住宿 2023/3/1-2023/6/30",
+    "IHG 酒店住宿 15%折扣優惠",
+    "",
+    "10 IHG 酒店餐飲 2023/3/1-2023/6/30",
+    " IHG 酒店餐飲 20% 折扣優惠",
+    "",
+    "11 FARFETCH 2023/3/31-2023/12/31",
+    " 享 Farfetch 最高 10% 折扣優惠"
+  ], 
+  "startDate":1672531200,
+  "endDate":1688083200,
+  "cardRewardOperator":2,
+  "rewardType":1,
+  "cardRewardLimitTypes":[],
+  "constraintPassLogics":[],
+  "feedbackBonus":{
+    "cashFeedbackBonus":{
+        "cashCalculateType":2,
+        "cashFeedbackBonusType":1,
+        "totalBonus":25,
+        "title":"現金回饋",
+        "returnBonusTitle":"%現金回饋",
+        "cashReturnTitlePrefix":"現省",
+        "cashReturnTitleSuffix":"元"
+    }
+  },
+  "rewards":[
+    {
+      "order":0,
+      "payloadOperator":1,
+      "payloads":[
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.15,
+                "min":0,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":13,
+                "channelMappingType":1,
+                "malls":[
+                  "1862ed53-a89c-46dc-ba32-3a6a270a1b9e", // Big Camera
+                ]
+            }
+          },
+
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.15,
+                "min":0,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":15,
+                "channelMappingType":1,
+                "conveniencestores":[
+                  "1b99dcfe-e7a6-4680-97a4-aaa13c17d0d6", // 唐吉訶德
+                ]
+            }
+          },
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.11,
+                "min":0,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":10,
+                "channelMappingType":1,
+                "travels":[
+                  "f82012aa-393c-41e3-98b0-0a728a81af5e", // Klook	
+                ]
+            }
+          },
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.1,
+                "min":1000,
+                "max":0
+              }
+            },
+            "channel":{
+              "channelOperatorType":1,
+              "channelType":1,
+              "channelMappingType":1,
+              "innerChannels":[
+                {
+                  "channelOperatorType":1,
+                  "channelType":2,
+                  "channelMappingType":1,
+                  "tasks":[
+                    "76864e81-56bf-4703-6a41-aa0208ed3d43", // 每週三 KKday 日韓旅遊商品單筆滿千享 9 折優惠，最高折抵TWD$200 元!
+                  ]
+                },
+                {
+                  "channelOperatorType":1,
+                  "channelType":10,
+                  "channelMappingType":1,
+                  "travels":[
+                    "947a0c83-db84-4b6f-b842-3453f93d505e", // KKDAY	
+                  ]
+                }
+              ]
+            }
+          },
+          
+         
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.08,
+                "min":0,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":10,
+                "channelMappingType":1,
+                "travels":[
+                  "025bbcfa-9033-41f5-aaa1-5a7548f82c9d", // hotels.com	
+                ]
+            }
+          },
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.1,
+                "min":0,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":4,
+                "channelMappingType":1,
+                "ecommerces":[
+                  "0554923b-1d32-44ae-9159-dba9f2c8e827", // SkiWebShop
+                ]
+            }
+          },
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.15,
+                "min":0,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":4,
+                "channelMappingType":1,
+                "ecommerces":[
+                  "e5298691-1c7e-41f2-9cf4-c91193cfb48b", // Shaya Pets	
+                ]
+            }
+          },
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.25,
+                "min":300,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":4,
+                "channelMappingType":1,
+                "ecommerces":[
+                  "4691e58b-11bf-4ca7-af80-9e63d00c6494", // Bambini Fashion	
+                ]
+            }
+          },
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.15,
+                "min":0,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":17,
+                "channelMappingType":1,
+                "hotels":[
+                  "554113cc-225f-4a6a-acfa-6ced769c2533", // IHG 酒店住宿		
+                ]
+            }
+          },
+
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.2,
+                "min":0,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":8,
+                "channelMappingType":1,
+                "foods":[
+                  "5a45eff9-8a26-4eda-9880-38328f5ee0f8", // IHG 酒店住宿		
+                ]
+            }
+          },
+
+          {
+            "feedback":{
+              "cashback":{
+                "cashCalculateType": 2,
+                "bonus":0.1,
+                "min":0,
+                "max":0
+              }
+            },
+            "channel":{
+                "channelOperatorType":1,
+                "channelType":4,
+                "channelMappingType":1,
+                "ecommerces":[
+                  "dbcc9784-4738-4989-97a7-8229eecbdc7e", // IHG 酒店住宿		
+                ]
+            }
+          }
+      ]
+    }
+  ]  
+}
+
+
+
+
+// ===========================================  Card Reward  ============================================================================= // 
+
+
+
+
+{
+  "cardID":"cf44d20e-df5c-4092-72ba-ed70658c68ed",
+  "title":"使用VISA國際組織於蝦皮購物,Vestiaire Collective 享優惠",
+  "descs":[
+    "1 蝦皮購物 2023/1/1-2023/9/30",
+    " 蝦皮購物海外直送館，單筆滿新台幣800元，可享新台幣120元折抵優惠!",
+    "",
+    "2 Vestiaire Collective 2023/1/1-2023/9/30",
+    " 首次消費滿600美元(或5000港幣) 享立減60美元(或500港幣)優惠!",
+  ],
+  "startDate":1672531200,
+  "endDate":1688083200,
+  "cardRewardOperator":2,
+  "rewardType":1,
+  "cardRewardLimitTypes":[],
+  "constraintPassLogics":[],
+  "feedbackBonus":{
+    "cashFeedbackBonus":{
+        "cashCalculateType":1,
+        "cashFeedbackBonusType":1,
+        "totalBonus":25,
+        "title":"現金回饋",
+        "returnBonusTitle":"現金回饋",
+        "cashReturnTitlePrefix":"現省",
+        "cashReturnTitleSuffix":"元"
+    }
+  },
+  "rewards":[
+
+    {
+      "order":0,
+      "payloadOperator":1,
+      "payloads":[
+
+        {
+          "feedback":{
+            "cashback":{
+              "cashCalculateType": 1,
+              "fixed":120,
+              "min":800,
+              "max":0
+            }
+          },
+          "channel":{
+              "channelOperatorType":1,
+              "channelType":4,
+              "channelMappingType":1,
+              "ecommerces":[
+                "ad2e2c24-56b4-43bb-be64-1d7f8a432455", // shopee	
+              ]
+          }
+        },
+        {
+          "feedback":{
+            "cashback":{
+              "cashCalculateType": 1,
+              "fixed":60,
+              "min":600,
+              "max":0
+            }
+          },
+          "channel":{
+              "channelOperatorType":1,
+              "channelType":4,
+              "channelMappingType":1,
+              "ecommerces":[
+                "8a9277db-8d06-41f0-828e-54ccc4b51f74", // Vestiaire Collective		
+              ]
+          }
+        }
+      ]
+    }
+  ]
+}
+
+
+
+
+
+
+
+
